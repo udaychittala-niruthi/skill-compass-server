@@ -16,3 +16,5 @@ yarn-error.log*
 /prisma/migrations
 /generated
 .env
+*.log
+*.log.*

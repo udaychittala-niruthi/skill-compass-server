@@ -15,6 +15,7 @@ import UserCertification from "./UserCertification";
 import UserPortfolio from "./UserPortfolio";
 import LearningSchedule from "./LearningSchedule";
 import AiAnalysis from "./AiAnalysis";
+import EducationalResource from "./EducationalResource";
 
 // 1. USER PREFERENCES
 User.hasOne(UserPreferences, { foreignKey: "userId", as: "preferences" });
@@ -50,6 +51,10 @@ UserPreferences.hasMany(LearningPath, {
     foreignKey: "userPreferencesId",
     as: "learningPaths",
 });
+
+// LearningPath - LearningModule association
+LearningPath.hasMany(LearningModule, { foreignKey: "learningPathId", as: "modules" });
+LearningModule.belongsTo(LearningPath, { foreignKey: "learningPathId", as: "learningPath" });
 
 // 5. ASSESSMENTS
 User.hasMany(Assessment, { foreignKey: "userId", as: "assessments" });
@@ -110,5 +115,6 @@ export {
     UserPortfolio,
     LearningSchedule,
     AiAnalysis,
+    EducationalResource,
     Op,
 };

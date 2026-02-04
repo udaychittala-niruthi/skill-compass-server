@@ -429,6 +429,284 @@
                 ]
             },
             "event": []
+        },
+        {
+            "name": "Learning Path",
+            "item": [
+                {
+                    "name": "Get Generation Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/learning-path/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-path",
+                                "status"
+                            ]
+                        },
+                        "description": "Check the generation status of the user's learning path (generating, completed, failed)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get My Learning Path",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/learning-path/my-path",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-path",
+                                "my-path"
+                            ]
+                        },
+                        "description": "Retrieve the complete learning path for the authenticated user with all modules"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Path Modules",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/learning-path/:pathId/modules",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-path",
+                                ":pathId",
+                                "modules"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "pathId",
+                                    "value": "1",
+                                    "description": "Learning Path ID"
+                                }
+                            ]
+                        },
+                        "description": "Get all modules for a specific learning path"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Regenerate Learning Path",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/learning-path/regenerate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-path",
+                                "regenerate"
+                            ]
+                        },
+                        "description": "Trigger regeneration of the user's learning path (deletes existing and creates new)"
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "event": []
+        },
+        {
+            "name": "Learning Progress",
+            "item": [
+                {
+                    "name": "Get My Progress",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/learning-progress/my-progress",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-progress",
+                                "my-progress"
+                            ]
+                        },
+                        "description": "Get all learning progress for the authenticated user"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Module Progress",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/learning-progress/module/:moduleId",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-progress",
+                                "module",
+                                ":moduleId"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "moduleId",
+                                    "value": "1",
+                                    "description": "Learning Module ID"
+                                }
+                            ]
+                        },
+                        "description": "Get progress for a specific module"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Module Progress",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"in_progress\",\n    \"progressPercentage\": 50,\n    \"timeSpentMinutes\": 30,\n    \"rating\": 4,\n    \"feedback\": \"Great content!\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/learning-progress/module/:moduleId",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-progress",
+                                "module",
+                                ":moduleId"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "moduleId",
+                                    "value": "1",
+                                    "description": "Learning Module ID"
+                                }
+                            ]
+                        },
+                        "description": "Update progress for a module (status: not_started, in_progress, completed, skipped)"
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "event": []
+        },
+        {
+            "name": "Learning Schedule",
+            "item": [
+                {
+                    "name": "Get My Schedule",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/learning-schedule/my-schedule",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-schedule",
+                                "my-schedule"
+                            ]
+                        },
+                        "description": "Get the learning schedule for the authenticated user"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Schedule Status",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"completed\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/learning-schedule/:scheduleId/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "learning-schedule",
+                                ":scheduleId",
+                                "status"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "scheduleId",
+                                    "value": "1",
+                                    "description": "Schedule Period ID"
+                                }
+                            ]
+                        },
+                        "description": "Update status of a schedule period (pending, in_progress, completed, skipped)"
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "event": []
         }
     ],
     "variable": [

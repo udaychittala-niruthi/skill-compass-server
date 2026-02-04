@@ -1,0 +1,170 @@
+### Learning Path API Tests
+@baseUrl = http://localhost:5001/api
+@email_college = testUser_26505@example.com
+@email_professional = testUser_21730@example.com
+@email_senior = testUser_52549@example.com
+@password = password123
+
+### 1. Login as COLLEGE_STUDENTS user (ID: 23)
+# @name loginCollege
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email_college}}",
+  "password": "{{password}}"
+}
+
+###
+@tokenCollege = {{loginCollege.response.body.data.token}}
+
+### 2. Login as PROFESSIONALS user (ID: 24)
+# @name loginProfessional
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email_professional}}",
+  "password": "{{password}}"
+}
+
+###
+@tokenProfessional = {{loginProfessional.response.body.data.token}}
+
+### 3. Login as SENIORS user (ID: 25)
+# @name loginSenior
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email_senior}}",
+  "password": "{{password}}"
+}
+
+###
+@tokenSenior = {{loginSenior.response.body.data.token}}
+
+### ============================================
+### LEARNING PATH ENDPOINTS - COLLEGE STUDENT
+### ============================================
+
+### 4. Get generation status (COLLEGE_STUDENTS)
+GET {{baseUrl}}/learning-path/status
+Authorization: Bearer {{tokenCollege}}
+
+### 5. Get my learning path (COLLEGE_STUDENTS)
+GET {{baseUrl}}/learning-path/my-path
+Authorization: Bearer {{tokenCollege}}
+
+### 6. Regenerate learning path (COLLEGE_STUDENTS)
+POST {{baseUrl}}/learning-path/regenerate
+Authorization: Bearer {{tokenCollege}}
+
+### ============================================
+### LEARNING PATH ENDPOINTS - PROFESSIONAL
+### ============================================
+
+### 7. Get generation status (PROFESSIONALS)
+GET {{baseUrl}}/learning-path/status
+Authorization: Bearer {{tokenProfessional}}
+
+### 8. Get my learning path (PROFESSIONALS)
+GET {{baseUrl}}/learning-path/my-path
+Authorization: Bearer {{tokenProfessional}}
+
+### ============================================
+### LEARNING PATH ENDPOINTS - SENIOR
+### ============================================
+
+### 9. Get generation status (SENIORS)
+GET {{baseUrl}}/learning-path/status
+Authorization: Bearer {{tokenSenior}}
+
+### 10. Get my learning path (SENIORS)
+GET {{baseUrl}}/learning-path/my-path
+Authorization: Bearer {{tokenSenior}}
+
+### ============================================
+### LEARNING PROGRESS ENDPOINTS - COLLEGE STUDENT
+### ============================================
+
+### 11. Get all my progress (COLLEGE_STUDENTS)
+GET {{baseUrl}}/learning-progress/my-progress
+Authorization: Bearer {{tokenCollege}}
+
+### 12. Update module progress (COLLEGE_STUDENTS) - will create new record
+POST {{baseUrl}}/learning-progress/module/1
+Authorization: Bearer {{tokenCollege}}
+Content-Type: application/json
+
+{
+  "status": "in-progress",
+  "progressPercentage": 50,
+  "timeSpent": 30
+}
+
+### 13. Get specific module progress (COLLEGE_STUDENTS)
+GET {{baseUrl}}/learning-progress/module/1
+Authorization: Bearer {{tokenCollege}}
+
+### 14. Complete module (COLLEGE_STUDENTS)
+POST {{baseUrl}}/learning-progress/module/1
+Authorization: Bearer {{tokenCollege}}
+Content-Type: application/json
+
+{
+  "status": "completed",
+  "progressPercentage": 100,
+  "timeSpent": 60,
+  "score": 85,
+  "maxScore": 100,
+  "passed": true,
+  "rating": 5
+}
+
+### ============================================
+### LEARNING SCHEDULE ENDPOINTS - COLLEGE STUDENT
+### ============================================
+
+### 15. Get my schedule (COLLEGE_STUDENTS)
+GET {{baseUrl}}/learning-schedule/my-schedule
+Authorization: Bearer {{tokenCollege}}
+
+### 16. Update schedule status (COLLEGE_STUDENTS) - replace :id with actual schedule ID
+PUT {{baseUrl}}/learning-schedule/1/status
+Authorization: Bearer {{tokenCollege}}
+Content-Type: application/json
+
+{
+  "status": "active",
+  "completionPercentage": 25
+}
+
+### ============================================
+### TEST ACCESS RESTRICTIONS
+### ============================================
+
+### 17. Try to access without authentication (should fail with 401)
+GET {{baseUrl}}/learning-path/my-path
+
+### 18. Try to get another user's progress with invalid module ID (should fail with 400)
+GET {{baseUrl}}/learning-progress/module/invalid
+Authorization: Bearer {{tokenCollege}}
+
+### 19. Try to update schedule with invalid ID (should fail with 400)
+PUT {{baseUrl}}/learning-schedule/invalid/status
+Authorization: Bearer {{tokenCollege}}
+Content-Type: application/json
+
+{
+  "status": "active"
+}
+
+### 20. Try to update schedule with invalid status (should fail with 400)
+PUT {{baseUrl}}/learning-schedule/1/status
+Authorization: Bearer {{tokenCollege}}
+Content-Type: application/json
+
+{
+  "status": "invalid_status"
+}

@@ -4,12 +4,16 @@ import InterestSeeder from "./intrests.seeder";
 import SkillSeeder from "./skill.seeder";
 import CourseSeeder from "./courses.seeder";
 import BranchesSeeder from "./branches.seeder";
+import { EducationalResourcesSeeder } from "./educationalResources.seeder";
+
+const educationalResourcesSeeder = new EducationalResourcesSeeder();
 
 const seeders = [
     { name: "Interest", run: InterestSeeder },
     { name: "Skill", run: SkillSeeder },
     { name: "Course", run: CourseSeeder },
     { name: "Branches", run: BranchesSeeder },
+    { name: "EducationalResources", run: () => educationalResourcesSeeder.seed() },
 ];
 
 async function seedAll() {

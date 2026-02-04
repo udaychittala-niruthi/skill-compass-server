@@ -20,6 +20,10 @@ class LearningModule extends Model {
     declare completionCount: number;
     declare groupSpecificMetadata: any; // JSONB
     declare courseId: number | null;
+    declare learningPathId: number | null; // New: link to learning path
+    declare orderInPath: number | null; // New: sequence in path
+    declare isAiGenerated: boolean; // New: flag for AI-generated modules
+    declare generationMetadata: any; // New: JSONB for AI generation details
 }
 
 LearningModule.init(
@@ -124,6 +128,26 @@ LearningModule.init(
                 model: "courses",
                 key: "id",
             },
+        },
+        learningPathId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: "learning_paths",
+                key: "id",
+            },
+        },
+        orderInPath: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        isAiGenerated: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        generationMetadata: {
+            type: DataTypes.JSONB,
+            defaultValue: {},
         },
     },
     {

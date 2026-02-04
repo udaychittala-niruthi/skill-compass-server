@@ -1,4 +1,5 @@
 import { User, UserPreferences } from "../models";
+import { learningPathService } from "./learningPath.service";
 
 class OnboardingService {
     async onboardKid(userId: number, data: { avatar?: string; bio?: string }) {
@@ -13,6 +14,10 @@ class OnboardingService {
         }
 
         await user.update({ isOnboarded: true });
+
+        // KIDS don't get learning paths - they only use clip module
+        console.log(`Onboarding complete for KIDS user ${userId} - skipping learning path generation`);
+
         return prefs;
     }
 
@@ -28,6 +33,12 @@ class OnboardingService {
         }
 
         await user.update({ isOnboarded: true });
+
+        // Trigger learning path generation (async - don't wait)
+        learningPathService.generateLearningPath(userId).catch(err => {
+            console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
+        });
+
         return prefs;
     }
 
@@ -57,6 +68,12 @@ class OnboardingService {
         }
 
         await user.update({ isOnboarded: true });
+
+        // Trigger learning path generation (async - don't wait)
+        learningPathService.generateLearningPath(userId).catch(err => {
+            console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
+        });
+
         return prefs;
     }
 
@@ -88,6 +105,12 @@ class OnboardingService {
         }
 
         await user.update({ isOnboarded: true });
+
+        // Trigger learning path generation (async - don't wait)
+        learningPathService.generateLearningPath(userId).catch(err => {
+            console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
+        });
+
         return prefs;
     }
 
@@ -112,6 +135,12 @@ class OnboardingService {
         }
 
         await user.update({ isOnboarded: true });
+
+        // Trigger learning path generation (async - don't wait)
+        learningPathService.generateLearningPath(userId).catch(err => {
+            console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
+        });
+
         return prefs;
     }
 
