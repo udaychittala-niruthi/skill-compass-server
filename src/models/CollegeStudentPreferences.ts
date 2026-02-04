@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db";
 
-class UserPreferences extends Model {
+class CollegeStudentPreferences extends Model {
     declare id: number;
     declare userId: number;
     declare interestId: number;
@@ -10,7 +10,7 @@ class UserPreferences extends Model {
     declare branchId: number;
 }
 
-UserPreferences.init(
+CollegeStudentPreferences.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -41,9 +41,9 @@ UserPreferences.init(
     },
     {
         sequelize,
-        tableName: "user_preferences",
+        tableName: "college_student_preferences",
         timestamps: false,
     }
 );
 
-export default UserPreferences;
+export default CollegeStudentPreferences;

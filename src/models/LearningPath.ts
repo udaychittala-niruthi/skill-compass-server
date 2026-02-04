@@ -6,7 +6,7 @@ class LearningPath extends Model {
     declare name: string;
     declare path: any; // JSON type
     declare userId: number;
-    declare userPreferencesId: number;
+    declare collegeStudentPreferencesId: number;
 }
 
 LearningPath.init(
@@ -29,7 +29,7 @@ LearningPath.init(
             allowNull: false,
             unique: true,
         },
-        userPreferencesId: {
+        collegeStudentPreferencesId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             unique: true,

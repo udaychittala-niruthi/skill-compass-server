@@ -30,7 +30,7 @@ const authController = {
       );
 
       const userWithProgress = await User.findByPk(user.id, {
-        include: ["userPreferences"],
+        include: ["collegeStudentPreferences"],
       });
 
       // Convert to plain object to remove properties
@@ -49,12 +49,25 @@ const authController = {
 
   async register(req: Request, res: Response) {
     try {
-      const { name, email, password, dob } = req.body;
+      const { name, email, password, age } = req.body;
+
+      if (!age) {
+        return sendResponse(res, false, "Age is required", 400);
+      }
 
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
-        return sendResponse(res, false, "User already exists", 400);
+        return sendResponse(res, false, "User already exists", 409);
       }
+
+      // Determine User Group
+      const ageNum = Number(age);
+      let group;
+      if (ageNum < 13) group = "KIDS";
+      else if (ageNum <= 17) group = "TEENS";
+      else if (ageNum <= 25) group = "COLLEGE_STUDENTS";
+      else if (ageNum <= 60) group = "PROFESSIONALS";
+      else group = "SENIORS";
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -64,6 +77,8 @@ const authController = {
             name,
             email,
             password: hashedPassword,
+            age: ageNum,
+            group,
           },
           { transaction: t }
         );
@@ -78,7 +93,7 @@ const authController = {
       );
 
       const userWithProgress = await User.findByPk(newUser.id, {
-        include: ["userPreferences"],
+        include: ["collegeStudentPreferences"],
       });
 
       const userObj = userWithProgress?.toJSON() as any;

@@ -3,55 +3,55 @@ import User from "./User";
 import Interest from "./Interest";
 import Skill from "./Skill";
 import Course from "./Course";
-import UserPreferences from "./UserPreferences";
+import CollegeStudentPreferences from "./CollegeStudentPreferences";
 import LearningPath from "./LearningPath";
 
-// User - UserPreferences (One-to-One)
-User.hasOne(UserPreferences, {
+// User - CollegeStudentPreferences (One-to-One)
+User.hasOne(CollegeStudentPreferences, {
     foreignKey: "userId",
-    as: "userPreferences",
+    as: "collegeStudentPreferences",
 });
-UserPreferences.belongsTo(User, {
+CollegeStudentPreferences.belongsTo(User, {
     foreignKey: "userId",
     as: "user",
 });
 
-// UserPreferences - Interest
-Interest.hasMany(UserPreferences, {
+// CollegeStudentPreferences - Interest
+Interest.hasMany(CollegeStudentPreferences, {
     foreignKey: "interestId",
-    as: "userPreferences",
+    as: "collegeStudentPreferences",
 });
-UserPreferences.belongsTo(Interest, {
+CollegeStudentPreferences.belongsTo(Interest, {
     foreignKey: "interestId",
     as: "interest",
 });
 
-// UserPreferences - Skill
-Skill.hasMany(UserPreferences, {
+// CollegeStudentPreferences - Skill
+Skill.hasMany(CollegeStudentPreferences, {
     foreignKey: "skillId",
-    as: "userPreferences",
+    as: "collegeStudentPreferences",
 });
-UserPreferences.belongsTo(Skill, {
+CollegeStudentPreferences.belongsTo(Skill, {
     foreignKey: "skillId",
     as: "skill",
 });
 
-// UserPreferences - Course
-Course.hasMany(UserPreferences, {
+// CollegeStudentPreferences - Course
+Course.hasMany(CollegeStudentPreferences, {
     foreignKey: "courseId",
-    as: "userPreferences",
+    as: "collegeStudentPreferences",
 });
-UserPreferences.belongsTo(Course, {
+CollegeStudentPreferences.belongsTo(Course, {
     foreignKey: "courseId",
     as: "course",
 });
 
-// UserPreferences - Branches
-Branches.hasMany(UserPreferences, {
+// CollegeStudentPreferences - Branches
+Branches.hasMany(CollegeStudentPreferences, {
     foreignKey: "branchId",
-    as: "userPreferences",
+    as: "collegeStudentPreferences",
 });
-UserPreferences.belongsTo(Branches, {
+CollegeStudentPreferences.belongsTo(Branches, {
     foreignKey: "branchId",
     as: "branch",
 });
@@ -83,7 +83,7 @@ export {
     Interest,
     Skill,
     Course,
-    UserPreferences,
+    CollegeStudentPreferences,
     LearningPath,
     Branches,
 };

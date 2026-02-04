@@ -6,6 +6,8 @@ class User extends Model {
     declare name: string;
     declare password: string;
     declare email: string;
+    declare age: number;
+    declare group: "KIDS" | "TEENS" | "COLLEGE_STUDENTS" | "PROFESSIONALS" | "SENIORS";
     declare role: "USER" | "ADMIN";
 }
 
@@ -28,6 +30,14 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+        },
+        age: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        group: {
+            type: DataTypes.ENUM("KIDS", "TEENS", "COLLEGE_STUDENTS", "PROFESSIONALS", "SENIORS"),
+            allowNull: false,
         },
         role: {
             type: DataTypes.ENUM("USER", "ADMIN"),

@@ -1,6 +1,7 @@
 # Skill Compass Server
 
 ## Overview
+
 Skill Compass Server is the backend application for the Skill Compass platform, designed to guide users in their learning journeys based on their interests and skills. It provides a robust API for user authentication, profile management, and personalized learning path generation using AI integrations.
 
 ## Architecture
@@ -17,22 +18,23 @@ graph TD
 ```
 
 ### Key Components
--   **Core Backend**: Built with **Node.js** and **Express.js** (TypeScript). Handles API requests, authentication, and business logic.
--   **Database**: **PostgreSQL**, managed via **Sequelize ORM**. Stores users, courses, skills, and preferences.
--   **AI Integration**:
-    -   **Groq SDK**: Used for generating intelligent learning paths and content.
-    -   **CLIP Service**: Interacts with a separate Python FastAPI service for image comparison and analysis.
--   **Authentication**: Secure JWT-based authentication with Bcrypt for password hashing.
+
+- **Core Backend**: Built with **Node.js** and **Express.js** (TypeScript). Handles API requests, authentication, and business logic.
+- **Database**: **PostgreSQL**, managed via **Sequelize ORM**. Stores users, courses, skills, and preferences.
+- **AI Integration**:
+  - **Groq SDK**: Used for generating intelligent learning paths and content.
+  - **CLIP Service**: Interacts with a separate Python FastAPI service for image comparison and analysis.
+- **Authentication**: Secure JWT-based authentication with Bcrypt for password hashing.
 
 ## Tech Stack
 
--   **Runtime**: Node.js
--   **Language**: TypeScript
--   **Framework**: Express.js
--   **Database**: PostgreSQL
--   **ORM**: Sequelize
--   **AI/ML**: Groq SDK, CLIP (via external service)
--   **Utilities**: Multer (File Upload), Joi (Validation), Sharp/Jimp (Image Processing)
+- **Runtime**: Node.js
+- **Language**: TypeScript
+- **Framework**: Express.js
+- **Database**: PostgreSQL
+- **ORM**: Sequelize
+- **AI/ML**: Groq SDK, CLIP (via external service)
+- **Utilities**: Multer (File Upload), Joi (Validation), Sharp/Jimp (Image Processing)
 
 ## Folder Structure
 
@@ -58,24 +60,28 @@ skill-compass-server/
 ## Database Schema
 
 Key models include:
--   **User**: Stores user credentials and profile data.
--   **UserPreferences**: Links users to their interests, skills, and course choices.
--   **Course, Skill, Interest, Branches**: Core entities for the education graph.
--   **LearningPath**: Stores generated learning paths for users.
+
+- **User**: Stores user credentials, profile data, **age**, and **group**.
+  - *Groups*: `KIDS`, `TEENS`, `COLLEGE_STUDENTS`, `PROFESSIONALS`, `SENIORS` (assigned based on age).
+- **CollegeStudentPreferences**: Stores academic preferences (courses, branches) specifically for users in the `COLLEGE_STUDENTS` group.
+- **Course, Skill, Interest, Branches**: Core entities for the education graph.
+- **LearningPath**: Stores generated learning paths for users.
 
 Relationships are defined in `src/models/index.ts`.
 
 ## Getting Started
 
 ### Prerequisites
--   Node.js (v18+ recommended)
--   PostgreSQL
--   Python (for the associated FastAPI service, if running locally)
+
+- Node.js (v18+ recommended)
+- PostgreSQL
+- Python (for the associated FastAPI service, if running locally)
 
 ### Installation
 
-1.  **Clone the repository**
-2.  **Install dependencies**:
+1. **Clone the repository**
+2. **Install dependencies**:
+
     ```bash
     npm install
     ```
@@ -94,25 +100,29 @@ GROQ_API_KEY=your_groq_api_key
 
 ### Running the Server
 
--   **Development Mode**:
+- **Development Mode**:
+
     ```bash
     npm run dev
     ```
+
     (Uses `tsx` for hot-reloading)
 
--   **Production Build**:
+- **Production Build**:
+
     ```bash
     npm run build
     npm start
     ```
 
--   **Database Seeding**:
+- **Database Seeding**:
+
     ```bash
     npm run seed
     ```
 
 ## API Overview
 
--   **Auth**: `/api/auth` (Register, Login)
--   **Users**: `/api/users` (Profile management)
--   **CLIP**: `/api/clip` (Image comparison service)
+- **Auth**: `/api/auth` (Register, Login)
+- **Users**: `/api/users` (Profile management)
+- **CLIP**: `/api/clip` (Image comparison service)
