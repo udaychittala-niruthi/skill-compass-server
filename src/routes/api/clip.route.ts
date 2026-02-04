@@ -6,6 +6,7 @@ import {
 } from "../../controllers/clip.controller.js";
 
 import { authenticate } from "../../middleware/auth.middleware.js";
+import { accessMiddleware, requireAccess } from "../../middleware/access.middleware.js";
 
 const clipRoutes = Router();
 
@@ -13,6 +14,6 @@ const clipRoutes = Router();
 clipRoutes.get("/info", getApiInfo);
 
 // Compare images endpoint
-clipRoutes.post("/compare", authenticate, uploadImages, compareImages);
+clipRoutes.post("/compare", authenticate, accessMiddleware, requireAccess("canAccessClipModule"), uploadImages, compareImages);
 
 export default clipRoutes;

@@ -3,6 +3,7 @@ import { Router } from "express";
 import userRoutes from "./api/users.route.js";
 import clipRoutes from "./api/clip.route.js";
 import authRoutes from "./api/auth.route.js";
+import onboardingRoutes from "./api/onboarding.route.js";
 import { sendResponse } from "../utils/customResponse.js";
 
 const routes = Router();
@@ -14,6 +15,7 @@ routes.get("/", (re: Request, res: Response) => {
 routes.use("/users", userRoutes);
 routes.use("/auth", authRoutes);
 routes.use("/clip", clipRoutes);
+routes.use("/onboarding", onboardingRoutes);
 
 routes.use((req: Request, res: Response, next: NextFunction) => {
   sendResponse(res, false, `${req.url} is not found`, 404);

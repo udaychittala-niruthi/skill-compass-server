@@ -9,6 +9,7 @@ class User extends Model {
     declare age: number;
     declare group: "KIDS" | "TEENS" | "COLLEGE_STUDENTS" | "PROFESSIONALS" | "SENIORS";
     declare role: "USER" | "ADMIN";
+    declare isOnboarded: boolean;
 }
 
 User.init(
@@ -42,6 +43,10 @@ User.init(
         role: {
             type: DataTypes.ENUM("USER", "ADMIN"),
             defaultValue: "USER",
+        },
+        isOnboarded: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
     },
     {

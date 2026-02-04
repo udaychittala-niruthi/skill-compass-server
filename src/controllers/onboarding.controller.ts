@@ -1,0 +1,81 @@
+import { Request, Response } from "express";
+import { onboardingService } from "../services/onboarding.service";
+import { sendResponse } from "../utils/customResponse";
+
+export const onboardingController = {
+    async onboardKid(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const data = req.body;
+            const result = await onboardingService.onboardKid(userId, data);
+            return sendResponse(res, true, "Kid profile updated successfully", 200, result);
+        } catch (error: any) {
+            console.error("Onboarding Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    },
+
+    async onboardTeen(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const data = req.body;
+            const result = await onboardingService.onboardTeen(userId, data);
+            return sendResponse(res, true, "Teen interests updated successfully", 200, result);
+        } catch (error: any) {
+            console.error("Onboarding Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    },
+
+    async onboardStudent(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const data = req.body;
+            const result = await onboardingService.onboardStudent(userId, data);
+            return sendResponse(res, true, "Student details updated successfully", 200, result);
+        } catch (error: any) {
+            console.error("Onboarding Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    },
+
+    async predictStudentCourse(req: Request, res: Response) {
+        // Placeholder for prediction logic
+        return sendResponse(res, true, "Course prediction not implemented yet", 200, {});
+    },
+
+    async onboardProfessional(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const data = req.body;
+            const result = await onboardingService.onboardProfessional(userId, data);
+            return sendResponse(res, true, "Professional details updated successfully", 200, result);
+        } catch (error: any) {
+            console.error("Onboarding Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    },
+
+    async onboardSenior(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const data = req.body;
+            const result = await onboardingService.onboardSenior(userId, data);
+            return sendResponse(res, true, "Senior details updated successfully", 200, result);
+        } catch (error: any) {
+            console.error("Onboarding Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    },
+
+    async checkStatus(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const status = await onboardingService.getOnboardingStatus(userId);
+            return sendResponse(res, true, "Onboarding status retrieved", 200, status);
+        } catch (error: any) {
+            console.error("Status Check Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    }
+};

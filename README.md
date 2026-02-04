@@ -57,17 +57,39 @@ skill-compass-server/
 └── package.json        # Dependencies and Scripts
 ```
 
-## Database Schema
+## Domain Model & Database Schema
 
-Key models include:
+The comprehensive data model supports the platform's personalized learning features.
 
-- **User**: Stores user credentials, profile data, **age**, and **group**.
-  - *Groups*: `KIDS`, `TEENS`, `COLLEGE_STUDENTS`, `PROFESSIONALS`, `SENIORS` (assigned based on age).
-- **CollegeStudentPreferences**: Stores academic preferences (courses, branches) specifically for users in the `COLLEGE_STUDENTS` group.
-- **Course, Skill, Interest, Branches**: Core entities for the education graph.
-- **LearningPath**: Stores generated learning paths for users.
+### 1. User & Profiles
 
-Relationships are defined in `src/models/index.ts`.
+- **User**: Core identity managing credentials, authentication, age, and broad user groups (`KIDS`, `TEENS`, `COLLEGE_STUDENTS`, `PROFESSIONALS`, `SENIORS`).
+- **UserPortfolio**: A public-facing profile showcasing a user's `headline`, `bio`, `skillsShowcase`, `featuredWork` (assessments), and `achievements`.
+- **UserPreferences**: Stores detailed preferences including arrays of `Interests` and `Skills`, as well as `Courses` and `Branches`. Detailed metadata for `COLLEGE_STUDENTS` is managed here or in related specialized tables.
+
+### 2. Educational Content Structure
+
+- **Course**: A high-level educational program.
+- **LearningModule**: Atomic units of learning content within a course.
+  - *Types*: `micro-lesson`, `project`, `assessment`, `certification`, `workshop`, `reading`.
+  - *Formats*: `video`, `article`, `interactive`, `quiz`, etc.
+- **Assessment**: Evaluative components like quizzes, exams, or projects.
+  - *Status*: Tracks if an assessment is `not-started`, `in-progress`, `submitted`, `graded`, etc.
+- **Certification**: Official certifications available to be earned.
+- **Skill** & **Interest**: Tagging entities to connect users with relevant content.
+- **Branches**: Academic branches (e.g., CSE, ECE) linked to courses.
+
+### 3. Progress Tracking
+
+- **LearningPath**: A personalized sequence of modules and courses generated for a user.
+- **LearningSchedule**: Time-based planning entities to help users manage their learning pace.
+- **UserModuleProgress**: Tracks granular progress (completion status, time spent) on specific `LearningModules`.
+- **UserCertification**: Tracks a user's journey towards a certification (`interested`, `preparing`, `scheduled`, `passed`, `failed`).
+- **AiAnalysis**: Stores AI-generated insights such as `skill-gap` analysis, `career-path` recommendations, and `study-plan` suggestions.
+
+### Relations
+
+Relationships are strictly defined in `src/models/index.ts` using Sequelize associations.
 
 ## Getting Started
 

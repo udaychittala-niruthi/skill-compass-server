@@ -1,4 +1,4 @@
-import { Course, Branches } from "../models";
+import { Course, Branches, Op } from "../models";
 import { getJsonCompletion } from "../services/groq";
 
 interface BranchData {
@@ -14,10 +14,22 @@ const BranchesSeeder = async () => {
     try {
         console.log("🌱 Seeding Branches...");
 
-        const courses = await Course.findAll();
+        //find all courses where branches does not have the courseids
+
+        const coursesWithBranches = await Branches.findAll({
+            attributes: ["courseId"],
+        });
+
+        const courses = await Course.findAll({
+            where: {
+                id: {
+                    [Op.notIn]: coursesWithBranches.map((branch) => branch.courseId),
+                },
+            },
+        });
 
         if (courses.length === 0) {
-            console.log("⚠️ No courses found. Skipping branches seeding.");
+            console.log("⚠️ All courses already have branches. Skipping branches seeding.");
             return;
         }
 
