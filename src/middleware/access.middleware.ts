@@ -49,3 +49,26 @@ export const requireAccess = (permission: keyof ServiceAccess) => {
         next();
     };
 };
+
+// Helper to enforce group restrictions
+export const requireGroup = (...allowedGroups: Array<'KIDS' | 'TEENS' | 'COLLEGE_STUDENTS' | 'PROFESSIONALS' | 'SENIORS'>) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const user = req.user as any;
+
+        if (!user || !user.group) {
+            return res.status(403).json({
+                status: false,
+                message: "Access denied: User group not found."
+            });
+        }
+
+        if (!allowedGroups.includes(user.group)) {
+            return res.status(403).json({
+                status: false,
+                message: `Access denied: This endpoint is only available for ${allowedGroups.join(', ')} users.`
+            });
+        }
+
+        next();
+    };
+};

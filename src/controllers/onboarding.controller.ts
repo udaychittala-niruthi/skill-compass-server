@@ -39,11 +39,6 @@ export const onboardingController = {
         }
     },
 
-    async predictStudentCourse(req: Request, res: Response) {
-        // Placeholder for prediction logic
-        return sendResponse(res, true, "Course prediction not implemented yet", 200, {});
-    },
-
     async onboardProfessional(req: Request, res: Response) {
         try {
             const userId = (req as any).user.id;

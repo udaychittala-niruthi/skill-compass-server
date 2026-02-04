@@ -4,6 +4,7 @@ import userRoutes from "./api/users.route.js";
 import clipRoutes from "./api/clip.route.js";
 import authRoutes from "./api/auth.route.js";
 import onboardingRoutes from "./api/onboarding.route.js";
+import commonRoutes from "./api/common.route.js";
 import { sendResponse } from "../utils/customResponse.js";
 
 const routes = Router();
@@ -16,6 +17,7 @@ routes.use("/users", userRoutes);
 routes.use("/auth", authRoutes);
 routes.use("/clip", clipRoutes);
 routes.use("/onboarding", onboardingRoutes);
+routes.use("/common", commonRoutes);
 
 routes.use((req: Request, res: Response, next: NextFunction) => {
   sendResponse(res, false, `${req.url} is not found`, 404);

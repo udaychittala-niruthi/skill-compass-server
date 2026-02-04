@@ -1,0 +1,446 @@
+{
+    "info": {
+        "_postman_id": "skill-compass-collection",
+        "name": "Skill Compass APIs",
+        "description": "Collection of APIs for Skill Compass application, specifically handling Authentication and User Onboarding flows.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Register",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.status && jsonData.body && jsonData.body.token) {",
+                                    "    pm.collectionVariables.set(\"token\", jsonData.body.token);",
+                                    "    console.log(\"Token set automatically\");",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"testuser_{{$randomInt}}@example.com\",\n    \"password\": \"password123\",\n    \"age\": 25\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.status && jsonData.body && jsonData.body.token) {",
+                                    "    pm.collectionVariables.set(\"token\", jsonData.body.token);",
+                                    "    console.log(\"Token set automatically\");",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"password123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Onboarding",
+            "item": [
+                {
+                    "name": "Check Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "status"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Onboard Kid",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"avatar\": \"superhero_1.png\",\n    \"bio\": \"I love coding games!\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/kids/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "kids",
+                                "profile"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Onboard Teen",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"interestIds\": [1, 2],\n    \"skillIds\": [1],\n    \"bio\": \"Interested in web dev.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/teens/interests",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "teens",
+                                "interests"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Onboard Student",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"courseId\": 1,\n    \"branchId\": 1,\n    \"skills\": [1, 3],\n    \"bio\": \"CS Student\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/students/details",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "students",
+                                "details"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Onboard Professional",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"currentRole\": \"Software Engineer\",\n    \"industry\": \"Tech\",\n    \"yearsOfExperience\": 5,\n    \"skills\": [1, 4],\n    \"bio\": \"Full stack dev\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/professionals/details",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "professionals",
+                                "details"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Onboard Senior",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"interestIds\": [3],\n    \"bio\": \"Learning basic computer skills\",\n    \"accessibilitySettings\": { \"fontSize\": \"large\" }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/seniors/details",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "seniors",
+                                "details"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": []
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Common & Prediction",
+            "item": [
+                {
+                    "name": "Get Interests",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/common/interests",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "common",
+                                "interests"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Skills",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/common/skills",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "common",
+                                "skills"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Courses",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/common/courses",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "common",
+                                "courses"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Branches (for Course 1)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/common/courses/1/branches",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "common",
+                                "courses",
+                                "1",
+                                "branches"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Predict Course",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"interestIds\": [1, 2],\n    \"skillIds\": [1]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/common/predict/course",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "common",
+                                "predict",
+                                "course"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Predict Branch",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"interestIds\": [1, 2],\n    \"skillIds\": [1],\n    \"courseId\": 1\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/common/predict/branch",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "common",
+                                "predict",
+                                "branch"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "event": []
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:5003/api",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}

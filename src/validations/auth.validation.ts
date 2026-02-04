@@ -12,6 +12,7 @@ export const registerSchema = Joi.object({
     "string.empty": "Password is required",
     "string.min": "Password must be at least 6 characters long",
   }),
+  age: Joi.number().required(),
   dob: Joi.date().iso().optional().messages({
     "date.format": "Invalid date format, use ISO string (YYYY-MM-DD)",
   }),

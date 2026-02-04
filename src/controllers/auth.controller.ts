@@ -30,7 +30,7 @@ const authController = {
       );
 
       const userWithProgress = await User.findByPk(user.id, {
-        include: ["collegeStudentPreferences"],
+        include: ["preferences"],
       });
 
       // Convert to plain object to remove properties
@@ -93,7 +93,7 @@ const authController = {
       );
 
       const userWithProgress = await User.findByPk(newUser.id, {
-        include: ["collegeStudentPreferences"],
+        include: ["preferences"],
       });
 
       const userObj = userWithProgress?.toJSON() as any;
