@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserModuleProgress } from "../models";
+import { UserModuleProgress, Op } from "../models";
 import { sendResponse } from "../utils/customResponse";
 
 export const learningProgressController = {
@@ -127,6 +127,29 @@ export const learningProgressController = {
                     progressData,
                     completedAt: status === "completed" ? new Date() : progress.completedAt,
                 });
+            }
+
+            // Update module quality metrics for reuse algorithm
+            try {
+                const { LearningModule } = await import("../models");
+                if (status === "completed") {
+                    await LearningModule.increment("completionCount", { where: { id: moduleId } });
+                }
+                if (rating !== undefined) {
+                    const allRatings = await UserModuleProgress.findAll({
+                        where: { moduleId, rating: { [Op.not]: null } },
+                        attributes: ["rating"],
+                    });
+                    if (allRatings.length > 0) {
+                        const avg = allRatings.reduce((sum, p) => sum + (p.rating || 0), 0) / allRatings.length;
+                        await LearningModule.update(
+                            { averageRating: parseFloat(avg.toFixed(2)) },
+                            { where: { id: moduleId } }
+                        );
+                    }
+                }
+            } catch (e) {
+                console.error("[Quality Update] Error:", e);
             }
 
             return sendResponse(res, true, "Module progress updated successfully", 200, progress);

@@ -8,12 +8,28 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // Default model to use.
 const DEFAULT_MODEL = "llama-3.3-70b-versatile";
 
-// Fallback models in order of preference
-const FALLBACK_MODELS = [
+// Hardcoded fallback models as a safety net (from user input)
+const STATIC_FALLBACK_MODELS = [
+    "openai/gpt-oss-20b",
+    "moonshotai/kimi-k2-instruct-0905",
+    "meta-llama/llama-guard-4-12b",
+    "qwen/qwen3-32b",
+    "openai/gpt-oss-120b",
+    "groq/compound",
+    "groq/compound-mini",
+    "meta-llama/llama-prompt-guard-2-22m",
+    "openai/gpt-oss-safeguard-20b",
+    "meta-llama/llama-4-maverick-17b-128e-instruct",
+    "meta-llama/llama-prompt-guard-2-86m",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+    "whisper-large-v3-turbo",
+    "allam-2-7b",
+    "canopylabs/orpheus-arabic-saudi",
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
-    "mixtral-8x7b-32768",
-    "gemma2-9b-it"
+    "moonshotai/kimi-k2-instruct",
+    "canopylabs/orpheus-v1-english",
+    "whisper-large-v3"
 ];
 
 export interface GroqCompletionOptions {
@@ -23,6 +39,38 @@ export interface GroqCompletionOptions {
     systemPrompt?: string;
 }
 
+let cachedModels: string[] = [];
+let lastFetchTime = 0;
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+/**
+ * Fetches available models from Groq API or returns cached/static list.
+ */
+async function getAvailableModels(): Promise<string[]> {
+    const now = Date.now();
+    if (cachedModels.length > 0 && (now - lastFetchTime < CACHE_TTL_MS)) {
+        return cachedModels;
+    }
+
+    try {
+        const list = await groq.models.list();
+        const models = list.data
+            .map((m: any) => m.id)
+            .filter((id: string) => typeof id === 'string');
+
+        if (models.length > 0) {
+            cachedModels = models;
+            lastFetchTime = now;
+            console.log(`Fetched ${models.length} models from Groq API.`);
+            return models;
+        }
+    } catch (error) {
+        console.warn("Failed to fetch models from Groq API, using static fallback:", error);
+    }
+
+    return STATIC_FALLBACK_MODELS;
+}
+
 /**
  * Helper to retry an operation with fallback models on rate limit errors.
  */
@@ -30,9 +78,12 @@ async function withModelFallback<T>(
     operation: (model: string) => Promise<T>,
     preferredModel: string = DEFAULT_MODEL
 ): Promise<T> {
+    const availableModels = await getAvailableModels();
+
+    // Ensure preferred model is first, then unique available models (excluding preferred)
     const modelsToTry = [
         preferredModel,
-        ...FALLBACK_MODELS.filter(m => m !== preferredModel)
+        ...availableModels.filter(m => m !== preferredModel)
     ];
 
     let lastError: any;
