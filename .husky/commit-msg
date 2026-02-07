@@ -1,1 +1,14 @@
-npx --no -- commitlint --edit $1
+if ! npx --no -- commitlint --edit $1; then
+  echo ""
+  echo "❌  COMMIT FAILED: Message format invalid"
+  echo "----------------------------------------------------"
+  echo "Please use Conventional Commits format:"
+  echo "  type(scope): subject"
+  echo ""
+  echo "Examples:"
+  echo "  feat: add new login api"
+  echo "  fix: resolve validation error"
+  echo "  chore: update dependencies"
+  echo "----------------------------------------------------"
+  exit 1
+fi
