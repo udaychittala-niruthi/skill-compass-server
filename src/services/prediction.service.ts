@@ -43,9 +43,9 @@ class PredictionService {
 
         // 2. Construct Prompt
         const prompt = `
-        Match the user's profile to the top 3 most suitable courses from the provided list.
+        Match the following profile to the top 3 most suitable courses from the provided list.
         
-        User Profile:
+        Your Profile:
         - Interests: [${interestNames}]
         - Skills: [${skillNames}]
 
@@ -125,10 +125,10 @@ class PredictionService {
         const branchMap = branches.map((b) => ({ id: b.id, name: b.name }));
 
         const prompt = `
-        User has selected course: "${course.name}".
-        Rank the top 3 branches/specializations for this user based on their profile.
+        You have selected course: "${course.name}".
+        Rank the top 3 branches/specializations based on your profile.
         
-        User Profile:
+        Your Profile:
         - Interests: [${interestNames}]
         - Skills: [${skillNames}]
 

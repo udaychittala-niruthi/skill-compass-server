@@ -8,28 +8,20 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // Default model to use.
 const DEFAULT_MODEL = "llama-3.3-70b-versatile";
 
-// Hardcoded fallback models as a safety net (from user input)
+// Hardcoded fallback models for CHAT COMPLETIONS ONLY (no audio/whisper models)
 const STATIC_FALLBACK_MODELS = [
-    "openai/gpt-oss-20b",
-    "moonshotai/kimi-k2-instruct-0905",
-    "meta-llama/llama-guard-4-12b",
-    "qwen/qwen3-32b",
-    "openai/gpt-oss-120b",
-    "groq/compound",
-    "groq/compound-mini",
-    "meta-llama/llama-prompt-guard-2-22m",
-    "openai/gpt-oss-safeguard-20b",
-    "meta-llama/llama-4-maverick-17b-128e-instruct",
-    "meta-llama/llama-prompt-guard-2-86m",
-    "meta-llama/llama-4-scout-17b-16e-instruct",
-    "whisper-large-v3-turbo",
-    "allam-2-7b",
-    "canopylabs/orpheus-arabic-saudi",
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
+    "qwen/qwen3-32b",
+    "meta-llama/llama-4-maverick-17b-128e-instruct",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+    "groq/compound",
+    "groq/compound-mini",
+    "moonshotai/kimi-k2-instruct-0905",
     "moonshotai/kimi-k2-instruct",
-    "canopylabs/orpheus-v1-english",
-    "whisper-large-v3"
+    "allam-2-7b"
+    // Excluded: whisper-large-v3-turbo, whisper-large-v3 (audio models, not chat)
+    // Excluded: llama-guard, llama-prompt-guard, orpheus (specialized models)
 ];
 
 export interface GroqCompletionOptions {
@@ -87,16 +79,18 @@ async function withModelFallback<T>(
         try {
             return await operation(model);
         } catch (error: any) {
-            console.warn(`Groq request failed with model ${model}:`, error.message);
+            console.warn(`Groq request failed with model ${model}:`, error.status, error.message);
             lastError = error;
 
-            const isRateLimit =
-                error?.status === 429 ||
+            const isRetryable =
+                error?.status === 429 || // Rate limit
+                error?.status === 400 || // Bad request (e.g., model doesn't support chat)
+                error?.status === 503 || // Service unavailable
                 error?.code === "rate_limit_exceeded" ||
-                (error?.message && error.message.includes("429"));
+                (error?.message && (error.message.includes("429") || error.message.includes("does not support")));
 
-            if (isRateLimit) {
-                console.log(`Switching to next model due to rate limit...`);
+            if (isRetryable) {
+                console.log(`Switching to next model due to error (${error?.status || "unknown"})...`);
                 continue; // Try next model
             }
 
