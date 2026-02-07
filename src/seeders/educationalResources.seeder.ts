@@ -5,7 +5,7 @@ import EducationalResource from "../models/EducationalResource";
  * Seeds curated learning resources with keywords for matching modules
  */
 export class EducationalResourcesSeeder {
-    async seed() {
+    async seed(_sequelize: any, transaction?: any) {
         console.log("🌱 Seeding educational resources...");
 
         const resources = [
@@ -348,13 +348,13 @@ export class EducationalResourcesSeeder {
         ];
 
         //Check if already seeded
-        const count = await EducationalResource.count();
+        const count = await EducationalResource.count({ transaction });
         if (count > 0) {
             console.log(`✓ Educational resources already seeded (${count} resources)`);
             return;
         }
 
-        await EducationalResource.bulkCreate(resources);
+        await EducationalResource.bulkCreate(resources, { transaction });
         console.log(`✓ Seeded ${resources.length} educational resources`);
     }
 }

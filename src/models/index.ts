@@ -23,19 +23,19 @@ UserPreferences.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // UserPreferences.interestIds and UserPreferences.skillIds are arrays, so no standard SQL association here
 // We can handle lookups manually or via utility functions
-UserPreferences.belongsTo(Course, { foreignKey: "courseId", as: "course" });
-UserPreferences.belongsTo(Branches, { foreignKey: "branchId", as: "branch" });
+UserPreferences.belongsTo(Course, { foreignKey: "courseId", as: "course", onDelete: "SET NULL" });
+UserPreferences.belongsTo(Branches, { foreignKey: "branchId", as: "branch", onDelete: "SET NULL" });
 
 // 2. LEARNING MODULES
-LearningModule.belongsTo(Course, { foreignKey: "courseId", as: "course" });
-Course.hasMany(LearningModule, { foreignKey: "courseId", as: "modules" });
+LearningModule.belongsTo(Course, { foreignKey: "courseId", as: "course", onDelete: "CASCADE" });
+Course.hasMany(LearningModule, { foreignKey: "courseId", as: "modules", onDelete: "CASCADE" });
 
 // 3. USER MODULE PROGRESS
 User.hasMany(UserModuleProgress, { foreignKey: "userId", as: "moduleProgress" });
 UserModuleProgress.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-LearningModule.hasMany(UserModuleProgress, { foreignKey: "moduleId", as: "userProgress" });
-UserModuleProgress.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module" });
+LearningModule.hasMany(UserModuleProgress, { foreignKey: "moduleId", as: "userProgress", onDelete: "CASCADE" });
+UserModuleProgress.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
 
 // 4. LEARNING PATHS
 User.hasOne(LearningPath, { foreignKey: "userId", as: "learningPath" });
@@ -58,8 +58,8 @@ LearningModule.belongsTo(LearningPath, { foreignKey: "learningPathId", as: "lear
 User.hasMany(Assessment, { foreignKey: "userId", as: "assessments" });
 Assessment.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-LearningModule.hasMany(Assessment, { foreignKey: "moduleId", as: "assessments" });
-Assessment.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module" });
+LearningModule.hasMany(Assessment, { foreignKey: "moduleId", as: "assessments", onDelete: "CASCADE" });
+Assessment.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
 
 // 6. CERTIFICATIONS (Catalog) - No direct user relation, mostly static
 
@@ -88,11 +88,13 @@ AiAnalysis.belongsTo(User, { foreignKey: "userId", as: "user" });
 // Existing Course - Branches relation
 Course.hasMany(Branches, {
     foreignKey: "courseId",
-    as: "branches"
+    as: "branches",
+    onDelete: "CASCADE"
 });
 Branches.belongsTo(Course, {
     foreignKey: "courseId",
-    as: "course"
+    as: "course",
+    onDelete: "CASCADE"
 });
 
 export {

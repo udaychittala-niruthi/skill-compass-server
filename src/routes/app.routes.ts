@@ -8,6 +8,7 @@ import commonRoutes from "./api/common.route.js";
 import learningPathRoutes from "./api/learningPath.routes.js";
 import learningProgressRoutes from "./api/learningProgress.routes.js";
 import learningScheduleRoutes from "./api/learningSchedule.routes.js";
+import adminRoutes from "./api/admin.route.js";
 import { sendResponse } from "../utils/customResponse.js";
 
 const routes = Router();
@@ -24,6 +25,7 @@ routes.use("/common", commonRoutes);
 routes.use("/learning-path", learningPathRoutes);
 routes.use("/learning-progress", learningProgressRoutes);
 routes.use("/learning-schedule", learningScheduleRoutes);
+routes.use("/admin", adminRoutes);
 
 routes.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     sendResponse(res, false, `${req.url} is not found`, 404);

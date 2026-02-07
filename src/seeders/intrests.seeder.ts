@@ -73,12 +73,12 @@ import { resolveIconsAndGenerateNew } from "./utils";
 
 // ... interests array ...
 
-const InterestSeeder = async (_sequelize: any) => {
+const InterestSeeder = async (_sequelize: any, transaction?: any) => {
     console.log("Creating Interests...");
 
     try {
         // 1. Fetch current DB state
-        const existingDbInterests = await Interest.findAll();
+        const existingDbInterests = await Interest.findAll({ transaction });
         const dbInterestMap = new Map(existingDbInterests.map((i) => [i.name.toLowerCase(), i]));
 
         const itemsToEnrich: string[] = [];
@@ -114,7 +114,8 @@ const InterestSeeder = async (_sequelize: any) => {
                     name: item.name,
                     icon: item.icon,
                     iconLibrary: item.iconLibrary
-                }
+                },
+                transaction
             });
 
             if (wasCreated) {
@@ -124,10 +125,13 @@ const InterestSeeder = async (_sequelize: any) => {
                     interestRecord.getDataValue("icon") !== item.icon ||
                     interestRecord.getDataValue("iconLibrary") !== item.iconLibrary
                 ) {
-                    await interestRecord.update({
-                        icon: item.icon,
-                        iconLibrary: item.iconLibrary
-                    });
+                    await interestRecord.update(
+                        {
+                            icon: item.icon,
+                            iconLibrary: item.iconLibrary
+                        },
+                        { transaction }
+                    );
                     updated++;
                 }
             }

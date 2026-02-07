@@ -1,5 +1,5 @@
-import { Course, Skill, Interest } from "../models";
-import { resolveCoursesAndGenerateNew } from "./utils";
+import { aiGenerateService, SyncCourseInput } from "../services/aiGenerate.service";
+import { Course, Op } from "../models";
 
 const courses: Record<string, string> = {
     BE: "TECH",
@@ -50,85 +50,68 @@ const courses: Record<string, string> = {
     Degree: "DIPLOMA"
 };
 
-const CourseSeeder = async (_sequelize: any) => {
-    console.log("Creating Courses...");
+const CourseSeeder = async (_sequelize: any, transaction?: any) => {
+    console.log("Syncing Courses via AI Generate Service...");
 
     try {
-        // 1. Fetch Context (Skills & Interests)
-        const allSkills = await Skill.findAll({ attributes: ["name"] });
-        const allInterests = await Interest.findAll({ attributes: ["name"] });
-        const skillNames = allSkills.map((s) => s.name);
-        const interestNames = allInterests.map((i) => i.name);
+        const inputCourseNames = Object.keys(courses);
 
-        // 2. Fetch existing courses
-        const existingDbCourses = await Course.findAll();
-        const dbCourseMap = new Map(existingDbCourses.map((c) => [c.name.toLowerCase(), c]));
-
-        const itemsToEnrich: { name: string; category: string }[] = [];
-        const knownNames: string[] = Object.keys(courses);
-
-        // 3. Determine items from hardcoded list that need enrichment
-        for (const [name, category] of Object.entries(courses)) {
-            const dbCourse = dbCourseMap.get(name.toLowerCase());
-            if (dbCourse) {
-                if (!dbCourse.getDataValue("icon") || !dbCourse.getDataValue("iconLibrary")) {
-                    itemsToEnrich.push({ name, category });
+        // 1. Delete courses that are not in the predefined list
+        const deletedCount = await Course.destroy({
+            where: {
+                name: {
+                    [Op.notIn]: inputCourseNames
                 }
-            } else {
-                itemsToEnrich.push({ name, category });
-            }
+            },
+            transaction
+        });
+
+        if (deletedCount > 0) {
+            console.log(`🗑️ Deleted ${deletedCount} stale courses.`);
         }
 
-        existingDbCourses.forEach((c) => knownNames.push(c.name));
+        const inputCourses: SyncCourseInput[] = Object.entries(courses).map(([name, category]) => ({
+            name,
+            category
+        }));
 
-        console.log(`Found ${itemsToEnrich.length} hardcoded courses to enrich/create.`);
+        const results = await aiGenerateService.enrichCourseIcons(inputCourses);
+        let createdCount = 0;
+        let updatedCount = 0;
 
-        // 4. Resolve and Generate
-        // Generate 15 new courses based on context
-        const processedCourses = await resolveCoursesAndGenerateNew(
-            itemsToEnrich,
-            knownNames,
-            skillNames,
-            interestNames,
-            15
-        );
-
-        // 5. Upsert
-        let created = 0;
-        let updated = 0;
-
-        for (const item of processedCourses) {
+        for (const item of results) {
             const [course, wasCreated] = await Course.findOrCreate({
                 where: { name: item.name },
                 defaults: {
                     name: item.name,
                     category: item.category,
-                    icon: item.icon,
-                    iconLibrary: item.iconLibrary
-                }
+                    icon: item.icon ?? null,
+                    iconLibrary: item.iconLibrary ?? null
+                },
+                transaction
             });
 
             if (wasCreated) {
-                created++;
+                createdCount++;
             } else {
-                if (
-                    course.getDataValue("icon") !== item.icon ||
-                    course.getDataValue("iconLibrary") !== item.iconLibrary
-                ) {
-                    await course.update({
-                        icon: item.icon,
-                        iconLibrary: item.iconLibrary
-                    });
-                    updated++;
-                }
+                // Update existing record
+                course.category = item.category;
+                course.icon = item.icon ?? null;
+                course.iconLibrary = item.iconLibrary ?? null;
+                await course.save({ transaction });
+                updatedCount++;
             }
         }
 
         console.log(
-            `✅  Courses seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${Object.keys(courses).length - itemsToEnrich.length} up-to-date hardcoded items.`
+            `✅ Courses synchronization completed:
+            Created: ${createdCount}
+            Updated: ${updatedCount}
+            Removed: ${deletedCount}
+        `
         );
     } catch (error) {
-        console.error("❌  Error seeding courses:", error);
+        console.error("❌ Error syncing courses in seeder:", error);
         throw error;
     }
 };

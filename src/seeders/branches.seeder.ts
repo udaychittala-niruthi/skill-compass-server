@@ -10,30 +10,13 @@ interface BranchesResponse {
     branches: BranchData[];
 }
 
-const BranchesSeeder = async () => {
+const BranchesSeeder = async (_sequelize: any, transaction?: any) => {
     try {
         console.log("🌱 Seeding Branches...");
 
-        //find all courses where branches does not have the courseids
-
-        const coursesWithBranches = await Branches.findAll({
-            attributes: ["courseId"]
-        });
-
-        const courses = await Course.findAll({
-            where: {
-                id: {
-                    [Op.notIn]: coursesWithBranches.map((branch) => branch.courseId)
-                }
-            }
-        });
+        const courses = await Course.findAll({ transaction });
 
         console.log(`Found ${courses.length} courses needing branches.`);
-
-        if (courses.length === 0) {
-            console.log("⚠️ All courses already have branches. Skipping branches seeding.");
-            return;
-        }
 
         for (const course of courses) {
             console.log(`Processing course: ${course.name} (${course.category})...`);
@@ -79,19 +62,52 @@ const BranchesSeeder = async () => {
                 });
 
                 if (response && response.branches && Array.isArray(response.branches)) {
-                    const branchesToInsert = response.branches.map((branch) => ({
-                        ...branch,
-                        courseId: course.id
-                    }));
+                    const generatedBranchNames = response.branches.map((b) => b.name);
 
-                    if (branchesToInsert.length > 0) {
-                        await Branches.bulkCreate(branchesToInsert, {
-                            ignoreDuplicates: true // Prevent duplicate errors if re-run
-                        });
-                        console.log(`✅ Added ${branchesToInsert.length} branches for ${course.name}`);
-                    } else {
-                        console.log(`ℹ️ No branches generated for ${course.name}`);
+                    // 1. Delete stale branches for this course
+                    const deletedCount = await Branches.destroy({
+                        where: {
+                            courseId: course.id,
+                            name: {
+                                [Op.notIn]: generatedBranchNames
+                            }
+                        },
+                        transaction
+                    });
+
+                    if (deletedCount > 0) {
+                        console.log(`🗑️ Deleted ${deletedCount} stale branches for ${course.name}`);
                     }
+
+                    // 2. Upsert generated branches
+                    let updatedCount = 0;
+                    let createdCount = 0;
+
+                    for (const branchData of response.branches) {
+                        const [branch, wasCreated] = await Branches.findOrCreate({
+                            where: {
+                                courseId: course.id,
+                                name: branchData.name
+                            },
+                            defaults: {
+                                ...branchData,
+                                courseId: course.id
+                            },
+                            transaction
+                        });
+
+                        if (wasCreated) {
+                            createdCount++;
+                        } else {
+                            branch.shortName = branchData.shortName;
+                            await branch.save({ transaction });
+                            updatedCount++;
+                        }
+                    }
+
+                    console.log(
+                        `✅ ${course.name}: Created ${createdCount}, Updated ${updatedCount}, Removed ${deletedCount}`
+                    );
                 } else {
                     console.error(`❌ Invalid response format for course ${course.name}:`, response);
                 }

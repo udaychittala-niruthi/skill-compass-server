@@ -145,12 +145,12 @@ const skills = [
     "no"
 ];
 
-const SkillSeeder = async (_sequelize: any) => {
+const SkillSeeder = async (_sequelize: any, transaction?: any) => {
     console.log("Creating Skills...");
 
     try {
         // 1. Fetch current DB state
-        const existingDbSkills = await Skill.findAll();
+        const existingDbSkills = await Skill.findAll({ transaction });
         const dbSkillMap = new Map(existingDbSkills.map((s) => [s.name.toLowerCase(), s]));
 
         const itemsToEnrich: string[] = [];
@@ -192,7 +192,8 @@ const SkillSeeder = async (_sequelize: any) => {
                     name: item.name,
                     icon: item.icon,
                     iconLibrary: item.iconLibrary
-                }
+                },
+                transaction
             });
 
             if (wasCreated) {
@@ -203,10 +204,13 @@ const SkillSeeder = async (_sequelize: any) => {
                     skillRecord.getDataValue("icon") !== item.icon ||
                     skillRecord.getDataValue("iconLibrary") !== item.iconLibrary
                 ) {
-                    await skillRecord.update({
-                        icon: item.icon,
-                        iconLibrary: item.iconLibrary
-                    });
+                    await skillRecord.update(
+                        {
+                            icon: item.icon,
+                            iconLibrary: item.iconLibrary
+                        },
+                        { transaction }
+                    );
                     updated++;
                 }
             }
