@@ -11,25 +11,25 @@ Skill.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         icon: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         iconLibrary: {
             type: DataTypes.STRING,
-            allowNull: true,
-        },
+            allowNull: true
+        }
     },
     {
         sequelize,
         tableName: "skills",
-        timestamps: false,
+        timestamps: false
     }
 );
 

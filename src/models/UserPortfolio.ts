@@ -20,7 +20,7 @@ UserPortfolio.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
@@ -28,51 +28,51 @@ UserPortfolio.init(
             unique: true,
             references: {
                 model: "users",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         headline: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         bio: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         profileImageUrl: {
             type: DataTypes.STRING(500),
-            allowNull: true,
+            allowNull: true
         },
         links: {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         },
         skillsShowcase: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            defaultValue: [],
+            defaultValue: []
         },
         featuredWork: {
             type: DataTypes.ARRAY(DataTypes.INTEGER),
-            defaultValue: [],
+            defaultValue: []
         },
         achievements: {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         },
         isPublic: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false,
+            defaultValue: false
         },
         shareableSlug: {
             type: DataTypes.STRING(100),
             unique: true,
-            allowNull: true,
-        },
+            allowNull: true
+        }
     },
     {
         sequelize,
         tableName: "user_portfolios",
-        timestamps: true,
+        timestamps: true
     }
 );
 

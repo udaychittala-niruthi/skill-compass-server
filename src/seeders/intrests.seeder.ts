@@ -1,5 +1,4 @@
-import { Interest, sequelize } from "../models";
-import { Sequelize } from "sequelize";
+import { Interest } from "../models";
 
 const interests = [
     "cloud computing",
@@ -67,20 +66,20 @@ const interests = [
     "animation",
     "all fields related to data science",
     "analysis",
-    "architecture and construction",
+    "architecture and construction"
 ];
 
 import { resolveIconsAndGenerateNew } from "./utils";
 
 // ... interests array ...
 
-const InterestSeeder = async (sequelize: Sequelize) => {
+const InterestSeeder = async (_sequelize: any) => {
     console.log("Creating Interests...");
 
     try {
         // 1. Fetch current DB state
         const existingDbInterests = await Interest.findAll();
-        const dbInterestMap = new Map(existingDbInterests.map(i => [i.name.toLowerCase(), i]));
+        const dbInterestMap = new Map(existingDbInterests.map((i) => [i.name.toLowerCase(), i]));
 
         const itemsToEnrich: string[] = [];
         const knownNames: string[] = [...interests];
@@ -89,7 +88,7 @@ const InterestSeeder = async (sequelize: Sequelize) => {
         for (const interestName of interests) {
             const dbInterest = dbInterestMap.get(interestName.toLowerCase());
             if (dbInterest) {
-                if (!dbInterest.getDataValue('icon') || !dbInterest.getDataValue('iconLibrary')) {
+                if (!dbInterest.getDataValue("icon") || !dbInterest.getDataValue("iconLibrary")) {
                     itemsToEnrich.push(interestName);
                 }
             } else {
@@ -97,12 +96,12 @@ const InterestSeeder = async (sequelize: Sequelize) => {
             }
         }
 
-        existingDbInterests.forEach(i => knownNames.push(i.name));
+        existingDbInterests.forEach((i) => knownNames.push(i.name));
 
         console.log(`Found ${itemsToEnrich.length} interests to enrich/create.`);
 
         // 3. Resolve icons and generate new ones
-        const processedItems = await resolveIconsAndGenerateNew(itemsToEnrich, knownNames, 'interest', 20);
+        const processedItems = await resolveIconsAndGenerateNew(itemsToEnrich, knownNames, "interest", 20);
 
         // 4. Upsert changes
         let created = 0;
@@ -121,7 +120,10 @@ const InterestSeeder = async (sequelize: Sequelize) => {
             if (wasCreated) {
                 created++;
             } else {
-                if (interestRecord.getDataValue('icon') !== item.icon || interestRecord.getDataValue('iconLibrary') !== item.iconLibrary) {
+                if (
+                    interestRecord.getDataValue("icon") !== item.icon ||
+                    interestRecord.getDataValue("iconLibrary") !== item.iconLibrary
+                ) {
                     await interestRecord.update({
                         icon: item.icon,
                         iconLibrary: item.iconLibrary
@@ -131,11 +133,13 @@ const InterestSeeder = async (sequelize: Sequelize) => {
             }
         }
 
-        console.log(`✅  Interests seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${interests.length - itemsToEnrich.length} up-to-date hardcoded items.`);
+        console.log(
+            `✅  Interests seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${interests.length - itemsToEnrich.length} up-to-date hardcoded items.`
+        );
     } catch (error) {
         console.error("❌  Error seeding interests:", error);
         throw error;
     }
-}
+};
 
 export default InterestSeeder;

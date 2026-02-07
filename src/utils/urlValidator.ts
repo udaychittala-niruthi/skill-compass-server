@@ -38,7 +38,7 @@ export class UrlValidator {
                         method: "HEAD",
                         hostname: url.hostname,
                         path: url.pathname + url.search,
-                        timeout: 5000,
+                        timeout: 5000
                     },
                     (response) => {
                         resolve(response.statusCode ? response.statusCode < 400 : false);
@@ -105,7 +105,7 @@ export class UrlValidator {
         const results = {
             contentUrl: false,
             thumbnailUrl: false,
-            resources: [] as boolean[],
+            resources: [] as boolean[]
         };
 
         if (urls.contentUrl) {
@@ -117,9 +117,7 @@ export class UrlValidator {
         }
 
         if (urls.resources && Array.isArray(urls.resources)) {
-            results.resources = await Promise.all(
-                urls.resources.map((url) => this.isAccessible(url))
-            );
+            results.resources = await Promise.all(urls.resources.map((url) => this.isAccessible(url)));
         }
 
         return results;

@@ -2,7 +2,7 @@
     "info": {
         "_postman_id": "skill-compass-collection",
         "name": "Skill Compass APIs",
-        "description": "Collection of APIs for Skill Compass application, specifically handling Authentication and User Onboarding flows.",
+        "description": "Collection of APIs for Skill Compass application. Updated to reflect latest API structure.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
@@ -31,7 +31,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"testuser_{{$randomInt}}@example.com\",\n    \"password\": \"password123\",\n    \"age\": 25\n}",
+                            "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"testuser_{{$randomInt}}@example.com\",\n    \"password\": \"password123\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -99,6 +99,34 @@
             "name": "Onboarding",
             "item": [
                 {
+                    "name": "Update Age",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"age\": 25\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/age",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "age"
+                            ]
+                        },
+                        "description": "Updates the user's age and derives their group."
+                    },
+                    "response": []
+                },
+                {
                     "name": "Check Status",
                     "request": {
                         "method": "GET",
@@ -113,6 +141,53 @@
                                 "status"
                             ]
                         }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Skills & Interests",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"skillIds\": [1, 2],\n    \"interestIds\": [3, 4]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/skills-interests",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "skills-interests"
+                            ]
+                        },
+                        "description": "Updates the user's skills and interests (only after age is set)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Skills & Interests",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/onboarding/skills-interests",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "onboarding",
+                                "skills-interests"
+                            ]
+                        },
+                        "description": "Retrieves the user's current skills and interests"
                     },
                     "response": []
                 },
@@ -266,23 +341,158 @@
                         "type": "string"
                     }
                 ]
-            },
-            "event": [
+            }
+        },
+        {
+            "name": "Users",
+            "item": [
                 {
-                    "listen": "prerequest",
-                    "script": {
-                        "type": "text/javascript",
-                        "exec": []
-                    }
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": []
                 },
                 {
-                    "listen": "test",
-                    "script": {
-                        "type": "text/javascript",
-                        "exec": []
-                    }
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Profile",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "profile"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
-            ]
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Clip",
+            "item": [
+                {
+                    "name": "Get Info",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/clip/info",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "clip",
+                                "info"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Compare Images",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "source",
+                                    "type": "file",
+                                    "src": []
+                                },
+                                {
+                                    "key": "target",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/clip/compare",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "clip",
+                                "compare"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            }
         },
         {
             "name": "Common & Prediction",
@@ -427,8 +637,7 @@
                         "type": "string"
                     }
                 ]
-            },
-            "event": []
+            }
         },
         {
             "name": "Learning Path",
@@ -536,8 +745,7 @@
                         "type": "string"
                     }
                 ]
-            },
-            "event": []
+            }
         },
         {
             "name": "Learning Progress",
@@ -634,8 +842,7 @@
                         "type": "string"
                     }
                 ]
-            },
-            "event": []
+            }
         },
         {
             "name": "Learning Schedule",
@@ -662,7 +869,7 @@
                 {
                     "name": "Update Schedule Status",
                     "request": {
-                        "method": "POST",
+                        "method": "PUT",
                         "header": [],
                         "body": {
                             "mode": "raw",
@@ -674,18 +881,18 @@
                             }
                         },
                         "url": {
-                            "raw": "{{base_url}}/learning-schedule/:scheduleId/status",
+                            "raw": "{{base_url}}/learning-schedule/:id/status",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "learning-schedule",
-                                ":scheduleId",
+                                ":id",
                                 "status"
                             ],
                             "variable": [
                                 {
-                                    "key": "scheduleId",
+                                    "key": "id",
                                     "value": "1",
                                     "description": "Schedule Period ID"
                                 }
@@ -705,8 +912,7 @@
                         "type": "string"
                     }
                 ]
-            },
-            "event": []
+            }
         },
         {
             "name": "Admin - GraphQL",
@@ -769,12 +975,12 @@
     "variable": [
         {
             "key": "base_url",
-            "value": "http://localhost:5001/api",
+            "value": "http://localhost:5003/api",
             "type": "string"
         },
         {
             "key": "graphql_url",
-            "value": "http://localhost:5001/graphql",
+            "value": "http://localhost:5003/graphql",
             "type": "string"
         },
         {

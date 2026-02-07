@@ -13,7 +13,7 @@ const seeders = [
     { name: "Skill", run: SkillSeeder },
     { name: "Course", run: CourseSeeder },
     { name: "Branches", run: BranchesSeeder },
-    { name: "EducationalResources", run: () => educationalResourcesSeeder.seed() },
+    { name: "EducationalResources", run: () => educationalResourcesSeeder.seed() }
 ];
 
 async function seedAll() {

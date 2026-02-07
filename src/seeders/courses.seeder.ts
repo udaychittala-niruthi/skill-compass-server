@@ -1,78 +1,77 @@
-import { Course, Skill, Interest, sequelize } from "../models";
-import { Sequelize } from "sequelize";
+import { Course, Skill, Interest } from "../models";
 import { resolveCoursesAndGenerateNew } from "./utils";
 
 const courses: Record<string, string> = {
-    "BE": "TECH",
-    "BTech": "TECH",
-    "MTech": "TECH",
-    "BCA": "TECH",
-    "MCA": "TECH",
-    "Biotechnology": "TECH",
+    BE: "TECH",
+    BTech: "TECH",
+    MTech: "TECH",
+    BCA: "TECH",
+    MCA: "TECH",
+    Biotechnology: "TECH",
 
-    "BCom": "COMMERCE",
-    "BAF": "COMMERCE",
-    "BBA": "COMMERCE",
-    "BMS": "COMMERCE",
+    BCom: "COMMERCE",
+    BAF: "COMMERCE",
+    BBA: "COMMERCE",
+    BMS: "COMMERCE",
     "Bachelor of Management Studies": "COMMERCE",
-    "MBA": "COMMERCE",
-    "PGDM": "COMMERCE",
-    "TYBCom": "COMMERCE",
-    "MCom": "COMMERCE",
+    MBA: "COMMERCE",
+    PGDM: "COMMERCE",
+    TYBCom: "COMMERCE",
+    MCom: "COMMERCE",
     "Chartered Accountancy": "COMMERCE",
 
-    "Arts": "ARTS",
-    "BA": "ARTS",
-    "MA": "ARTS",
+    Arts: "ARTS",
+    BA: "ARTS",
+    MA: "ARTS",
     "Bachelor of Journalism": "ARTS",
     "Master of Journalism": "ARTS",
-    "Journalism": "ARTS",
-    "BAC": "ARTS",
-    "BALLB": "ARTS",
+    Journalism: "ARTS",
+    BAC: "ARTS",
+    BALLB: "ARTS",
     "Law Hons": "ARTS",
-    "Economics": "ARTS",
+    Economics: "ARTS",
     "Commercial Art Visual Art": "ARTS",
 
-    "BPharm": "MEDICAL",
-    "BPharmacy": "MEDICAL",
+    BPharm: "MEDICAL",
+    BPharmacy: "MEDICAL",
     "Diploma in Pharmacy": "MEDICAL",
-    "MDCS": "MEDICAL",
-    "Doctor": "MEDICAL",
+    MDCS: "MEDICAL",
+    Doctor: "MEDICAL",
     "GNM Nursing": "MEDICAL",
-    "Pharmacy": "MEDICAL",
+    Pharmacy: "MEDICAL",
 
     "Agri Diploma": "DIPLOMA",
-    "Diploma": "DIPLOMA",
-    "DEd": "DIPLOMA",
-    "DME": "DIPLOMA",
-    "BHMCT": "DIPLOMA",
-    "HH": "DIPLOMA",
-    "PooSc": "DIPLOMA",
-    "Degree": "DIPLOMA"
+    Diploma: "DIPLOMA",
+    DEd: "DIPLOMA",
+    DME: "DIPLOMA",
+    BHMCT: "DIPLOMA",
+    HH: "DIPLOMA",
+    PooSc: "DIPLOMA",
+    Degree: "DIPLOMA"
 };
 
-const CourseSeeder = async (sequelize: Sequelize) => {
+const CourseSeeder = async (_sequelize: any) => {
     console.log("Creating Courses...");
 
     try {
         // 1. Fetch Context (Skills & Interests)
-        const allSkills = await Skill.findAll({ attributes: ['name'] });
-        const allInterests = await Interest.findAll({ attributes: ['name'] });
-        const skillNames = allSkills.map(s => s.name);
-        const interestNames = allInterests.map(i => i.name);
+        const allSkills = await Skill.findAll({ attributes: ["name"] });
+        const allInterests = await Interest.findAll({ attributes: ["name"] });
+        const skillNames = allSkills.map((s) => s.name);
+        const interestNames = allInterests.map((i) => i.name);
 
         // 2. Fetch existing courses
         const existingDbCourses = await Course.findAll();
-        const dbCourseMap = new Map(existingDbCourses.map(c => [c.name.toLowerCase(), c]));
+        const dbCourseMap = new Map(existingDbCourses.map((c) => [c.name.toLowerCase(), c]));
 
-        const itemsToEnrich: { name: string, category: string }[] = [];
+        const itemsToEnrich: { name: string; category: string }[] = [];
         const knownNames: string[] = Object.keys(courses);
 
         // 3. Determine items from hardcoded list that need enrichment
         for (const [name, category] of Object.entries(courses)) {
             const dbCourse = dbCourseMap.get(name.toLowerCase());
             if (dbCourse) {
-                if (!dbCourse.getDataValue('icon') || !dbCourse.getDataValue('iconLibrary')) {
+                if (!dbCourse.getDataValue("icon") || !dbCourse.getDataValue("iconLibrary")) {
                     itemsToEnrich.push({ name, category });
                 }
             } else {
@@ -80,7 +79,7 @@ const CourseSeeder = async (sequelize: Sequelize) => {
             }
         }
 
-        existingDbCourses.forEach(c => knownNames.push(c.name));
+        existingDbCourses.forEach((c) => knownNames.push(c.name));
 
         console.log(`Found ${itemsToEnrich.length} hardcoded courses to enrich/create.`);
 
@@ -112,7 +111,10 @@ const CourseSeeder = async (sequelize: Sequelize) => {
             if (wasCreated) {
                 created++;
             } else {
-                if (course.getDataValue('icon') !== item.icon || course.getDataValue('iconLibrary') !== item.iconLibrary) {
+                if (
+                    course.getDataValue("icon") !== item.icon ||
+                    course.getDataValue("iconLibrary") !== item.iconLibrary
+                ) {
                     await course.update({
                         icon: item.icon,
                         iconLibrary: item.iconLibrary
@@ -122,12 +124,13 @@ const CourseSeeder = async (sequelize: Sequelize) => {
             }
         }
 
-        console.log(`✅  Courses seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${Object.keys(courses).length - itemsToEnrich.length} up-to-date hardcoded items.`);
-
+        console.log(
+            `✅  Courses seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${Object.keys(courses).length - itemsToEnrich.length} up-to-date hardcoded items.`
+        );
     } catch (error) {
         console.error("❌  Error seeding courses:", error);
         throw error;
     }
-}
+};
 
 export default CourseSeeder;

@@ -13,29 +13,29 @@ Branches.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         shortName: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         courseId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "courses",
-                key: "id",
-            },
-        },
+                key: "id"
+            }
+        }
     },
     {
         sequelize,
         tableName: "branches",
-        timestamps: false,
+        timestamps: false
     }
 );
 

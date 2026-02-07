@@ -41,11 +41,11 @@ export class ModuleSearchService {
             // Build search query
             const whereClause: any = {
                 targetUserGroups: {
-                    [Op.contains]: [userGroup],
+                    [Op.contains]: [userGroup]
                 },
                 isAiGenerated: true,
                 contentUrl: { [Op.not]: null },
-                thumbnailUrl: { [Op.not]: null },
+                thumbnailUrl: { [Op.not]: null }
             };
 
             // Add difficulty filter if specified
@@ -59,8 +59,8 @@ export class ModuleSearchService {
                 order: [
                     ["completionCount", "DESC"],
                     ["averageRating", "DESC NULLS LAST"],
-                    ["createdAt", "DESC"],
-                ],
+                    ["createdAt", "DESC"]
+                ]
             });
 
             // Score each module
@@ -75,7 +75,7 @@ export class ModuleSearchService {
 
             // Secondary sort/rank by relevance (Skills & Interests)
             const rankedModules = this.rankModulesByRelevance(
-                qualityModules.map(sm => sm.module),
+                qualityModules.map((sm) => sm.module),
                 { skills, interests: criteria.interestIds }
             );
 
@@ -89,7 +89,11 @@ export class ModuleSearchService {
     /**
      * Score module quality (0-100)
      */
-    async scoreModuleQuality(module: any, targetCourseId?: number, targetBranchId?: number): Promise<ModuleQualityScore> {
+    async scoreModuleQuality(
+        module: any,
+        targetCourseId?: number,
+        targetBranchId?: number
+    ): Promise<ModuleQualityScore> {
         const breakdown = {
             hasResources: 0,
             averageRating: 0,
@@ -97,7 +101,7 @@ export class ModuleSearchService {
             isRecent: 0,
             hasPrerequisites: 0,
             courseMatch: 0,
-            branchMatch: 0,
+            branchMatch: 0
         };
 
         // 1. Has Resources (30 points)
@@ -154,44 +158,40 @@ export class ModuleSearchService {
             breakdown.branchMatch = 10;
         }
 
-
-
         const totalScore = Object.values(breakdown).reduce((sum, val) => sum + val, 0);
 
         return {
             module,
             score: totalScore,
-            breakdown,
+            breakdown
         };
     }
 
     /**
      * Rank modules by relevance to user context
      */
-    rankModulesByRelevance(
-        modules: any[],
-        userContext: { skills: number[]; interests?: number[] }
-    ): any[] {
-        return modules.map((module) => {
-            let relevanceScore = 0;
+    rankModulesByRelevance(modules: any[], userContext: { skills: number[]; interests?: number[] }): any[] {
+        return modules
+            .map((module) => {
+                let relevanceScore = 0;
 
-            // Convert to plain object if it's a Sequelize instance
-            const plainModule = module.get ? module.get({ plain: true }) : module;
+                // Convert to plain object if it's a Sequelize instance
+                const plainModule = module.get ? module.get({ plain: true }) : module;
 
-            // Check skill tag overlap
-            // Assuming skillTags might contain names or IDs. If IDs are embedded stringly:
-            if (plainModule.skillTags && userContext.skills) {
+                // Check skill tag overlap
+                // Assuming skillTags might contain names or IDs. If IDs are embedded stringly:
+                if (plainModule.skillTags && userContext.skills) {
+                    relevanceScore += 5;
+                }
 
-                relevanceScore += 5;
-            }
+                // TODO: If we store interestTags on modules, check those too.
 
-            // TODO: If we store interestTags on modules, check those too.
-
-            return {
-                ...plainModule,
-                relevanceScore,
-            };
-        }).sort((a, b) => b.relevanceScore - a.relevanceScore);
+                return {
+                    ...plainModule,
+                    relevanceScore
+                };
+            })
+            .sort((a, b) => b.relevanceScore - a.relevanceScore);
     }
 
     /**
@@ -202,7 +202,7 @@ export class ModuleSearchService {
             totalModules: totalNeeded,
             reusedModules: existingCount,
             newModules: newCount,
-            reusePercentage: totalNeeded > 0 ? ((existingCount / totalNeeded) * 100).toFixed(1) : "0",
+            reusePercentage: totalNeeded > 0 ? ((existingCount / totalNeeded) * 100).toFixed(1) : "0"
         };
     }
 
@@ -221,10 +221,7 @@ export class ModuleSearchService {
     /**
      * Ensure balanced module types
      */
-    balanceModuleTypes(
-        existingModules: any[],
-        targetDistribution: Record<string, number>
-    ): any[] {
+    balanceModuleTypes(existingModules: any[], targetDistribution: Record<string, number>): any[] {
         const balanced: any[] = [];
         const typeCounts: Record<string, number> = {};
 

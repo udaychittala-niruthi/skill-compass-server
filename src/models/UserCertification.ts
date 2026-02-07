@@ -14,32 +14,32 @@ UserCertification.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "users",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         certificationId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "certifications",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         status: {
             type: DataTypes.ENUM("interested", "preparing", "scheduled", "passed", "failed", "expired"),
-            defaultValue: "interested",
+            defaultValue: "interested"
         },
         progressData: {
             type: DataTypes.JSONB,
-            defaultValue: {},
-        },
+            defaultValue: {}
+        }
     },
     {
         sequelize,
@@ -48,9 +48,9 @@ UserCertification.init(
         indexes: [
             {
                 unique: true,
-                fields: ["userId", "certificationId"],
-            },
-        ],
+                fields: ["userId", "certificationId"]
+            }
+        ]
     }
 );
 

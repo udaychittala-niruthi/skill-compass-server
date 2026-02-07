@@ -12,8 +12,8 @@ class WebSocketService {
             cors: {
                 origin: process.env.FRONTEND_URL || "*",
                 methods: ["GET", "POST"],
-                credentials: true,
-            },
+                credentials: true
+            }
         });
 
         this.io.on("connection", (socket) => {

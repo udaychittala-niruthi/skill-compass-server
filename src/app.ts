@@ -7,7 +7,7 @@ import { sendResponse } from "./utils/customResponse.js";
 const app: Application = AppConfig(express());
 
 app.get("/", (req: Request, res: Response) => {
-  sendResponse(res, true, "👋 Hello from Server...");
+    sendResponse(res, true, "👋 Hello from Server...");
 });
 
 app.use("/api", routes);

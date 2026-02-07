@@ -31,15 +31,15 @@ LearningModule.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         title: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         description: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         moduleType: {
             type: DataTypes.ENUM(
@@ -51,109 +51,101 @@ LearningModule.init(
                 "workshop",
                 "reading"
             ),
-            allowNull: false,
+            allowNull: false
         },
         format: {
-            type: DataTypes.ENUM(
-                "video",
-                "article",
-                "interactive",
-                "live-session",
-                "project",
-                "quiz",
-                "podcast"
-            ),
-            allowNull: true,
+            type: DataTypes.ENUM("video", "article", "interactive", "live-session", "project", "quiz", "podcast"),
+            allowNull: true
         },
         difficulty: {
             type: DataTypes.ENUM("beginner", "intermediate", "advanced", "expert"),
-            defaultValue: "intermediate",
+            defaultValue: "intermediate"
         },
         duration: {
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
                 min: 5,
-                max: 10000,
-            },
+                max: 10000
+            }
         },
         contentUrl: {
             type: DataTypes.STRING(500),
-            allowNull: true,
+            allowNull: true
         },
         thumbnailUrl: {
             type: DataTypes.STRING(500),
-            allowNull: true,
+            allowNull: true
         },
         category: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         subcategory: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         skillTags: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            defaultValue: [],
+            defaultValue: []
         },
         prerequisiteModules: {
             type: DataTypes.ARRAY(DataTypes.INTEGER),
-            defaultValue: [],
+            defaultValue: []
         },
         targetUserGroups: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            defaultValue: ["COLLEGE_STUDENTS", "PROFESSIONALS"],
+            defaultValue: ["COLLEGE_STUDENTS", "PROFESSIONALS"]
         },
         averageRating: {
             type: DataTypes.DECIMAL(3, 2),
             defaultValue: 0.0,
             validate: {
                 min: 0,
-                max: 5,
-            },
+                max: 5
+            }
         },
         completionCount: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
+            defaultValue: 0
         },
         groupSpecificMetadata: {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         },
         courseId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "courses",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         learningPathId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "learning_paths",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         orderInPath: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: true
         },
         isAiGenerated: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false,
+            defaultValue: false
         },
         generationMetadata: {
             type: DataTypes.JSONB,
-            defaultValue: {},
-        },
+            defaultValue: {}
+        }
     },
     {
         sequelize,
         tableName: "learning_modules",
-        timestamps: true,
+        timestamps: true
     }
 );
 

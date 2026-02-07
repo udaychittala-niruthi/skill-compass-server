@@ -15,8 +15,7 @@ export class AccessChecker {
             allowedAIFeatures: []
         };
 
-
-        if (user.role === 'ADMIN') {
+        if (user.role === "ADMIN") {
             return {
                 canAccessLearningModules: true,
                 canSubmitAssessments: true,
@@ -25,14 +24,14 @@ export class AccessChecker {
                 canUpdateProfile: true,
                 canModifyContent: true,
                 canAccessClipModule: true,
-                allowedModuleTypes: ['ALL'],
-                allowedAIFeatures: ['ALL']
+                allowedModuleTypes: ["ALL"],
+                allowedAIFeatures: ["ALL"]
             };
         }
 
-        if (user.role === 'MODERATOR') {
+        if (user.role === "MODERATOR") {
             access.canModifyContent = true;
-            access.allowedAIFeatures = ['content-moderation'];
+            access.allowedAIFeatures = ["content-moderation"];
         }
 
         // Enforce Onboarding
@@ -51,52 +50,52 @@ export class AccessChecker {
             };
         }
 
-
         switch (user.group) {
-            case 'KIDS':
-                access.allowedModuleTypes = ['interactive-story', 'gamified-lesson'];
+            case "KIDS":
+                access.allowedModuleTypes = ["interactive-story", "gamified-lesson"];
                 access.canSubmitAssessments = false;
                 access.canCallAIAnalysis = false;
                 access.canAccessClipModule = true;
-                access.allowedUpdateFields = ['interests', 'avatar'];
+                access.allowedUpdateFields = ["interests", "avatar"];
                 break;
-            case 'TEENS':
-                access.allowedModuleTypes = ['interactive-story', 'gamified-lesson', 'quiz'];
+            case "TEENS":
+                access.allowedModuleTypes = ["interactive-story", "gamified-lesson", "quiz"];
                 access.canSubmitAssessments = true;
                 access.canCallAIAnalysis = true;
-                access.allowedAIFeatures = ['homework-help'];
-                access.allowedUpdateFields = ['interests', 'bio', 'learningStyle'];
+                access.allowedAIFeatures = ["homework-help"];
+                access.allowedUpdateFields = ["interests", "bio", "learningStyle"];
                 break;
-            case 'COLLEGE_STUDENTS':
-                access.allowedModuleTypes = ['lecture', 'project', 'quiz', 'lab'];
-                access.canSubmitAssessments = true;
-                access.canEarnCertifications = true;
-                access.canCallAIAnalysis = true;
-                access.allowedAIFeatures = ['skill-gap', 'career-path', 'resume-review'];
-                access.allowedUpdateFields = ['interests', 'bio', 'skills', 'certificationStatus', 'linkedin'];
-                break;
-            case 'PROFESSIONALS':
-                access.allowedModuleTypes = ['lecture', 'project', 'case-study'];
+            case "COLLEGE_STUDENTS":
+                access.allowedModuleTypes = ["lecture", "project", "quiz", "lab"];
                 access.canSubmitAssessments = true;
                 access.canEarnCertifications = true;
                 access.canCallAIAnalysis = true;
-                access.allowedAIFeatures = ['skill-gap', 'career-path', 'market-analysis'];
-                access.allowedUpdateFields = ['interests', 'bio', 'skills', 'portfolio', 'experience'];
+                access.allowedAIFeatures = ["skill-gap", "career-path", "resume-review"];
+                access.allowedUpdateFields = ["interests", "bio", "skills", "certificationStatus", "linkedin"];
                 break;
-            case 'SENIORS':
-                access.allowedModuleTypes = ['simplified-lesson', 'video-guide'];
+            case "PROFESSIONALS":
+                access.allowedModuleTypes = ["lecture", "project", "case-study"];
+                access.canSubmitAssessments = true;
+                access.canEarnCertifications = true;
                 access.canCallAIAnalysis = true;
-                access.allowedAIFeatures = ['basic-guidance'];
-                access.allowedUpdateFields = ['interests', 'accessibilitySettings'];
+                access.allowedAIFeatures = ["skill-gap", "career-path", "market-analysis"];
+                access.allowedUpdateFields = ["interests", "bio", "skills", "portfolio", "experience"];
+                break;
+            case "SENIORS":
+                access.allowedModuleTypes = ["simplified-lesson", "video-guide"];
+                access.canCallAIAnalysis = true;
+                access.allowedAIFeatures = ["basic-guidance"];
+                access.allowedUpdateFields = ["interests", "accessibilitySettings"];
                 break;
         }
 
-        if (user.subscriptionStatus === 'FREE') {
+        if (user.subscriptionStatus === "FREE") {
             if (access.allowedAIFeatures && access.allowedAIFeatures.length > 0) {
-                access.allowedAIFeatures = access.allowedAIFeatures.filter(f => !['career-path', 'market-analysis'].includes(f));
+                access.allowedAIFeatures = access.allowedAIFeatures.filter(
+                    (f) => !["career-path", "market-analysis"].includes(f)
+                );
             }
             // Could also restrict module types here if needed
-        } else if (user.subscriptionStatus === 'PAID') {
         }
 
         return access;

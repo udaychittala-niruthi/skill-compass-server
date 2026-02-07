@@ -16,32 +16,32 @@ Certification.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         issuingOrganization: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         certificationUrl: {
             type: DataTypes.STRING(500),
-            allowNull: true,
+            allowNull: true
         },
         description: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         metadata: {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         },
         skillTags: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            defaultValue: [],
-        },
+            defaultValue: []
+        }
     },
     {
         sequelize,
@@ -50,9 +50,9 @@ Certification.init(
         indexes: [
             {
                 unique: true,
-                fields: ["name", "issuingOrganization"],
-            },
-        ],
+                fields: ["name", "issuingOrganization"]
+            }
+        ]
     }
 );
 

@@ -9,18 +9,20 @@ export interface SeederItem {
 export async function resolveIconsAndGenerateNew(
     itemsToEnrich: string[],
     knownItemNames: string[],
-    type: 'skill' | 'interest',
+    type: "skill" | "interest",
     countToGenerate: number = 20
 ): Promise<SeederItem[]> {
     const chunkSize = 30;
-    let results: SeederItem[] = [];
+    const results: SeederItem[] = [];
 
     // 1. Process items that need icons
     if (itemsToEnrich.length > 0) {
         console.log(`Enriching ${itemsToEnrich.length} ${type}s with icons...`);
         for (let i = 0; i < itemsToEnrich.length; i += chunkSize) {
             const chunk = itemsToEnrich.slice(i, i + chunkSize);
-            console.log(`Processing ${type} enrichment chunk ${Math.ceil((i + 1) / chunkSize)} of ${Math.ceil(itemsToEnrich.length / chunkSize)}...`);
+            console.log(
+                `Processing ${type} enrichment chunk ${Math.ceil((i + 1) / chunkSize)} of ${Math.ceil(itemsToEnrich.length / chunkSize)}...`
+            );
 
             try {
                 const prompt = `
@@ -39,7 +41,7 @@ export async function resolveIconsAndGenerateNew(
                 }
             } catch (e) {
                 console.error(`Error processing chunk ${i} for ${type}:`, e);
-                chunk.forEach(item => {
+                chunk.forEach((item) => {
                     results.push({
                         name: item,
                         icon: "help-circle-outline",
@@ -90,7 +92,9 @@ export async function generateCoursesContextual(
     existingCourseNames: string[],
     countToGenerate: number = 20
 ): Promise<(SeederItem & { category: string })[]> {
-    console.log(`Generating ${countToGenerate} courses based on ${skills.length} skills and ${interests.length} interests...`);
+    console.log(
+        `Generating ${countToGenerate} courses based on ${skills.length} skills and ${interests.length} interests...`
+    );
 
     // Limits inputs to avoid token overflow
     const skillContext = skills.slice(0, 50).join(", ");
@@ -130,7 +134,7 @@ export async function generateCoursesContextual(
 }
 
 export async function resolveCoursesAndGenerateNew(
-    itemsToEnrich: { name: string, category: string }[],
+    itemsToEnrich: { name: string; category: string }[],
     knownCourseNames: string[],
     skills: string[],
     interests: string[],
@@ -161,7 +165,7 @@ export async function resolveCoursesAndGenerateNew(
             } catch (e) {
                 console.error(`Error enriching course chunk ${i}:`, e);
                 // Fallback
-                chunk.forEach(item => results.push({ ...item, icon: "school", iconLibrary: "MaterialIcons" }));
+                chunk.forEach((item) => results.push({ ...item, icon: "school", iconLibrary: "MaterialIcons" }));
             }
         }
     }
@@ -174,4 +178,3 @@ export async function resolveCoursesAndGenerateNew(
 
     return results;
 }
-

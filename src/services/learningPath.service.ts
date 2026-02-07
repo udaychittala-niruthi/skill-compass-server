@@ -1,4 +1,14 @@
-import { User, UserPreferences, LearningPath, LearningModule, Skill, Interest, Course, Branches, LearningSchedule } from "../models";
+import {
+    User,
+    UserPreferences,
+    LearningPath,
+    LearningModule,
+    Skill,
+    Interest,
+    Course,
+    Branches,
+    LearningSchedule
+} from "../models";
 import { getJsonCompletion } from "./groq";
 import { websocketService } from "./websocket.service";
 import { resourceUrlService } from "./resourceUrl.service";
@@ -60,13 +70,13 @@ class LearningPathService {
 
                 // Search for existing quality modules with advanced criteria
                 existingModules = await moduleSearchService.findMatchingModules({
-                    userGroup: user.group,
+                    userGroup: user.group as any,
                     skills: skillIds,
                     courseId: preferences.courseId || undefined, // New: Match course context
                     branchId: preferences.branchId || undefined, // New: Match branch context
                     interestIds: preferences.interestIds || [], // New: Match interests
                     minQuality: 50, // Lowered threshold to 50 to catch valid modules without extra metadata
-                    limit: 20,
+                    limit: 20
                 });
 
                 console.log(`[Module Reuse] Found ${existingModules.length} existing quality modules`);
@@ -122,7 +132,6 @@ class LearningPathService {
                     path: null, // Clear old path structure
                     userPreferencesId: preferences.id
                 });
-
             } else {
                 // Create initial learning path record
                 learningPath = await LearningPath.create({
@@ -130,7 +139,7 @@ class LearningPathService {
                     name: `Learning Path for ${user.name}`,
                     status: "generating",
                     userPreferencesId: preferences.id,
-                    path: null,
+                    path: null
                 });
                 learningPathId = learningPath.id;
             }
@@ -138,7 +147,7 @@ class LearningPathService {
             // Emit WebSocket event: generation started
             websocketService.emitGenerationStarted(userId, {
                 learningPathId: learningPathId,
-                message: "Learning path generation started",
+                message: "Learning path generation started"
             });
 
             // Start async generation (don't await)
@@ -181,7 +190,7 @@ class LearningPathService {
                 newModules: 0,
                 reusePercentage: "0",
                 groqTokensUsed: 0,
-                tokensSaved: 0,
+                tokensSaved: 0
             };
 
             // Calculate how many new modules needed from Groq
@@ -198,14 +207,25 @@ class LearningPathService {
             reuseStats.tokensSaved = reuseCount * estimatedTokensPerModule;
             reuseStats.groqTokensUsed = newModulesNeeded * estimatedTokensPerModule;
 
-            console.log(`[Module Reuse] Strategy: ${reuseCount} existing + ${newModulesNeeded} new = ${targetModuleCount} total (${reuseStats.reusePercentage}% reuse)`);
-            console.log(`[Module Reuse] Token savings: ${reuseStats.tokensSaved} tokens (~$${(reuseStats.tokensSaved * 0.000002).toFixed(4)})`);
+            console.log(
+                `[Module Reuse] Strategy: ${reuseCount} existing + ${newModulesNeeded} new = ${targetModuleCount} total (${reuseStats.reusePercentage}% reuse)`
+            );
+            console.log(
+                `[Module Reuse] Token savings: ${reuseStats.tokensSaved} tokens (~$${(reuseStats.tokensSaved * 0.000002).toFixed(4)})`
+            );
 
             // Generate path based on user group (only for missing modules)
             let generatedPath: GeneratedPath;
             switch (user.group) {
                 case "COLLEGE_STUDENTS":
-                    generatedPath = await this.generateCollegeStudentPath(user, preferences, skills, interests, course, branch);
+                    generatedPath = await this.generateCollegeStudentPath(
+                        user,
+                        preferences,
+                        skills,
+                        interests,
+                        course,
+                        branch
+                    );
                     break;
                 case "PROFESSIONALS":
                     generatedPath = await this.generateProfessionalPath(user, preferences, skills, interests);
@@ -237,10 +257,10 @@ class LearningPathService {
                     path: {
                         description: generatedPath.description,
                         modules: moduleIds,
-                        metadata: generatedPath.metadata || {},
+                        metadata: generatedPath.metadata || {}
                     },
                     status: "completed",
-                    generatedAt: new Date(),
+                    generatedAt: new Date()
                 },
                 { where: { id: learningPathId } }
             );
@@ -252,7 +272,7 @@ class LearningPathService {
             websocketService.emitGenerationCompleted(userId, {
                 learningPathId,
                 message: "Learning path generated successfully",
-                path: generatedPath,
+                path: generatedPath
             });
 
             console.log(`Successfully generated learning path for user ${userId}`);
@@ -263,7 +283,7 @@ class LearningPathService {
             await LearningPath.update(
                 {
                     status: "failed",
-                    generationError: error.message || "Unknown error",
+                    generationError: error.message || "Unknown error"
                 },
                 { where: { id: learningPathId } }
             );
@@ -271,7 +291,7 @@ class LearningPathService {
             // Emit WebSocket event: generation failed
             websocketService.emitGenerationFailed(userId, {
                 learningPathId,
-                error: error.message || "Unknown error",
+                error: error.message || "Unknown error"
             });
         }
     }
@@ -279,7 +299,7 @@ class LearningPathService {
     /**
      * Calculate target number of modules based on user group and learning hours
      */
-    private calculateTargetModuleCount(userGroup: string, weeklyHours: number): number {
+    private calculateTargetModuleCount(userGroup: string, _weeklyHours: number): number {
         switch (userGroup) {
             case "COLLEGE_STUDENTS":
                 return 15; // Semester-based, comprehensive
@@ -350,7 +370,7 @@ Return a JSON object with:
 
         return await getJsonCompletion<GeneratedPath>(prompt, {
             temperature: 0.7,
-            max_tokens: 4000,
+            max_tokens: 4000
         });
     }
 
@@ -409,7 +429,7 @@ Return a JSON object with:
 
         return await getJsonCompletion<GeneratedPath>(prompt, {
             temperature: 0.7,
-            max_tokens: 4000,
+            max_tokens: 4000
         });
     }
 
@@ -467,7 +487,7 @@ Return a JSON object with:
 
         return await getJsonCompletion<GeneratedPath>(prompt, {
             temperature: 0.8,
-            max_tokens: 3000,
+            max_tokens: 3000
         });
     }
 
@@ -522,7 +542,7 @@ Return a JSON object with:
 
         return await getJsonCompletion<GeneratedPath>(prompt, {
             temperature: 0.6,
-            max_tokens: 2000,
+            max_tokens: 2000
         });
     }
 
@@ -550,7 +570,7 @@ Return a JSON object with:
             await LearningModule.update(
                 {
                     learningPathId,
-                    orderInPath: i + 1,
+                    orderInPath: i + 1
                 },
                 { where: { id: existing.id } }
             );
@@ -574,7 +594,7 @@ Return a JSON object with:
                 const [videoUrl, thumbnailUrl, pdfResources] = await Promise.all([
                     resourceUrlService.findVideoUrl(searchTerm, module.duration),
                     resourceUrlService.findThumbnail(searchTerm),
-                    resourceUrlService.findPdfResources(searchTerm),
+                    resourceUrlService.findPdfResources(searchTerm)
                 ]);
 
                 // Get format metadata
@@ -585,9 +605,10 @@ Return a JSON object with:
                 if (module.prerequisites && module.prerequisites.length > 0) {
                     for (const prereqTitle of module.prerequisites) {
                         // Find by title match
-                        const foundModule = createdModules.find((m) =>
-                            m.title.toLowerCase().includes(prereqTitle.toLowerCase()) ||
-                            prereqTitle.toLowerCase().includes(m.title.toLowerCase())
+                        const foundModule = createdModules.find(
+                            (m) =>
+                                m.title.toLowerCase().includes(prereqTitle.toLowerCase()) ||
+                                prereqTitle.toLowerCase().includes(m.title.toLowerCase())
                         );
 
                         if (foundModule) {
@@ -622,8 +643,8 @@ Return a JSON object with:
                         searchKeywords: searchTerm,
                         formatMetadata: format,
                         pdfResources: pdfResources,
-                        originalPrerequisites: module.prerequisites || [],
-                    },
+                        originalPrerequisites: module.prerequisites || []
+                    }
                 });
 
                 createdModules.push(created);
@@ -651,8 +672,8 @@ Return a JSON object with:
                     generationMetadata: {
                         generatedAt: new Date(),
                         generatedFor: learningPathId,
-                        error: "Failed to fetch resources",
-                    },
+                        error: "Failed to fetch resources"
+                    }
                 });
 
                 createdModules.push(created);
@@ -700,10 +721,10 @@ Return a JSON object with:
                 scheduleData: {
                     weekNumber: week,
                     allocatedHours: weeklyHours,
-                    modulesToComplete: this.distributeModules(moduleIds, week, weeksNeeded),
+                    modulesToComplete: this.distributeModules(moduleIds, week, weeksNeeded)
                 },
                 status: week === 1 ? ("active" as const) : ("upcoming" as const),
-                completionPercentage: 0,
+                completionPercentage: 0
             });
         }
 
@@ -725,7 +746,7 @@ Return a JSON object with:
      */
     async getLearningPathByUserId(userId: number) {
         const learningPath = await LearningPath.findOne({
-            where: { userId },
+            where: { userId }
         });
 
         if (!learningPath) {
@@ -735,12 +756,12 @@ Return a JSON object with:
         // Fetch associated modules separately
         const modules = await LearningModule.findAll({
             where: { learningPathId: learningPath.id },
-            order: [["orderInPath", "ASC"]],
+            order: [["orderInPath", "ASC"]]
         });
 
         return {
             ...learningPath.toJSON(),
-            modules,
+            modules
         };
     }
 
@@ -754,7 +775,7 @@ Return a JSON object with:
             return {
                 exists: false,
                 status: null,
-                message: "No learning path found",
+                message: "No learning path found"
             };
         }
 
@@ -762,7 +783,7 @@ Return a JSON object with:
             exists: true,
             status: learningPath.status,
             generatedAt: learningPath.generatedAt,
-            error: learningPath.generationError,
+            error: learningPath.generationError
         };
     }
 }

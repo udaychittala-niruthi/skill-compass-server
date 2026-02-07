@@ -6,12 +6,17 @@ import helmet from "helmet";
 import { errorLogger } from "../middleware/errLogger.js";
 
 export function AppConfig(app: Application) {
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.use(morgan("dev"));
-  app.use(cors());
-  app.use(helmet());
-  app.use(errorLogger);
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    app.use(morgan("dev"));
+    app.use(
+        cors({
+            origin: "*",
+            credentials: true
+        })
+    );
+    app.use(helmet());
+    app.use(errorLogger);
 
-  return app;
+    return app;
 }

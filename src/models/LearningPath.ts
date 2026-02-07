@@ -19,42 +19,42 @@ LearningPath.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         path: {
             type: DataTypes.JSONB,
-            allowNull: true, // Nullable until generation completes
+            allowNull: true // Nullable until generation completes
         },
         userPreferencesId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "user_preferences",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
+            unique: true
         },
         status: {
             type: DataTypes.ENUM("generating", "completed", "failed"),
             defaultValue: "generating",
-            allowNull: false,
+            allowNull: false
         },
         generationError: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         generatedAt: {
             type: DataTypes.DATE,
-            allowNull: true,
-        },
+            allowNull: true
+        }
     },
     {
         sequelize,
@@ -62,12 +62,12 @@ LearningPath.init(
         timestamps: true, // Enables createdAt and updatedAt
         indexes: [
             {
-                fields: ["userId"],
+                fields: ["userId"]
             },
             {
-                fields: ["status"],
-            },
-        ],
+                fields: ["status"]
+            }
+        ]
     }
 );
 

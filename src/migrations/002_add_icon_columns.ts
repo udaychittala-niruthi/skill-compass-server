@@ -13,7 +13,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("skills", "icon", {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added icon column to skills");
     } catch (error: any) {
@@ -27,7 +27,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("skills", "iconLibrary", {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added iconLibrary column to skills");
     } catch (error: any) {
@@ -42,7 +42,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("interests", "icon", {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added icon column to interests");
     } catch (error: any) {
@@ -56,7 +56,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("interests", "iconLibrary", {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added iconLibrary column to interests");
     } catch (error: any) {

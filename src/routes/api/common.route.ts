@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { commonController, predictionController } from "../../controllers/prediction.controller";
+import { commonController, predictionController } from "../../controllers/common.controller";
 import { authenticate } from "../../middleware/auth.middleware";
 import { validate } from "../../middleware/validate.middleware";
 import { predictCourseSchema, predictBranchSchema } from "../../validations/prediction.validation";
@@ -20,4 +20,3 @@ router.post("/predict/course", validate(predictCourseSchema), predictionControll
 router.post("/predict/branch", validate(predictBranchSchema), predictionController.predictBranch);
 
 export default router;
-

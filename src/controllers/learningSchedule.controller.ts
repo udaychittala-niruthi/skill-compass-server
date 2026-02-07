@@ -12,7 +12,7 @@ export const learningScheduleController = {
 
             const schedules = await LearningSchedule.findAll({
                 where: { userId },
-                order: [["periodNumber", "ASC"]],
+                order: [["periodNumber", "ASC"]]
             });
 
             return sendResponse(res, true, "Learning schedule retrieved successfully", 200, schedules);
@@ -54,7 +54,8 @@ export const learningScheduleController = {
 
             await schedule.update({
                 status: status || schedule.status,
-                completionPercentage: completionPercentage !== undefined ? completionPercentage : schedule.completionPercentage,
+                completionPercentage:
+                    completionPercentage !== undefined ? completionPercentage : schedule.completionPercentage
             });
 
             return sendResponse(res, true, "Schedule updated successfully", 200, schedule);
@@ -62,5 +63,5 @@ export const learningScheduleController = {
             console.error("Update Schedule Status Error:", error);
             return sendResponse(res, false, error.message || "Internal Server Error", 500);
         }
-    },
+    }
 };

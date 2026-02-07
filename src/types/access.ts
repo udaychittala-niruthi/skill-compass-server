@@ -1,16 +1,16 @@
 export interface UserContext {
     id: number;
     age: number;
-    role: 'USER' | 'ADMIN' | 'MODERATOR';
-    group: 'KIDS' | 'TEENS' | 'COLLEGE_STUDENTS' | 'PROFESSIONALS' | 'SENIORS';
+    role: "USER" | "ADMIN" | "MODERATOR";
+    group: "KIDS" | "TEENS" | "COLLEGE_STUDENTS" | "PROFESSIONALS" | "SENIORS";
     isOnboarded: boolean;
     preferences?: {
         interests: string[];
         skills: string[];
         learningStyle?: string;
     };
-    subscriptionStatus?: 'FREE' | 'PAID' | 'TRIAL';
-    certificationStatus?: Record<string, 'INTERESTED' | 'PREPARING' | 'PASSED'>;
+    subscriptionStatus?: "FREE" | "PAID" | "TRIAL";
+    certificationStatus?: Record<string, "INTERESTED" | "PREPARING" | "PASSED">;
 }
 
 export interface ServiceAccess {

@@ -21,8 +21,6 @@ import EducationalResource from "./EducationalResource";
 User.hasOne(UserPreferences, { foreignKey: "userId", as: "preferences" });
 UserPreferences.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-
-
 // UserPreferences.interestIds and UserPreferences.skillIds are arrays, so no standard SQL association here
 // We can handle lookups manually or via utility functions
 UserPreferences.belongsTo(Course, { foreignKey: "courseId", as: "course" });
@@ -45,11 +43,11 @@ LearningPath.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 LearningPath.belongsTo(UserPreferences, {
     foreignKey: "userPreferencesId",
-    as: "userPreferences",
+    as: "userPreferences"
 });
 UserPreferences.hasMany(LearningPath, {
     foreignKey: "userPreferencesId",
-    as: "learningPaths",
+    as: "learningPaths"
 });
 
 // LearningPath - LearningModule association
@@ -87,15 +85,14 @@ LearningSchedule.belongsTo(LearningPath, { foreignKey: "learningPathId", as: "le
 User.hasMany(AiAnalysis, { foreignKey: "userId", as: "aiAnalyses" });
 AiAnalysis.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-
 // Existing Course - Branches relation
 Course.hasMany(Branches, {
     foreignKey: "courseId",
-    as: "branches",
+    as: "branches"
 });
 Branches.belongsTo(Course, {
     foreignKey: "courseId",
-    as: "course",
+    as: "course"
 });
 
 export {
@@ -116,5 +113,5 @@ export {
     LearningSchedule,
     AiAnalysis,
     EducationalResource,
-    Op,
+    Op
 };

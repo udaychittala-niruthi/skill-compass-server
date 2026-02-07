@@ -17,15 +17,15 @@ const BranchesSeeder = async () => {
         //find all courses where branches does not have the courseids
 
         const coursesWithBranches = await Branches.findAll({
-            attributes: ["courseId"],
+            attributes: ["courseId"]
         });
 
         const courses = await Course.findAll({
             where: {
                 id: {
-                    [Op.notIn]: coursesWithBranches.map((branch) => branch.courseId),
-                },
-            },
+                    [Op.notIn]: coursesWithBranches.map((branch) => branch.courseId)
+                }
+            }
         });
 
         console.log(`Found ${courses.length} courses needing branches.`);
@@ -75,18 +75,18 @@ const BranchesSeeder = async () => {
             try {
                 const response = await getJsonCompletion<BranchesResponse>(prompt, {
                     temperature: 0.3, // Lower temperature for more deterministic facts
-                    systemPrompt: "You are an expert in the Indian Education System. Output strictly in JSON.",
+                    systemPrompt: "You are an expert in the Indian Education System. Output strictly in JSON."
                 });
 
                 if (response && response.branches && Array.isArray(response.branches)) {
                     const branchesToInsert = response.branches.map((branch) => ({
                         ...branch,
-                        courseId: course.id,
+                        courseId: course.id
                     }));
 
                     if (branchesToInsert.length > 0) {
                         await Branches.bulkCreate(branchesToInsert, {
-                            ignoreDuplicates: true, // Prevent duplicate errors if re-run
+                            ignoreDuplicates: true // Prevent duplicate errors if re-run
                         });
                         console.log(`✅ Added ${branchesToInsert.length} branches for ${course.name}`);
                     } else {

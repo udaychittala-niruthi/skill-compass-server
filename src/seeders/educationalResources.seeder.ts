@@ -19,7 +19,7 @@ export class EducationalResourcesSeeder {
                 provider: "Eloquent JavaScript",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
             {
                 title: "You Don't Know JS (Book Series)",
@@ -29,7 +29,7 @@ export class EducationalResourcesSeeder {
                 provider: "GitHub",
                 difficulty: "advanced" as const,
                 isPremium: false,
-                rating: 4.9,
+                rating: 4.9
             },
             {
                 title: "JavaScript.info Tutorial",
@@ -39,7 +39,7 @@ export class EducationalResourcesSeeder {
                 provider: "JavaScript.info",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
 
             // Python
@@ -51,7 +51,7 @@ export class EducationalResourcesSeeder {
                 provider: "Dr. Chuck",
                 difficulty: "beginner" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
             {
                 title: "Automate the Boring Stuff with Python",
@@ -61,7 +61,7 @@ export class EducationalResourcesSeeder {
                 provider: "Al Sweigart",
                 difficulty: "beginner" as const,
                 isPremium: false,
-                rating: 4.9,
+                rating: 4.9
             },
             {
                 title: "Official Python Tutorial",
@@ -71,7 +71,7 @@ export class EducationalResourcesSeeder {
                 provider: "Python.org",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
 
             // Web Development
@@ -83,7 +83,7 @@ export class EducationalResourcesSeeder {
                 provider: "MDN",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.9,
+                rating: 4.9
             },
             {
                 title: "MDN Web Docs - CSS",
@@ -93,7 +93,7 @@ export class EducationalResourcesSeeder {
                 provider: "MDN",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.9,
+                rating: 4.9
             },
             {
                 title: "React Official Documentation",
@@ -103,7 +103,7 @@ export class EducationalResourcesSeeder {
                 provider: "React",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
 
             // Cloud Computing
@@ -115,7 +115,7 @@ export class EducationalResourcesSeeder {
                 provider: "AWS",
                 difficulty: "beginner" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
             {
                 title: "Microsoft Azure Documentation",
@@ -125,7 +125,7 @@ export class EducationalResourcesSeeder {
                 provider: "Microsoft",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
             {
                 title: "Google Cloud Documentation",
@@ -135,7 +135,7 @@ export class EducationalResourcesSeeder {
                 provider: "Google Cloud",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
 
             // Databases
@@ -147,7 +147,7 @@ export class EducationalResourcesSeeder {
                 provider: "SQLTutorial.org",
                 difficulty: "beginner" as const,
                 isPremium: false,
-                rating: 4.5,
+                rating: 4.5
             },
             {
                 title: "PostgreSQL Tutorial",
@@ -157,7 +157,7 @@ export class EducationalResourcesSeeder {
                 provider: "PostgreSQL",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
             {
                 title: "MongoDB University",
@@ -167,7 +167,7 @@ export class EducationalResourcesSeeder {
                 provider: "MongoDB",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
 
             // Machine Learning & AI
@@ -179,7 +179,7 @@ export class EducationalResourcesSeeder {
                 provider: "Scikit-learn",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
             {
                 title: "TensorFlow Tutorials",
@@ -189,7 +189,7 @@ export class EducationalResourcesSeeder {
                 provider: "TensorFlow",
                 difficulty: "advanced" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
             {
                 title: "Deep Learning Book",
@@ -199,7 +199,7 @@ export class EducationalResourcesSeeder {
                 provider: "MIT Press",
                 difficulty: "advanced" as const,
                 isPremium: false,
-                rating: 4.9,
+                rating: 4.9
             },
 
             // DevOps & Tools
@@ -211,7 +211,7 @@ export class EducationalResourcesSeeder {
                 provider: "Docker",
                 difficulty: "beginner" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
             {
                 title: "Kubernetes Tutorials",
@@ -221,7 +221,7 @@ export class EducationalResourcesSeeder {
                 provider: "Kubernetes",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
             {
                 title: "Git Pro Book",
@@ -231,7 +231,7 @@ export class EducationalResourcesSeeder {
                 provider: "Git",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
 
             // Data Structures & Algorithms
@@ -243,7 +243,7 @@ export class EducationalResourcesSeeder {
                 provider: "MIT Press",
                 difficulty: "advanced" as const,
                 isPremium: true,
-                rating: 4.9,
+                rating: 4.9
             },
             {
                 title: "Open Data Structures",
@@ -253,7 +253,7 @@ export class EducationalResourcesSeeder {
                 provider: "opendatastructures.org",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.5,
+                rating: 4.5
             },
 
             // Security
@@ -265,7 +265,7 @@ export class EducationalResourcesSeeder {
                 provider: "OWASP",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
             {
                 title: "Web Security Academy",
@@ -275,7 +275,7 @@ export class EducationalResourcesSeeder {
                 provider: "PortSwigger",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
 
             // Software Engineering
@@ -287,7 +287,7 @@ export class EducationalResourcesSeeder {
                 provider: "Refactoring Guru",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
             {
                 title: "Agile Resources",
@@ -297,7 +297,7 @@ export class EducationalResourcesSeeder {
                 provider: "Atlassian",
                 difficulty: "beginner" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
 
             // Node.js
@@ -309,7 +309,7 @@ export class EducationalResourcesSeeder {
                 provider: "Node.js",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.7,
+                rating: 4.7
             },
 
             // Java
@@ -321,7 +321,7 @@ export class EducationalResourcesSeeder {
                 provider: "Oracle",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.6,
+                rating: 4.6
             },
 
             // Data Science
@@ -333,7 +333,7 @@ export class EducationalResourcesSeeder {
                 provider: "Jake VanderPlas",
                 difficulty: "intermediate" as const,
                 isPremium: false,
-                rating: 4.8,
+                rating: 4.8
             },
             {
                 title: "Kaggle Learn",
@@ -343,8 +343,8 @@ export class EducationalResourcesSeeder {
                 provider: "Kaggle",
                 difficulty: "all" as const,
                 isPremium: false,
-                rating: 4.7,
-            },
+                rating: 4.7
+            }
         ];
 
         //Check if already seeded

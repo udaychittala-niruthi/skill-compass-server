@@ -13,24 +13,21 @@ const __dirname = path.dirname(__filename);
 // Create logs folder if it doesn't exist
 const logsDir = path.join(__dirname, "../../logs");
 if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir, { recursive: true });
+    fs.mkdirSync(logsDir, { recursive: true });
 }
 
-const errLogStream = fs.createWriteStream(
-  path.join(logsDir + "../../logs/error.log"),
-  { flags: "a" }
-);
+const errLogStream = fs.createWriteStream(path.join(logsDir + "../../logs/error.log"), { flags: "a" });
 
 const errStream: StreamOptions = {
-  write: (message) => {
-    console.log("--- ERROR LOG ---");
-    message = message.toString() + `\n ${"-".repeat(50)}\n`;
-    errLogStream.write(message);
-  },
+    write: (message) => {
+        console.log("--- ERROR LOG ---");
+        message = message.toString() + `\n ${"-".repeat(50)}\n`;
+        errLogStream.write(message);
+    }
 };
 const format = ":method :url :status :response-time ms - :res[content-length]";
 
 export const errorLogger = morgan(format, {
-  skip: (req, res) => res.statusCode < 500, // skip non-errors
-  stream: errStream,
+    skip: (req, res) => res.statusCode < 500, // skip non-errors
+    stream: errStream
 });

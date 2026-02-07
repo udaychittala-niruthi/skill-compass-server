@@ -22,7 +22,7 @@ UserPreferences.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
@@ -30,66 +30,66 @@ UserPreferences.init(
             unique: true,
             references: {
                 model: "users",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         interestIds: {
             type: DataTypes.ARRAY(DataTypes.INTEGER),
-            defaultValue: [],
+            defaultValue: []
         },
         skillIds: {
             type: DataTypes.ARRAY(DataTypes.INTEGER),
-            defaultValue: [],
+            defaultValue: []
         },
         courseId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "courses",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         branchId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "branches",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         currentRole: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         targetRole: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         industry: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         yearsOfExperience: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: true
         },
         weeklyLearningHours: {
             type: DataTypes.INTEGER,
-            defaultValue: 5,
+            defaultValue: 5
         },
         learningStyle: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         groupSpecificData: {
             type: DataTypes.JSONB,
-            defaultValue: {},
-        },
+            defaultValue: {}
+        }
     },
     {
         sequelize,
         tableName: "user_preferences",
-        timestamps: true,
+        timestamps: true
     }
 );
 

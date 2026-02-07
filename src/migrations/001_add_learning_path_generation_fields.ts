@@ -14,7 +14,7 @@ export async function up() {
         await queryInterface.addColumn("learning_paths", "status", {
             type: DataTypes.ENUM("generating", "completed", "failed"),
             defaultValue: "generating",
-            allowNull: false,
+            allowNull: false
         });
         console.log("✅ Added status column to learning_paths");
     } catch (error: any) {
@@ -28,7 +28,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("learning_paths", "generationError", {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added generationError column to learning_paths");
     } catch (error: any) {
@@ -42,7 +42,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("learning_paths", "generatedAt", {
             type: DataTypes.DATE,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added generatedAt column to learning_paths");
     } catch (error: any) {
@@ -57,7 +57,7 @@ export async function up() {
     try {
         await queryInterface.changeColumn("learning_paths", "path", {
             type: DataTypes.JSONB,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Made path column nullable in learning_paths");
     } catch (error: any) {
@@ -69,7 +69,7 @@ export async function up() {
         await queryInterface.addColumn("learning_paths", "createdAt", {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: DataTypes.NOW,
+            defaultValue: DataTypes.NOW
         });
         console.log("✅ Added createdAt column to learning_paths");
     } catch (error: any) {
@@ -84,7 +84,7 @@ export async function up() {
         await queryInterface.addColumn("learning_paths", "updatedAt", {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: DataTypes.NOW,
+            defaultValue: DataTypes.NOW
         });
         console.log("✅ Added updatedAt column to learning_paths");
     } catch (error: any) {
@@ -102,8 +102,8 @@ export async function up() {
             allowNull: true,
             references: {
                 model: "learning_paths",
-                key: "id",
-            },
+                key: "id"
+            }
         });
         console.log("✅ Added learningPathId column to learning_modules");
     } catch (error: any) {
@@ -117,7 +117,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("learning_modules", "orderInPath", {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added orderInPath column to learning_modules");
     } catch (error: any) {
@@ -131,7 +131,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("learning_modules", "isAiGenerated", {
             type: DataTypes.BOOLEAN,
-            defaultValue: false,
+            defaultValue: false
         });
         console.log("✅ Added isAiGenerated column to learning_modules");
     } catch (error: any) {
@@ -145,7 +145,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("learning_modules", "generationMetadata", {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         });
         console.log("✅ Added generationMetadata column to learning_modules");
     } catch (error: any) {
@@ -159,7 +159,7 @@ export async function up() {
     // Add indexes
     try {
         await queryInterface.addIndex("learning_paths", ["userId"], {
-            name: "learning_paths_userId",
+            name: "learning_paths_userId"
         });
         console.log("✅ Added userId index to learning_paths");
     } catch (error: any) {
@@ -172,7 +172,7 @@ export async function up() {
 
     try {
         await queryInterface.addIndex("learning_paths", ["status"], {
-            name: "learning_paths_status",
+            name: "learning_paths_status"
         });
         console.log("✅ Added status index to learning_paths");
     } catch (error: any) {

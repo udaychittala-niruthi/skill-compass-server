@@ -19,56 +19,56 @@ LearningSchedule.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "users",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         learningPathId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "learning_paths",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         periodType: {
             type: DataTypes.ENUM("daily", "weekly", "monthly"),
-            defaultValue: "weekly",
+            defaultValue: "weekly"
         },
         periodNumber: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         startDate: {
             type: DataTypes.DATEONLY,
-            allowNull: false,
+            allowNull: false
         },
         endDate: {
             type: DataTypes.DATEONLY,
-            allowNull: true,
+            allowNull: true
         },
         scheduleData: {
             type: DataTypes.JSONB,
-            allowNull: false,
+            allowNull: false
         },
         status: {
             type: DataTypes.ENUM("upcoming", "active", "completed", "skipped"),
-            defaultValue: "upcoming",
+            defaultValue: "upcoming"
         },
         completionPercentage: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             validate: {
                 min: 0,
-                max: 100,
-            },
-        },
+                max: 100
+            }
+        }
     },
     {
         sequelize,
@@ -78,9 +78,9 @@ LearningSchedule.init(
             {
                 unique: true,
                 name: "unique_schedule_entry",
-                fields: ["userId", "periodType", "periodNumber", "learningPathId"],
-            },
-        ],
+                fields: ["userId", "periodType", "periodNumber", "learningPathId"]
+            }
+        ]
     }
 );
 

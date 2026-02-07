@@ -48,15 +48,13 @@ const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
  */
 async function getAvailableModels(): Promise<string[]> {
     const now = Date.now();
-    if (cachedModels.length > 0 && (now - lastFetchTime < CACHE_TTL_MS)) {
+    if (cachedModels.length > 0 && now - lastFetchTime < CACHE_TTL_MS) {
         return cachedModels;
     }
 
     try {
         const list = await groq.models.list();
-        const models = list.data
-            .map((m: any) => m.id)
-            .filter((id: string) => typeof id === 'string');
+        const models = list.data.map((m: any) => m.id).filter((id: string) => typeof id === "string");
 
         if (models.length > 0) {
             cachedModels = models;
@@ -81,10 +79,7 @@ async function withModelFallback<T>(
     const availableModels = await getAvailableModels();
 
     // Ensure preferred model is first, then unique available models (excluding preferred)
-    const modelsToTry = [
-        preferredModel,
-        ...availableModels.filter(m => m !== preferredModel)
-    ];
+    const modelsToTry = [preferredModel, ...availableModels.filter((m) => m !== preferredModel)];
 
     let lastError: any;
 
@@ -95,7 +90,10 @@ async function withModelFallback<T>(
             console.warn(`Groq request failed with model ${model}:`, error.message);
             lastError = error;
 
-            const isRateLimit = error?.status === 429 || error?.code === 'rate_limit_exceeded' || (error?.message && error.message.includes('429'));
+            const isRateLimit =
+                error?.status === 429 ||
+                error?.code === "rate_limit_exceeded" ||
+                (error?.message && error.message.includes("429"));
 
             if (isRateLimit) {
                 console.log(`Switching to next model due to rate limit...`);
@@ -115,16 +113,8 @@ async function withModelFallback<T>(
  * @param options Configuration options.
  * @returns The generated text.
  */
-export async function getChatCompletion(
-    prompt: string,
-    options: GroqCompletionOptions = {}
-): Promise<string> {
-    const {
-        temperature = 0.7,
-        max_tokens = 1024,
-        systemPrompt,
-        model: requestedModel
-    } = options;
+export async function getChatCompletion(prompt: string, options: GroqCompletionOptions = {}): Promise<string> {
+    const { temperature = 0.7, max_tokens = 1024, systemPrompt, model: requestedModel } = options;
 
     const messages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [];
 
@@ -139,7 +129,7 @@ export async function getChatCompletion(
             messages,
             model,
             temperature,
-            max_tokens,
+            max_tokens
         });
 
         return completion.choices[0]?.message?.content || "";
@@ -152,10 +142,7 @@ export async function getChatCompletion(
  * @param options Configuration options.
  * @returns The parsed JSON object.
  */
-export async function getJsonCompletion<T = any>(
-    prompt: string,
-    options: GroqCompletionOptions = {}
-): Promise<T> {
+export async function getJsonCompletion<T = any>(prompt: string, options: GroqCompletionOptions = {}): Promise<T> {
     const {
         temperature = 0.5, // Lower temperature for structured output stability
         max_tokens = 2048,
@@ -170,7 +157,7 @@ export async function getJsonCompletion<T = any>(
 
     const messages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: "system", content: finalSystemPrompt },
-        { role: "user", content: prompt },
+        { role: "user", content: prompt }
     ];
 
     return withModelFallback(async (model) => {
@@ -180,14 +167,14 @@ export async function getJsonCompletion<T = any>(
             // @ts-ignore
             response_format: { type: "json_object" },
             temperature,
-            max_tokens,
+            max_tokens
         });
 
         const content = completion.choices[0]?.message?.content || "{}";
 
         try {
             return JSON.parse(content) as T;
-        } catch (parseError) {
+        } catch (_parseError) {
             console.error(`Failed to parse JSON response from model ${model}:`, content);
             throw new Error(`Failed to parse JSON response from LLM (${model})`);
         }

@@ -29,55 +29,47 @@ Assessment.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "users",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         moduleId: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
                 model: "learning_modules",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         assessmentType: {
-            type: DataTypes.ENUM(
-                "quiz",
-                "exam",
-                "project",
-                "assignment",
-                "presentation",
-                "case-study",
-                "peer-review"
-            ),
-            allowNull: false,
+            type: DataTypes.ENUM("quiz", "exam", "project", "assignment", "presentation", "case-study", "peer-review"),
+            allowNull: false
         },
         title: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         description: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         instructions: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         requiredDeliverables: {
             type: DataTypes.ARRAY(DataTypes.STRING),
-            defaultValue: [],
+            defaultValue: []
         },
         submissionData: {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         },
         status: {
             type: DataTypes.ENUM(
@@ -88,53 +80,53 @@ Assessment.init(
                 "graded",
                 "revision-needed"
             ),
-            defaultValue: "not-started",
+            defaultValue: "not-started"
         },
         score: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: true
         },
         maxScore: {
             type: DataTypes.INTEGER,
-            defaultValue: 100,
+            defaultValue: 100
         },
         grade: {
             type: DataTypes.STRING(10),
-            allowNull: true,
+            allowNull: true
         },
         feedback: {
             type: DataTypes.TEXT,
-            allowNull: true,
+            allowNull: true
         },
         strengths: {
             type: DataTypes.ARRAY(DataTypes.TEXT),
-            defaultValue: [],
+            defaultValue: []
         },
         improvements: {
             type: DataTypes.ARRAY(DataTypes.TEXT),
-            defaultValue: [],
+            defaultValue: []
         },
         assessmentData: {
             type: DataTypes.JSONB,
-            defaultValue: {},
+            defaultValue: {}
         },
         startedAt: {
             type: DataTypes.DATE,
-            allowNull: true,
+            allowNull: true
         },
         submittedAt: {
             type: DataTypes.DATE,
-            allowNull: true,
+            allowNull: true
         },
         gradedAt: {
             type: DataTypes.DATE,
-            allowNull: true,
-        },
+            allowNull: true
+        }
     },
     {
         sequelize,
         tableName: "assessments",
-        timestamps: true,
+        timestamps: true
     }
 );
 

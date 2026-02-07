@@ -6,8 +6,8 @@ class User extends Model {
     declare name: string;
     declare password: string;
     declare email: string;
-    declare age: number;
-    declare group: "KIDS" | "TEENS" | "COLLEGE_STUDENTS" | "PROFESSIONALS" | "SENIORS";
+    declare age: number | null;
+    declare group: "KIDS" | "TEENS" | "COLLEGE_STUDENTS" | "PROFESSIONALS" | "SENIORS" | null;
     declare role: "USER" | "ADMIN";
     declare isOnboarded: boolean;
 }
@@ -17,42 +17,42 @@ User.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+            unique: true
         },
         age: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true
         },
         group: {
             type: DataTypes.ENUM("KIDS", "TEENS", "COLLEGE_STUDENTS", "PROFESSIONALS", "SENIORS"),
-            allowNull: false,
+            allowNull: true
         },
         role: {
             type: DataTypes.ENUM("USER", "ADMIN"),
-            defaultValue: "USER",
+            defaultValue: "USER"
         },
         isOnboarded: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
+            defaultValue: false
+        }
     },
     {
         sequelize,
         tableName: "users",
-        timestamps: true, // This adds createdAt and updatedAt automatically
+        timestamps: true // This adds createdAt and updatedAt automatically
     }
 );
 

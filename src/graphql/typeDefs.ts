@@ -1,6 +1,3 @@
-
-import { buildSchema } from "graphql";
-
 export const typeDefs = `#graphql
   type User {
     id: ID!

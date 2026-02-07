@@ -63,7 +63,7 @@ export const learningPathController = {
             }
 
             return sendResponse(res, true, "Modules retrieved successfully", 200, {
-                modules: learningPath.path,
+                modules: learningPath.path
             });
         } catch (error: any) {
             console.error("Get Path Modules Error:", error);
@@ -90,11 +90,11 @@ export const learningPathController = {
 
             return sendResponse(res, true, "Learning path regeneration started", 200, {
                 status: "generating",
-                message: "Your learning path is being regenerated. You will be notified when it's ready.",
+                message: "Your learning path is being regenerated. You will be notified when it's ready."
             });
         } catch (error: any) {
             console.error("Regenerate Path Error:", error);
             return sendResponse(res, false, error.message || "Internal Server Error", 500);
         }
-    },
+    }
 };

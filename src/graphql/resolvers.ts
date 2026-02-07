@@ -1,9 +1,20 @@
-
 import {
-    User, Interest, Skill, Course, Branches, LearningPath,
-    UserPreferences, LearningModule, UserModuleProgress,
-    Assessment, Certification, UserCertification, UserPortfolio,
-    LearningSchedule, AiAnalysis, EducationalResource
+    User,
+    Interest,
+    Skill,
+    Course,
+    Branches,
+    LearningPath,
+    UserPreferences,
+    LearningModule,
+    UserModuleProgress,
+    Assessment,
+    Certification,
+    UserCertification,
+    UserPortfolio,
+    LearningSchedule,
+    AiAnalysis,
+    EducationalResource
 } from "../models";
 
 export const resolvers = {
@@ -75,67 +86,67 @@ export const resolvers = {
         portfolio: (parent: any) => UserPortfolio.findOne({ where: { userId: parent.id } }),
         schedules: (parent: any) => LearningSchedule.findAll({ where: { userId: parent.id } }),
         aiAnalyses: (parent: any) => AiAnalysis.findAll({ where: { userId: parent.id } }),
-        moduleProgress: (parent: any) => UserModuleProgress.findAll({ where: { userId: parent.id } }),
+        moduleProgress: (parent: any) => UserModuleProgress.findAll({ where: { userId: parent.id } })
     },
 
     Course: {
         branches: (parent: any) => Branches.findAll({ where: { courseId: parent.id } }),
-        modules: (parent: any) => LearningModule.findAll({ where: { courseId: parent.id } }),
+        modules: (parent: any) => LearningModule.findAll({ where: { courseId: parent.id } })
     },
 
     Branch: {
-        course: (parent: any) => Course.findByPk(parent.courseId),
+        course: (parent: any) => Course.findByPk(parent.courseId)
     },
 
     LearningPath: {
         user: (parent: any) => User.findByPk(parent.userId),
         userPreferences: (parent: any) => UserPreferences.findByPk(parent.userPreferencesId),
         modules: (parent: any) => LearningModule.findAll({ where: { learningPathId: parent.id } }),
-        schedules: (parent: any) => LearningSchedule.findAll({ where: { learningPathId: parent.id } }),
+        schedules: (parent: any) => LearningSchedule.findAll({ where: { learningPathId: parent.id } })
     },
 
     UserPreferences: {
         user: (parent: any) => User.findByPk(parent.userId),
         course: (parent: any) => Course.findByPk(parent.courseId),
-        branch: (parent: any) => Branches.findByPk(parent.branchId),
+        branch: (parent: any) => Branches.findByPk(parent.branchId)
     },
 
     LearningModule: {
         course: (parent: any) => Course.findByPk(parent.courseId),
         learningPath: (parent: any) => LearningPath.findByPk(parent.learningPathId),
         assessments: (parent: any) => Assessment.findAll({ where: { moduleId: parent.id } }),
-        userProgress: (parent: any) => UserModuleProgress.findAll({ where: { moduleId: parent.id } }),
+        userProgress: (parent: any) => UserModuleProgress.findAll({ where: { moduleId: parent.id } })
     },
 
     UserModuleProgress: {
         user: (parent: any) => User.findByPk(parent.userId),
-        module: (parent: any) => LearningModule.findByPk(parent.moduleId),
+        module: (parent: any) => LearningModule.findByPk(parent.moduleId)
     },
 
     Assessment: {
         user: (parent: any) => User.findByPk(parent.userId),
-        module: (parent: any) => LearningModule.findByPk(parent.moduleId),
+        module: (parent: any) => LearningModule.findByPk(parent.moduleId)
     },
 
     Certification: {
-        userProgress: (parent: any) => UserCertification.findAll({ where: { certificationId: parent.id } }),
+        userProgress: (parent: any) => UserCertification.findAll({ where: { certificationId: parent.id } })
     },
 
     UserCertification: {
         user: (parent: any) => User.findByPk(parent.userId),
-        certification: (parent: any) => Certification.findByPk(parent.certificationId),
+        certification: (parent: any) => Certification.findByPk(parent.certificationId)
     },
 
     UserPortfolio: {
-        user: (parent: any) => User.findByPk(parent.userId),
+        user: (parent: any) => User.findByPk(parent.userId)
     },
 
     LearningSchedule: {
         user: (parent: any) => User.findByPk(parent.userId),
-        learningPath: (parent: any) => LearningPath.findByPk(parent.learningPathId),
+        learningPath: (parent: any) => LearningPath.findByPk(parent.learningPathId)
     },
 
     AiAnalysis: {
-        user: (parent: any) => User.findByPk(parent.userId),
-    },
+        user: (parent: any) => User.findByPk(parent.userId)
+    }
 };

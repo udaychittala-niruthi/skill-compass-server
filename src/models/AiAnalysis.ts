@@ -18,15 +18,15 @@ AiAnalysis.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: "users",
-                key: "id",
-            },
+                key: "id"
+            }
         },
         analysisType: {
             type: DataTypes.ENUM(
@@ -36,41 +36,41 @@ AiAnalysis.init(
                 "study-plan",
                 "personalization"
             ),
-            allowNull: false,
+            allowNull: false
         },
         analysisData: {
             type: DataTypes.JSONB,
-            allowNull: false,
+            allowNull: false
         },
         generatedBy: {
             type: DataTypes.STRING(50),
-            defaultValue: "groq-ai",
+            defaultValue: "groq-ai"
         },
         modelVersion: {
             type: DataTypes.STRING(50),
-            allowNull: true,
+            allowNull: true
         },
         confidence: {
             type: DataTypes.DECIMAL(3, 2),
             allowNull: true,
             validate: {
                 min: 0,
-                max: 1,
-            },
+                max: 1
+            }
         },
         generatedAt: {
             type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
+            defaultValue: DataTypes.NOW
         },
         expiresAt: {
             type: DataTypes.DATE,
-            allowNull: true,
-        },
+            allowNull: true
+        }
     },
     {
         sequelize,
         tableName: "ai_analyses",
-        timestamps: true,
+        timestamps: true
     }
 );
 

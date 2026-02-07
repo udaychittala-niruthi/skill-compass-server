@@ -82,3 +82,21 @@ export const onboardSeniorSchema = Joi.object({
         "object.base": "accessibilitySettings must be an object"
     })
 });
+
+// Update Skills and Interests
+export const updateSkillsInterestsSchema = Joi.object({
+    skillIds: Joi.array().items(Joi.number()).unique().optional().messages({
+        "array.base": "skillIds must be an array"
+    }),
+    interestIds: Joi.array().items(Joi.number()).unique().optional().messages({
+        "array.base": "interestIds must be an array"
+    })
+}).custom((value, helpers) => {
+    const hasSkills = value.skillIds && value.skillIds.length > 0;
+    const hasInterests = value.interestIds && value.interestIds.length > 0;
+
+    if (!hasSkills && !hasInterests) {
+        return helpers.message({ custom: "At least one skill or interest must be selected" });
+    }
+    return value;
+});

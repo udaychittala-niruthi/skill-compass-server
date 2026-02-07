@@ -1,6 +1,5 @@
-import { Course, Branches, Interest, Skill, sequelize } from "../models";
+import { Course, Branches, Interest, Skill } from "../models";
 import { getJsonCompletion } from "./groq";
-import { Op } from "sequelize";
 
 interface PredictionRequest {
     interestIds: number[];
@@ -22,17 +21,17 @@ class PredictionService {
         // 1. Fetch Metadata
         const interests = await Interest.findAll({ where: { id: interestIds } });
         const skills = await Skill.findAll({ where: { id: skillIds } });
-        const AllCourses = await Course.findAll({ attributes: ['id', 'name', 'category'] });
+        const AllCourses = await Course.findAll({ attributes: ["id", "name", "category"] });
 
         if (interests.length === 0 && skills.length === 0) {
             throw new Error("At least one interest or skill is required for prediction.");
         }
 
-        const interestNames = interests.map(i => i.name).join(", ");
-        const skillNames = skills.map(s => s.name).join(", ");
+        const interestNames = interests.map((i) => i.name).join(", ");
+        const skillNames = skills.map((s) => s.name).join(", ");
 
         // Optimize: Send minimal data to AI
-        const courseMap = AllCourses.map(c => ({ id: c.id, name: c.name, category: c.category }));
+        const courseMap = AllCourses.map((c) => ({ id: c.id, name: c.name, category: c.category }));
 
         // 2. Construct Prompt
         const prompt = `
@@ -60,7 +59,9 @@ class PredictionService {
             });
 
             // Handle potential wrapping
-            const items = Array.isArray(aiResponse) ? aiResponse : (aiResponse as any).courses || (aiResponse as any).predictions || [];
+            const items = Array.isArray(aiResponse)
+                ? aiResponse
+                : (aiResponse as any).courses || (aiResponse as any).predictions || [];
             if (!Array.isArray(items)) {
                 throw new Error("AI response is not an array and could not be unwrapped.");
             }
@@ -68,7 +69,7 @@ class PredictionService {
             // 4. Map back to full objects (sanity check)
             const predictions = [];
             for (const item of items) {
-                const course = AllCourses.find(c => String(c.id) === String(item.id));
+                const course = AllCourses.find((c) => String(c.id) === String(item.id));
                 if (course) {
                     predictions.push({
                         id: course.id,
@@ -84,7 +85,6 @@ class PredictionService {
             }
 
             return predictions.sort((a, b) => b.score - a.score);
-
         } catch (error: any) {
             console.error("Course Prediction Error:", JSON.stringify(error, null, 2));
             if (error?.response?.data) console.error("Groq Response:", JSON.stringify(error.response.data, null, 2));
@@ -105,9 +105,9 @@ class PredictionService {
         if (!course) throw new Error("Course not found.");
         if (branches.length === 0) return []; // No branches to predict
 
-        const interestNames = interests.map(i => i.name).join(", ");
-        const skillNames = skills.map(s => s.name).join(", ");
-        const branchMap = branches.map(b => ({ id: b.id, name: b.name }));
+        const interestNames = interests.map((i) => i.name).join(", ");
+        const skillNames = skills.map((s) => s.name).join(", ");
+        const branchMap = branches.map((b) => ({ id: b.id, name: b.name }));
 
         const prompt = `
         User has selected course: "${course.name}".
@@ -142,7 +142,7 @@ class PredictionService {
 
             const predictions = [];
             for (const item of items) {
-                const branch = branches.find(b => String(b.id) === String(item.id));
+                const branch = branches.find((b) => String(b.id) === String(item.id));
                 if (branch) {
                     predictions.push({
                         id: branch.id,
@@ -158,7 +158,6 @@ class PredictionService {
             }
 
             return predictions.sort((a, b) => b.score - a.score);
-
         } catch (error: any) {
             console.error("Branch Prediction Error:", JSON.stringify(error, null, 2));
             throw new Error(`Failed to generate branch predictions: ${error.message}`);

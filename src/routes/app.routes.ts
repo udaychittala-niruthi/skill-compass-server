@@ -13,7 +13,7 @@ import { sendResponse } from "../utils/customResponse.js";
 const routes = Router();
 
 routes.get("/", (re: Request, res: Response) => {
-  sendResponse(res, true, "😎 Api is Working..");
+    sendResponse(res, true, "😎 Api is Working..");
 });
 
 routes.use("/users", userRoutes);
@@ -25,7 +25,7 @@ routes.use("/learning-path", learningPathRoutes);
 routes.use("/learning-progress", learningProgressRoutes);
 routes.use("/learning-schedule", learningScheduleRoutes);
 
-routes.use((req: Request, res: Response, next: NextFunction) => {
-  sendResponse(res, false, `${req.url} is not found`, 404);
+routes.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+    sendResponse(res, false, `${req.url} is not found`, 404);
 });
 export default routes;

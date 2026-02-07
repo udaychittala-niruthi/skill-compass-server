@@ -35,7 +35,7 @@ class OnboardingService {
         await user.update({ isOnboarded: true });
 
         // Trigger learning path generation (async - don't wait)
-        learningPathService.generateLearningPath(userId).catch(err => {
+        learningPathService.generateLearningPath(userId).catch((err) => {
             console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
         });
 
@@ -70,7 +70,7 @@ class OnboardingService {
         await user.update({ isOnboarded: true });
 
         // Trigger learning path generation (async - don't wait)
-        learningPathService.generateLearningPath(userId).catch(err => {
+        learningPathService.generateLearningPath(userId).catch((err) => {
             console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
         });
 
@@ -107,7 +107,7 @@ class OnboardingService {
         await user.update({ isOnboarded: true });
 
         // Trigger learning path generation (async - don't wait)
-        learningPathService.generateLearningPath(userId).catch(err => {
+        learningPathService.generateLearningPath(userId).catch((err) => {
             console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
         });
 
@@ -137,17 +137,78 @@ class OnboardingService {
         await user.update({ isOnboarded: true });
 
         // Trigger learning path generation (async - don't wait)
-        learningPathService.generateLearningPath(userId).catch(err => {
+        learningPathService.generateLearningPath(userId).catch((err) => {
             console.error(`Failed to initiate learning path generation for user ${userId}:`, err);
         });
 
         return prefs;
     }
 
+    async updateAge(userId: number, age: number) {
+        const user = await User.findByPk(userId);
+        if (!user) throw new Error("User not found");
+
+        let group;
+        if (age < 13) group = "KIDS";
+        else if (age <= 17) group = "TEENS";
+        else if (age <= 25) group = "COLLEGE_STUDENTS";
+        else if (age <= 60) group = "PROFESSIONALS";
+        else group = "SENIORS";
+
+        await user.update({ age, group: group as any }); // Type assertion for group
+        return { age, group };
+    }
+
     async getOnboardingStatus(userId: number) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
-        return { isOnboarded: user.isOnboarded };
+        return {
+            isOnboarded: user.isOnboarded,
+            age: user.age,
+            group: user.group
+        };
+    }
+    async updateSkillsAndInterests(userId: number, data: { skillIds?: number[]; interestIds?: number[] }) {
+        const user = await User.findByPk(userId);
+        if (!user) throw new Error("User not found");
+
+        if (user.age === null) {
+            throw new Error("User age must be set before updating skills and interests");
+        }
+
+        let prefs = await UserPreferences.findOne({ where: { userId } });
+        if (!prefs) {
+            // Create with defaults if not exists, though unlikely if age is set (usually created on first step? no, age is just user update)
+            // actually onboarding steps might create prefs.
+            prefs = await UserPreferences.create({
+                userId,
+                skillIds: data.skillIds || [],
+                interestIds: data.interestIds || []
+            });
+        } else {
+            const updateData: any = {};
+            if (data.skillIds !== undefined) updateData.skillIds = data.skillIds;
+            if (data.interestIds !== undefined) updateData.interestIds = data.interestIds;
+            await prefs.update(updateData);
+        }
+
+        return prefs;
+    }
+
+    async getUserSkillsAndInterests(userId: number) {
+        const user = await User.findByPk(userId);
+        if (!user) throw new Error("User not found");
+
+        if (user.age === null) {
+            throw new Error("User age must be set to access skills and interests");
+        }
+
+        const prefs = await UserPreferences.findOne({ where: { userId } });
+
+        return {
+            skillIds: prefs?.skillIds || [],
+            interestIds: prefs?.interestIds || []
+        };
     }
 }
 

@@ -13,7 +13,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("courses", "icon", {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added icon column to courses");
     } catch (error: any) {
@@ -27,7 +27,7 @@ export async function up() {
     try {
         await queryInterface.addColumn("courses", "iconLibrary", {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         });
         console.log("✅ Added iconLibrary column to courses");
     } catch (error: any) {

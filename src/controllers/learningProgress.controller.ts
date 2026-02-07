@@ -12,7 +12,7 @@ export const learningProgressController = {
 
             const progress = await UserModuleProgress.findAll({
                 where: { userId },
-                order: [["updatedAt", "DESC"]],
+                order: [["updatedAt", "DESC"]]
             });
 
             return sendResponse(res, true, "Progress retrieved successfully", 200, progress);
@@ -35,7 +35,7 @@ export const learningProgressController = {
             }
 
             const progress = await UserModuleProgress.findOne({
-                where: { userId, moduleId },
+                where: { userId, moduleId }
             });
 
             if (!progress) {
@@ -61,17 +61,8 @@ export const learningProgressController = {
                 return sendResponse(res, false, "Invalid module ID", 400);
             }
 
-            const {
-                status,
-                progressPercentage,
-                timeSpent,
-                score,
-                maxScore,
-                passed,
-                rating,
-                feedback,
-                progressData,
-            } = req.body;
+            const { status, progressPercentage, timeSpent, score, maxScore, passed, rating, feedback, progressData } =
+                req.body;
 
             // Validate status if provided
             const validStatuses = ["not-started", "in-progress", "completed", "failed"];
@@ -94,7 +85,7 @@ export const learningProgressController = {
             }
 
             let progress = await UserModuleProgress.findOne({
-                where: { userId, moduleId },
+                where: { userId, moduleId }
             });
 
             if (!progress) {
@@ -111,7 +102,7 @@ export const learningProgressController = {
                     rating,
                     feedback,
                     progressData: progressData || {},
-                    completedAt: status === "completed" ? new Date() : null,
+                    completedAt: status === "completed" ? new Date() : null
                 });
             } else {
                 // Update existing progress
@@ -125,7 +116,7 @@ export const learningProgressController = {
                     rating,
                     feedback,
                     progressData,
-                    completedAt: status === "completed" ? new Date() : progress.completedAt,
+                    completedAt: status === "completed" ? new Date() : progress.completedAt
                 });
             }
 
@@ -138,7 +129,7 @@ export const learningProgressController = {
                 if (rating !== undefined) {
                     const allRatings = await UserModuleProgress.findAll({
                         where: { moduleId, rating: { [Op.not]: null } },
-                        attributes: ["rating"],
+                        attributes: ["rating"]
                     });
                     if (allRatings.length > 0) {
                         const avg = allRatings.reduce((sum, p) => sum + (p.rating || 0), 0) / allRatings.length;
@@ -157,5 +148,5 @@ export const learningProgressController = {
             console.error("Update Module Progress Error:", error);
             return sendResponse(res, false, error.message || "Internal Server Error", 500);
         }
-    },
+    }
 };

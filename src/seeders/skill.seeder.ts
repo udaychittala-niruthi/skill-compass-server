@@ -1,5 +1,4 @@
-import { Skill, sequelize } from "../models";
-import { Sequelize } from "sequelize";
+import { Skill } from "../models";
 import { resolveIconsAndGenerateNew } from "./utils";
 
 const skills = [
@@ -143,16 +142,16 @@ const skills = [
     "building rapport",
     "2d/3d animation",
     "oracle",
-    "no",
+    "no"
 ];
 
-const SkillSeeder = async (sequelize: Sequelize) => {
+const SkillSeeder = async (_sequelize: any) => {
     console.log("Creating Skills...");
 
     try {
         // 1. Fetch current DB state
         const existingDbSkills = await Skill.findAll();
-        const dbSkillMap = new Map(existingDbSkills.map(s => [s.name.toLowerCase(), s]));
+        const dbSkillMap = new Map(existingDbSkills.map((s) => [s.name.toLowerCase(), s]));
 
         const itemsToEnrich: string[] = [];
         const knownNames: string[] = [...skills]; // base known names
@@ -162,7 +161,7 @@ const SkillSeeder = async (sequelize: Sequelize) => {
             const dbSkill = dbSkillMap.get(skillName.toLowerCase());
             if (dbSkill) {
                 // If exists but missing icon, add to enrichment list
-                if (!dbSkill.getDataValue('icon') || !dbSkill.getDataValue('iconLibrary')) {
+                if (!dbSkill.getDataValue("icon") || !dbSkill.getDataValue("iconLibrary")) {
                     itemsToEnrich.push(skillName);
                 }
                 // Else: skip, it's already good
@@ -173,14 +172,14 @@ const SkillSeeder = async (sequelize: Sequelize) => {
         }
 
         // Also add existing DB names to knownNames for exclusion context
-        existingDbSkills.forEach(s => knownNames.push(s.name));
+        existingDbSkills.forEach((s) => knownNames.push(s.name));
 
         console.log(`Found ${itemsToEnrich.length} skills to enrich/create.`);
 
         // 3. Resolve icons and generate new ones
-        // Only generate new ones if we are actually processing things, or force it? 
+        // Only generate new ones if we are actually processing things, or force it?
         // Let's always try to generate a few new ones.
-        const processedItems = await resolveIconsAndGenerateNew(itemsToEnrich, knownNames, 'skill', 20);
+        const processedItems = await resolveIconsAndGenerateNew(itemsToEnrich, knownNames, "skill", 20);
 
         // 4. Upsert changes
         let created = 0;
@@ -200,7 +199,10 @@ const SkillSeeder = async (sequelize: Sequelize) => {
                 created++;
             } else {
                 // Update if icon changed or was missing
-                if (skillRecord.getDataValue('icon') !== item.icon || skillRecord.getDataValue('iconLibrary') !== item.iconLibrary) {
+                if (
+                    skillRecord.getDataValue("icon") !== item.icon ||
+                    skillRecord.getDataValue("iconLibrary") !== item.iconLibrary
+                ) {
                     await skillRecord.update({
                         icon: item.icon,
                         iconLibrary: item.iconLibrary
@@ -210,11 +212,13 @@ const SkillSeeder = async (sequelize: Sequelize) => {
             }
         }
 
-        console.log(`✅  Skills seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${skills.length - itemsToEnrich.length} up-to-date hardcoded items.`);
+        console.log(
+            `✅  Skills seeding completed. Created ${created} new, Updated ${updated} existing. Skipped ${skills.length - itemsToEnrich.length} up-to-date hardcoded items.`
+        );
     } catch (error) {
         console.error("❌  Error seeding skills:", error);
         throw error;
     }
-}
+};
 
 export default SkillSeeder;

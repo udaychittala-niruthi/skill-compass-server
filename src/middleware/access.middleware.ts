@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { accessChecker } from '../services/access.service';
-import { UserContext, ServiceAccess } from '../types/access';
+import { Request, Response, NextFunction } from "express";
+import { accessChecker } from "../services/access.service";
+import { UserContext, ServiceAccess } from "../types/access";
 
 // Extending Express Request to include serviceAccess
 declare global {
@@ -51,7 +51,9 @@ export const requireAccess = (permission: keyof ServiceAccess) => {
 };
 
 // Helper to enforce group restrictions
-export const requireGroup = (...allowedGroups: Array<'KIDS' | 'TEENS' | 'COLLEGE_STUDENTS' | 'PROFESSIONALS' | 'SENIORS'>) => {
+export const requireGroup = (
+    ...allowedGroups: Array<"KIDS" | "TEENS" | "COLLEGE_STUDENTS" | "PROFESSIONALS" | "SENIORS">
+) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const user = req.user as any;
 
@@ -65,7 +67,7 @@ export const requireGroup = (...allowedGroups: Array<'KIDS' | 'TEENS' | 'COLLEGE
         if (!allowedGroups.includes(user.group)) {
             return res.status(403).json({
                 status: false,
-                message: `Access denied: This endpoint is only available for ${allowedGroups.join(', ')} users.`
+                message: `Access denied: This endpoint is only available for ${allowedGroups.join(", ")} users.`
             });
         }
 

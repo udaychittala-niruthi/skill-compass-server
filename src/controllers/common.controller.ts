@@ -64,4 +64,4 @@ export const predictionController = {
             return sendResponse(res, false, error.message, 500);
         }
     }
-}
+};
