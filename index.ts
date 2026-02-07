@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { postgresConnection } from "./src/config/db.js";
 import { createServer } from "http";
 import { websocketService } from "./src/services/websocket.service.js";
+import { setupGraphQL } from "./src/graphql/server.js";
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ async function startServer() {
 
     // Initialize WebSocket
     websocketService.initialize(httpServer);
+
+    // Initialize GraphQL (Admin Only)
+    await setupGraphQL(app);
 
     httpServer
         .listen(port, () => {

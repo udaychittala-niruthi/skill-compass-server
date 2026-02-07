@@ -24,6 +24,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@apollo/server": "^4.13.0",
     "@types/multer": "^2.0.0",
     "@types/socket.io": "^3.0.1",
     "axios": "^1.13.4",
@@ -32,6 +33,7 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "form-data": "^4.0.1",
+    "graphql": "^16.12.0",
     "groq-sdk": "^0.37.0",
     "helmet": "^8.1.0",
     "jimp": "^1.6.0",

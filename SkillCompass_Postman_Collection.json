@@ -707,12 +707,74 @@
                 ]
             },
             "event": []
+        },
+        {
+            "name": "Admin - GraphQL",
+            "item": [
+                {
+                    "name": "Dashboard Stats",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "query GetDashboardStats {\n  dashboardStats {\n    totalUsers\n    totalCourses\n    totalModules\n    activeUsers\n  }\n}",
+                                "variables": ""
+                            }
+                        },
+                        "url": {
+                            "raw": "{{graphql_url}}",
+                            "host": [
+                                "{{graphql_url}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "query GetAllUsers {\n  users {\n    id\n    name\n    email\n    role\n    preferences {\n      learningStyle\n      difficultyLevel\n    }\n  }\n}",
+                                "variables": ""
+                            }
+                        },
+                        "url": {
+                            "raw": "{{graphql_url}}",
+                            "host": [
+                                "{{graphql_url}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            }
         }
     ],
     "variable": [
         {
             "key": "base_url",
-            "value": "http://localhost:5003/api",
+            "value": "http://localhost:5001/api",
+            "type": "string"
+        },
+        {
+            "key": "graphql_url",
+            "value": "http://localhost:5001/graphql",
             "type": "string"
         },
         {

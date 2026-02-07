@@ -28,6 +28,8 @@ const BranchesSeeder = async () => {
             },
         });
 
+        console.log(`Found ${courses.length} courses needing branches.`);
+
         if (courses.length === 0) {
             console.log("⚠️ All courses already have branches. Skipping branches seeding.");
             return;

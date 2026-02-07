@@ -181,9 +181,7 @@ export class ModuleSearchService {
             // Check skill tag overlap
             // Assuming skillTags might contain names or IDs. If IDs are embedded stringly:
             if (plainModule.skillTags && userContext.skills) {
-                // If skillTags are names, this simple ID check might be weak if we don't map names <-> IDs elsewhere.
-                // But generally, more overlap is better.
-                // Let's assume generic overlap for now.
+
                 relevanceScore += 5;
             }
 
