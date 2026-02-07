@@ -3,7 +3,7 @@ import type { Application } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
-import { errorLogger } from "../middleware/errLogger.js";
+import { errorLoggerMiddleware } from "../middleware/errLogger.js";
 
 export function AppConfig(app: Application) {
     app.use(express.json());
@@ -16,7 +16,7 @@ export function AppConfig(app: Application) {
         })
     );
     app.use(helmet());
-    app.use(errorLogger);
+    app.use(errorLoggerMiddleware);
 
     return app;
 }

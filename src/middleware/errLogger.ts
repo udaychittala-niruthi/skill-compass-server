@@ -1,5 +1,4 @@
-import morgan from "morgan";
-import type { StreamOptions } from "morgan";
+import type { Request, Response, NextFunction } from "express";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -16,18 +15,161 @@ if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir, { recursive: true });
 }
 
-const errLogStream = fs.createWriteStream(path.join(logsDir + "../../logs/error.log"), { flags: "a" });
+const errorLogPath = path.join(logsDir, "error.log");
 
-const errStream: StreamOptions = {
-    write: (message) => {
-        console.log("--- ERROR LOG ---");
-        message = message.toString() + `\n ${"-".repeat(50)}\n`;
-        errLogStream.write(message);
+interface ErrorLogEntry {
+    timestamp: string;
+    method: string;
+    url: string;
+    statusCode: number;
+    request: {
+        headers: Record<string, unknown>;
+        body: unknown;
+        params: unknown;
+        query: unknown;
+    };
+    response: {
+        body: unknown;
+    };
+    duration: string;
+}
+
+/**
+ * Writes error log entry to file
+ */
+function writeErrorLog(entry: ErrorLogEntry): void {
+    const separator = "=".repeat(80);
+    const logContent = `
+${separator}
+TIMESTAMP: ${entry.timestamp}
+METHOD: ${entry.method}
+URL: ${entry.url}
+STATUS: ${entry.statusCode}
+DURATION: ${entry.duration}
+${"-".repeat(40)}
+REQUEST HEADERS:
+${JSON.stringify(entry.request.headers, null, 2)}
+${"-".repeat(40)}
+REQUEST BODY:
+${JSON.stringify(entry.request.body, null, 2)}
+${"-".repeat(40)}
+REQUEST PARAMS:
+${JSON.stringify(entry.request.params, null, 2)}
+${"-".repeat(40)}
+REQUEST QUERY:
+${JSON.stringify(entry.request.query, null, 2)}
+${"-".repeat(40)}
+RESPONSE BODY:
+${JSON.stringify(entry.response.body, null, 2)}
+${separator}
+`;
+
+    // Write to file
+    fs.appendFileSync(errorLogPath, logContent);
+
+    // Also log to console in development
+    if (process.env.NODE_ENV !== "production") {
+        console.log("\n🚨 ERROR LOG 🚨");
+        console.log(`[${entry.timestamp}] ${entry.method} ${entry.url} - ${entry.statusCode}`);
+        console.log("Request Body:", JSON.stringify(entry.request.body, null, 2));
+        console.log("Response Body:", JSON.stringify(entry.response.body, null, 2));
+        console.log("-".repeat(50));
     }
-};
-const format = ":method :url :status :response-time ms - :res[content-length]";
+}
 
-export const errorLogger = morgan(format, {
-    skip: (req, res) => res.statusCode < 500, // skip non-errors
-    stream: errStream
-});
+/**
+ * Global error logging middleware
+ * Captures request/response details for all error responses (status >= 400)
+ */
+export function errorLoggerMiddleware(req: Request, res: Response, next: NextFunction): void {
+    const startTime = Date.now();
+
+    // Store original json method
+    const originalJson = res.json.bind(res);
+
+    // Override json method to capture response body
+    res.json = function (body: unknown) {
+        const statusCode = res.statusCode;
+        const duration = Date.now() - startTime;
+
+        // Log if status code indicates an error (>= 400)
+        if (statusCode >= 400) {
+            const logEntry: ErrorLogEntry = {
+                timestamp: new Date().toISOString(),
+                method: req.method,
+                url: req.originalUrl,
+                statusCode,
+                request: {
+                    headers: sanitizeHeaders(req.headers),
+                    body: req.body,
+                    params: req.params,
+                    query: req.query
+                },
+                response: {
+                    body
+                },
+                duration: `${duration}ms`
+            };
+
+            writeErrorLog(logEntry);
+        }
+
+        // Call original json method
+        return originalJson(body);
+    };
+
+    next();
+}
+
+/**
+ * Sanitize headers to remove sensitive information
+ */
+function sanitizeHeaders(headers: Record<string, unknown>): Record<string, unknown> {
+    const sensitiveKeys = ["authorization", "cookie", "x-api-key"];
+    const sanitized = { ...headers };
+
+    for (const key of sensitiveKeys) {
+        if (sanitized[key]) {
+            sanitized[key] = "[REDACTED]";
+        }
+    }
+
+    return sanitized;
+}
+
+/**
+ * Global error handler middleware (for uncaught errors)
+ * Place this at the end of middleware chain
+ */
+export function globalErrorHandler(err: Error, req: Request, res: Response, _next: NextFunction): void {
+    const startTime = (req as any).startTime || Date.now();
+    const duration = Date.now() - startTime;
+
+    const logEntry: ErrorLogEntry = {
+        timestamp: new Date().toISOString(),
+        method: req.method,
+        url: req.originalUrl,
+        statusCode: 500,
+        request: {
+            headers: sanitizeHeaders(req.headers),
+            body: req.body,
+            params: req.params,
+            query: req.query
+        },
+        response: {
+            body: {
+                error: err.message,
+                stack: process.env.NODE_ENV !== "production" ? err.stack : undefined
+            }
+        },
+        duration: `${duration}ms`
+    };
+
+    writeErrorLog(logEntry);
+
+    res.status(500).json({
+        status: false,
+        message: "Internal Server Error",
+        err: process.env.NODE_ENV !== "production" ? err.message : undefined
+    });
+}
