@@ -5,6 +5,8 @@ class Course extends Model {
     declare id: number;
     declare name: string;
     declare category: string;
+    declare icon: string | null;
+    declare iconLibrary: string | null;
 }
 
 Course.init(

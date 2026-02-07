@@ -1,5 +1,7 @@
 import { User, UserPreferences } from "../models";
 import { learningPathService } from "./learningPath.service";
+import { Op } from "sequelize";
+import { Skill, Interest } from "../models";
 
 class OnboardingService {
     async onboardKid(userId: number, data: { avatar?: string; bio?: string }) {
@@ -162,10 +164,15 @@ class OnboardingService {
     async getOnboardingStatus(userId: number) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
+
+        const prefs = await UserPreferences.findOne({ where: { userId } });
+
         return {
+            user,
             isOnboarded: user.isOnboarded,
             age: user.age,
-            group: user.group
+            group: user.group,
+            preferences: prefs || null
         };
     }
     async updateSkillsAndInterests(userId: number, data: { skillIds?: number[]; interestIds?: number[] }) {
@@ -204,10 +211,12 @@ class OnboardingService {
         }
 
         const prefs = await UserPreferences.findOne({ where: { userId } });
+        const skils = await Skill.findAll({ where: { id: { [Op.in]: prefs?.skillIds || [] } } });
+        const interests = await Interest.findAll({ where: { id: { [Op.in]: prefs?.interestIds || [] } } });
 
         return {
-            skillIds: prefs?.skillIds || [],
-            interestIds: prefs?.interestIds || []
+            skils,
+            interests
         };
     }
 }

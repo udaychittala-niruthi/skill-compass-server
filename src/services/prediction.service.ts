@@ -7,21 +7,29 @@ interface PredictionRequest {
     courseId?: number; // For branch prediction
 }
 
-interface PredictionResult {
+export interface PredictedItem {
     id: number;
     name: string;
-    score: number;
+    description?: string;
+    matchPercentage: number;
     reasoning: string;
+    isTopRecommended?: boolean;
+}
+
+export interface PredictedCourse extends PredictedItem {
+    category?: string;
+    icon?: string | null;
+    iconLibrary?: string | null;
 }
 
 class PredictionService {
-    async predictCourses(data: PredictionRequest): Promise<PredictionResult[]> {
+    async predictCourses(data: PredictionRequest): Promise<PredictedCourse[]> {
         const { interestIds, skillIds } = data;
 
         // 1. Fetch Metadata
         const interests = await Interest.findAll({ where: { id: interestIds } });
         const skills = await Skill.findAll({ where: { id: skillIds } });
-        const AllCourses = await Course.findAll({ attributes: ["id", "name", "category"] });
+        const AllCourses = await Course.findAll({ attributes: ["id", "name", "category", "icon", "iconLibrary"] });
 
         if (interests.length === 0 && skills.length === 0) {
             throw new Error("At least one interest or skill is required for prediction.");
@@ -67,15 +75,22 @@ class PredictionService {
             }
 
             // 4. Map back to full objects (sanity check)
-            const predictions = [];
-            for (const item of items) {
+            const sortedItems = items.sort((a, b) => b.score - a.score);
+            const predictions: PredictedCourse[] = [];
+
+            for (let i = 0; i < sortedItems.length; i++) {
+                const item = sortedItems[i];
                 const course = AllCourses.find((c) => String(c.id) === String(item.id));
                 if (course) {
                     predictions.push({
                         id: course.id,
                         name: course.name,
-                        score: item.score,
-                        reasoning: item.reasoning
+                        category: course.category,
+                        icon: course.icon,
+                        iconLibrary: course.iconLibrary,
+                        matchPercentage: item.score,
+                        reasoning: item.reasoning,
+                        isTopRecommended: i === 0
                     });
                 }
             }
@@ -84,7 +99,7 @@ class PredictionService {
                 throw new Error(`No predictions matched DB records. Raw AI Items: ${JSON.stringify(items)}`);
             }
 
-            return predictions.sort((a, b) => b.score - a.score);
+            return predictions;
         } catch (error: any) {
             console.error("Course Prediction Error:", JSON.stringify(error, null, 2));
             if (error?.response?.data) console.error("Groq Response:", JSON.stringify(error.response.data, null, 2));
@@ -92,7 +107,7 @@ class PredictionService {
         }
     }
 
-    async predictBranches(data: PredictionRequest): Promise<PredictionResult[]> {
+    async predictBranches(data: PredictionRequest): Promise<PredictedCourse[]> {
         const { interestIds, skillIds, courseId } = data;
 
         if (!courseId) throw new Error("Course ID is required for branch prediction.");
@@ -140,15 +155,22 @@ class PredictionService {
                 throw new Error("AI response is not an array and could not be unwrapped.");
             }
 
-            const predictions = [];
-            for (const item of items) {
+            const sortedItems = items.sort((a, b) => b.score - a.score);
+            const predictions: PredictedCourse[] = [];
+
+            for (let i = 0; i < sortedItems.length; i++) {
+                const item = sortedItems[i];
                 const branch = branches.find((b) => String(b.id) === String(item.id));
                 if (branch) {
                     predictions.push({
                         id: branch.id,
                         name: branch.name,
-                        score: item.score,
-                        reasoning: item.reasoning
+                        category: course.category,
+                        icon: course.icon,
+                        iconLibrary: course.iconLibrary,
+                        matchPercentage: item.score,
+                        reasoning: item.reasoning,
+                        isTopRecommended: i === 0
                     });
                 }
             }
@@ -157,7 +179,7 @@ class PredictionService {
                 throw new Error(`No branch predictions matched DB records. Raw AI Items: ${JSON.stringify(items)}`);
             }
 
-            return predictions.sort((a, b) => b.score - a.score);
+            return predictions;
         } catch (error: any) {
             console.error("Branch Prediction Error:", JSON.stringify(error, null, 2));
             throw new Error(`Failed to generate branch predictions: ${error.message}`);

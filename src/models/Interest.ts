@@ -4,6 +4,8 @@ import sequelize from "../config/db";
 class Interest extends Model {
     declare id: number;
     declare name: string;
+    declare icon: string | null;
+    declare iconLibrary: string | null;
 }
 
 Interest.init(

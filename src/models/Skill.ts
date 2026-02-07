@@ -4,6 +4,8 @@ import sequelize from "../config/db";
 class Skill extends Model {
     declare id: number;
     declare name: string;
+    declare icon: string | null;
+    declare iconLibrary: string | null;
 }
 
 Skill.init(
