@@ -1,5 +1,5 @@
 import { Course, Branches, Op } from "../models/index.js";
-import { getJsonCompletion } from "../services/groq";
+import { getJsonCompletion } from "../services/groq.js";
 
 interface BranchData {
     name: string;

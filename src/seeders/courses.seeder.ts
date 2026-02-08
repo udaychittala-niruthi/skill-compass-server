@@ -1,4 +1,4 @@
-import { aiGenerateService, SyncCourseInput } from "../services/aiGenerate.service";
+import { aiGenerateService, SyncCourseInput } from "../services/aiGenerate.service.js";
 import { Course, Op } from "../models/index.js";
 
 const courses: Record<string, string> = {

@@ -1,9 +1,9 @@
-import app from "./src/app.js";
+import app from "./app.js";
 import dotenv from "dotenv";
-import { postgresConnection } from "./src/config/db.js";
+import { postgresConnection } from "./config/db.js";
 import { createServer } from "http";
-import { websocketService } from "./src/services/websocket.service.js";
-import { setupGraphQL } from "./src/graphql/server.js";
+import { websocketService } from "./services/websocket.service.js";
+import { setupGraphQL } from "./graphql/server.js";
 
 dotenv.config();
 
@@ -33,7 +33,7 @@ async function startServer() {
     const shutdown = async () => {
         console.log("\n🛑 Gracefully shutting down...");
         try {
-            const sequelize = (await import("./src/config/db.js")).default;
+            const sequelize = (await import("./config/db.js")).default;
             await sequelize.close();
             console.log("🔌 Neon connection pool closed.");
             process.exit(0);

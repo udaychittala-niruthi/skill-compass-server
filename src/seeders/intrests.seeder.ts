@@ -69,7 +69,7 @@ const interests = [
     "architecture and construction"
 ];
 
-import { resolveIconsAndGenerateNew } from "./utils";
+import { resolveIconsAndGenerateNew } from "./utils.js";
 
 // ... interests array ...
 
