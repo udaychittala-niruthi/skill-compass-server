@@ -2,28 +2,40 @@ import Joi from "joi";
 
 // Kids Onboarding
 export const onboardKidSchema = Joi.object({
+    learningStyle: Joi.string().required().messages({
+        "string.empty": "Learning style is required",
+        "any.required": "Learning style is required"
+    }),
+    weeklyLearningHours: Joi.number().min(0).required().messages({
+        "number.base": "Weekly learning hours must be a number",
+        "any.required": "Weekly learning hours is required"
+    }),
     avatar: Joi.string().optional().messages({
         "string.base": "avatar must be a string"
-    }),
-    bio: Joi.string().optional().messages({
-        "string.base": "bio must be a string"
     })
 });
 
 // Teens Onboarding
 export const onboardTeenSchema = Joi.object({
-    interestIds: Joi.array().items(Joi.number()).min(1).required().messages({
-        "array.base": "interestIds must be an array",
-        "array.min": "At least one interest is required",
-        "any.required": "interestIds is required"
+    learningStyle: Joi.string().required().messages({
+        "string.empty": "Learning style is required",
+        "any.required": "Learning style is required"
     }),
-    skillIds: Joi.array().items(Joi.number()).min(1).required().messages({
-        "array.base": "skillIds must be an array",
-        "array.min": "At least one skill is required",
-        "any.required": "skillIds is required"
+    weeklyLearningHours: Joi.number().min(0).required().messages({
+        "number.base": "Weekly learning hours must be a number",
+        "any.required": "Weekly learning hours is required"
     }),
-    bio: Joi.string().optional().messages({
-        "string.base": "bio must be a string"
+    courseId: Joi.number().optional().messages({
+        "number.base": "courseId must be a number"
+    }),
+    branchId: Joi.number().optional().messages({
+        "number.base": "branchId must be a number"
+    }),
+    interestIds: Joi.array().items(Joi.number()).optional().messages({
+        "array.base": "interestIds must be an array"
+    }),
+    skillIds: Joi.array().items(Joi.number()).optional().messages({
+        "array.base": "skillIds must be an array"
     })
 });
 
@@ -37,19 +49,44 @@ export const onboardStudentSchema = Joi.object({
         "number.base": "branchId must be a number",
         "any.required": "branchId is required"
     }),
-    skills: Joi.array().items(Joi.number()).optional().messages({
-        "array.base": "skills must be an array"
+    learningStyle: Joi.string().required().messages({
+        "string.empty": "Learning style is required",
+        "any.required": "Learning style is required"
     }),
-    bio: Joi.string().optional().messages({
-        "string.base": "bio must be a string"
+    weeklyLearningHours: Joi.number().min(0).required().messages({
+        "number.base": "Weekly learning hours must be a number",
+        "any.required": "Weekly learning hours is required"
+    }),
+    skillIds: Joi.array().items(Joi.number()).optional().messages({
+        "array.base": "skillIds must be an array"
     })
 });
 
 // Professionals Onboarding
 export const onboardProfessionalSchema = Joi.object({
+    courseId: Joi.number().required().messages({
+        "number.base": "courseId must be a number",
+        "any.required": "courseId is required"
+    }),
+    branchId: Joi.number().required().messages({
+        "number.base": "branchId must be a number",
+        "any.required": "branchId is required"
+    }),
+    learningStyle: Joi.string().required().messages({
+        "string.empty": "Learning style is required",
+        "any.required": "Learning style is required"
+    }),
+    weeklyLearningHours: Joi.number().min(0).required().messages({
+        "number.base": "Weekly learning hours must be a number",
+        "any.required": "Weekly learning hours is required"
+    }),
     currentRole: Joi.string().required().messages({
         "string.empty": "currentRole is required",
         "any.required": "currentRole is required"
+    }),
+    targetRole: Joi.string().required().messages({
+        "string.empty": "targetRole is required",
+        "any.required": "targetRole is required"
     }),
     industry: Joi.string().required().messages({
         "string.empty": "industry is required",
@@ -60,23 +97,32 @@ export const onboardProfessionalSchema = Joi.object({
         "number.min": "yearsOfExperience must be at least 0",
         "any.required": "yearsOfExperience is required"
     }),
-    skills: Joi.array().items(Joi.number()).optional().messages({
-        "array.base": "skills must be an array"
-    }),
-    bio: Joi.string().optional().messages({
-        "string.base": "bio must be a string"
+    skillIds: Joi.array().items(Joi.number()).optional().messages({
+        "array.base": "skillIds must be an array"
     })
 });
 
 // Seniors Onboarding
 export const onboardSeniorSchema = Joi.object({
-    interestIds: Joi.array().items(Joi.number()).min(1).required().messages({
-        "array.base": "interestIds must be an array",
-        "array.min": "At least one interest is required",
-        "any.required": "interestIds is required"
+    learningStyle: Joi.string().required().messages({
+        "string.empty": "Learning style is required",
+        "any.required": "Learning style is required"
     }),
-    bio: Joi.string().optional().messages({
-        "string.base": "bio must be a string"
+    weeklyLearningHours: Joi.number().min(0).required().messages({
+        "number.base": "Weekly learning hours must be a number",
+        "any.required": "Weekly learning hours is required"
+    }),
+    courseId: Joi.number().optional().messages({
+        "number.base": "courseId must be a number"
+    }),
+    branchId: Joi.number().optional().messages({
+        "number.base": "branchId must be a number"
+    }),
+    interestIds: Joi.array().items(Joi.number()).optional().messages({
+        "array.base": "interestIds must be an array"
+    }),
+    skillIds: Joi.array().items(Joi.number()).optional().messages({
+        "array.base": "skillIds must be an array"
     }),
     accessibilitySettings: Joi.object().optional().messages({
         "object.base": "accessibilitySettings must be an object"

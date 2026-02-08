@@ -39,8 +39,7 @@ LearningPath.init(
         },
         userId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         status: {
             type: DataTypes.ENUM("generating", "completed", "failed"),

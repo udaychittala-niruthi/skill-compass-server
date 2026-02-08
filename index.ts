@@ -29,5 +29,21 @@ async function startServer() {
         .on("error", (error) => {
             console.error("❌ Failed to start the Server: ", error);
         });
+
+    const shutdown = async () => {
+        console.log("\n🛑 Gracefully shutting down...");
+        try {
+            const sequelize = (await import("./src/config/db.js")).default;
+            await sequelize.close();
+            console.log("🔌 Neon connection pool closed.");
+            process.exit(0);
+        } catch (error) {
+            console.error("❌ Error during shutdown:", error);
+            process.exit(1);
+        }
+    };
+
+    process.on("SIGTERM", shutdown);
+    process.on("SIGINT", shutdown);
 }
 startServer();

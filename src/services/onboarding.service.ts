@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import { Skill, Interest } from "../models";
 
 class OnboardingService {
-    async onboardKid(userId: number, data: { avatar?: string; bio?: string }) {
+    async onboardKid(userId: number, data: { learningStyle: string; weeklyLearningHours: number; avatar?: string }) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
 
@@ -23,15 +23,37 @@ class OnboardingService {
         return prefs;
     }
 
-    async onboardTeen(userId: number, data: { interestIds: number[]; skillIds: number[]; bio?: string }) {
+    async onboardTeen(
+        userId: number,
+        data: {
+            learningStyle: string;
+            weeklyLearningHours: number;
+            interestIds?: number[];
+            skillIds?: number[];
+            courseId?: number;
+            branchId?: number;
+        }
+    ) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
 
+        // Prepare data for preferences
+        const prefsData: any = {
+            learningStyle: data.learningStyle,
+            weeklyLearningHours: data.weeklyLearningHours,
+            interestIds: data.interestIds || [],
+            skillIds: data.skillIds || []
+        };
+
+        // Only add courseId/branchId when they are valid positive IDs; 0 would violate FK
+        if (data.courseId !== undefined) prefsData.courseId = data.courseId > 0 ? data.courseId : null;
+        if (data.branchId !== undefined) prefsData.branchId = data.branchId > 0 ? data.branchId : null;
+
         let prefs = await UserPreferences.findOne({ where: { userId } });
         if (!prefs) {
-            prefs = await UserPreferences.create({ userId, ...data });
+            prefs = await UserPreferences.create({ userId, ...prefsData });
         } else {
-            await prefs.update(data);
+            await prefs.update(prefsData);
         }
 
         await user.update({ isOnboarded: true });
@@ -46,10 +68,20 @@ class OnboardingService {
 
     async onboardStudent(
         userId: number,
-        data: { courseId: number; branchId: number; bio?: string; skills?: number[] }
+        data: {
+            courseId: number;
+            branchId: number;
+            learningStyle: string;
+            weeklyLearningHours: number;
+            skillIds?: number[];
+        }
     ) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
+
+        if (!data.courseId || !data.branchId || !data.learningStyle || data.weeklyLearningHours === undefined) {
+            throw new Error("Course, branch, learning style, and weekly learning hours are required");
+        }
 
         let prefs = await UserPreferences.findOne({ where: { userId } });
         if (!prefs) {
@@ -57,15 +89,17 @@ class OnboardingService {
                 userId,
                 courseId: data.courseId,
                 branchId: data.branchId,
-                skillIds: data.skills || [],
-                bio: data.bio
+                learningStyle: data.learningStyle,
+                weeklyLearningHours: data.weeklyLearningHours,
+                skillIds: data.skillIds || []
             });
         } else {
             await prefs.update({
                 courseId: data.courseId,
                 branchId: data.branchId,
-                skillIds: data.skills || [],
-                bio: data.bio
+                learningStyle: data.learningStyle,
+                weeklyLearningHours: data.weeklyLearningHours,
+                skillIds: data.skillIds || []
             });
         }
 
@@ -81,29 +115,54 @@ class OnboardingService {
 
     async onboardProfessional(
         userId: number,
-        data: { currentRole: string; industry: string; yearsOfExperience: number; skills?: number[]; bio?: string }
+        data: {
+            courseId: number;
+            branchId: number;
+            learningStyle: string;
+            weeklyLearningHours: number;
+            currentRole: string;
+            targetRole: string;
+            industry: string;
+            yearsOfExperience: number;
+            skillIds?: number[];
+        }
     ) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
 
+        if (
+            !data.courseId ||
+            !data.branchId ||
+            !data.learningStyle ||
+            data.weeklyLearningHours === undefined ||
+            !data.currentRole ||
+            !data.targetRole ||
+            !data.industry ||
+            data.yearsOfExperience === undefined
+        ) {
+            throw new Error("Missing required professional information");
+        }
+
         let prefs = await UserPreferences.findOne({ where: { userId } });
+        const updateData = {
+            courseId: data.courseId,
+            branchId: data.branchId,
+            learningStyle: data.learningStyle,
+            weeklyLearningHours: data.weeklyLearningHours,
+            currentRole: data.currentRole,
+            targetRole: data.targetRole,
+            industry: data.industry,
+            yearsOfExperience: data.yearsOfExperience,
+            skillIds: data.skillIds || []
+        };
+
         if (!prefs) {
             prefs = await UserPreferences.create({
                 userId,
-                currentRole: data.currentRole,
-                industry: data.industry,
-                yearsOfExperience: data.yearsOfExperience,
-                skillIds: data.skills || [],
-                bio: data.bio
+                ...updateData
             });
         } else {
-            await prefs.update({
-                currentRole: data.currentRole,
-                industry: data.industry,
-                yearsOfExperience: data.yearsOfExperience,
-                skillIds: data.skills || [],
-                bio: data.bio
-            });
+            await prefs.update(updateData);
         }
 
         await user.update({ isOnboarded: true });
@@ -116,24 +175,45 @@ class OnboardingService {
         return prefs;
     }
 
-    async onboardSenior(userId: number, data: { interestIds?: number[]; bio?: string; accessibilitySettings?: any }) {
+    async onboardSenior(
+        userId: number,
+        data: {
+            learningStyle: string;
+            weeklyLearningHours: number;
+            courseId?: number;
+            branchId?: number;
+            interestIds?: number[];
+            skillIds?: number[];
+            accessibilitySettings?: any;
+        }
+    ) {
         const user = await User.findByPk(userId);
         if (!user) throw new Error("User not found");
 
+        if (!data.learningStyle || data.weeklyLearningHours === undefined) {
+            throw new Error("Learning style and weekly learning hours are required");
+        }
+
         let prefs = await UserPreferences.findOne({ where: { userId } });
+        const updateData: any = {
+            learningStyle: data.learningStyle,
+            weeklyLearningHours: data.weeklyLearningHours,
+            interestIds: data.interestIds || [],
+            skillIds: data.skillIds || [],
+            groupSpecificData: { accessibility: data.accessibilitySettings }
+        };
+
+        // Only set courseId/branchId when they are valid positive IDs; 0 would violate FK
+        if (data.courseId !== undefined) updateData.courseId = data.courseId > 0 ? data.courseId : null;
+        if (data.branchId !== undefined) updateData.branchId = data.branchId > 0 ? data.branchId : null;
+
         if (!prefs) {
             prefs = await UserPreferences.create({
                 userId,
-                interestIds: data.interestIds || [],
-                bio: data.bio,
-                groupSpecificData: { accessibility: data.accessibilitySettings }
+                ...updateData
             });
         } else {
-            await prefs.update({
-                interestIds: data.interestIds || [],
-                bio: data.bio,
-                groupSpecificData: { ...prefs.groupSpecificData, accessibility: data.accessibilitySettings }
-            });
+            await prefs.update(updateData);
         }
 
         await user.update({ isOnboarded: true });

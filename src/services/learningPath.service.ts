@@ -7,11 +7,14 @@ import {
     Interest,
     Course,
     Branches,
-    LearningSchedule
+    LearningSchedule,
+    UserModuleProgress
 } from "../models";
 import { getJsonCompletion } from "./groq";
 import { websocketService } from "./websocket.service";
 import { resourceUrlService } from "./resourceUrl.service";
+import sequelize from "../config/db";
+import { QueryTypes } from "sequelize";
 
 interface GeneratedModule {
     title: string;
@@ -63,85 +66,53 @@ class LearningPathService {
             // Fetch skills for module search
             const skillIds = preferences.skillIds || [];
 
-            // OPTIMIZATION: Search existing modules first (before deleting the old path!)
-            let existingModules: any[] = [];
-            try {
-                const { moduleSearchService } = await import("./moduleSearch.service");
+            // Fetch the most recent learning path
+            let learningPath = await LearningPath.findOne({
+                where: { userId },
+                order: [["createdAt", "DESC"]]
+            });
 
-                // Search for existing quality modules with advanced criteria
-                existingModules = await moduleSearchService.findMatchingModules({
-                    userGroup: user.group as any,
-                    skills: skillIds,
-                    courseId: preferences.courseId || undefined, // New: Match course context
-                    branchId: preferences.branchId || undefined, // New: Match branch context
-                    interestIds: preferences.interestIds || [], // New: Match interests
-                    minQuality: 50, // Lowered threshold to 50 to catch valid modules without extra metadata
-                    limit: 20
-                });
-
-                console.log(`[Module Reuse] Found ${existingModules.length} existing quality modules`);
-            } catch (error) {
-                console.error("[Module Reuse] Error searching existing modules:", error);
-                existingModules = [];
-            }
-
-            // Check if learning path already exists
-            let learningPath = await LearningPath.findOne({ where: { userId } });
             let learningPathId: number;
+            let shouldCreateNew = false;
 
             if (learningPath) {
-                console.log(`Updating existing learning path for user ${userId}`);
-                learningPathId = learningPath.id;
-
-                // CRITICAL: Identify modules to keep vs remove
-                // If we found reusable modules, we keep them.
-                // We remove everything else currently attached to this path.
-
-                const reuseIds = existingModules.map((m: any) => m.id);
-
-                // Detach reusable modules (set learningPathId = null temporarily or ensure they are safe)
-                // Actually, if they are already associated with this path (learningPathId === existingPath.id),
-                // we technically don't need to detach/reattach if we are careful.
-                // But `createModules` logic expects to "attach" them. To keep logic simple/consistent:
-                // 1. Detach reusable ones (if they belong to this path).
-                // 2. Delete the rest.
-
-                if (reuseIds.length > 0) {
-                    await LearningModule.update(
-                        { learningPathId: null },
-                        {
-                            where: {
-                                id: reuseIds,
-                                learningPathId: learningPathId // Only strictly detach if they belong to this path
-                            }
-                        }
-                    );
-                    console.log(`[Module Reuse] Detached ${reuseIds.length} candidate modules for reuse`);
+                // If the current path is completed, check if user finished it
+                if (learningPath.status === "completed") {
+                    const isFinished = await this.isPathFinishedByUser(userId, learningPath.id);
+                    if (isFinished) {
+                        shouldCreateNew = true;
+                    }
                 }
-
-                // Delete remaining modules (the ones NOT being reused)
-                // Since we detached the reusable ones, we can safely delete everything remaining in this path
-                await LearningModule.destroy({ where: { learningPathId: learningPathId } });
-
-                // Remove old schedules
-                await LearningSchedule.destroy({ where: { learningPathId: learningPathId } });
-
-                // Update status to generating
-                await learningPath.update({
-                    status: "generating",
-                    path: null, // Clear old path structure
-                    userPreferencesId: preferences.id
-                });
             } else {
+                shouldCreateNew = true;
+            }
+
+            if (shouldCreateNew) {
                 // Create initial learning path record
                 learningPath = await LearningPath.create({
                     userId,
-                    name: `Learning Path for ${user.name}`,
+                    name: `Learning Path for ${user.name} #${(await LearningPath.count({ where: { userId } })) + 1}`,
                     status: "generating",
                     userPreferencesId: preferences.id,
                     path: null
                 });
                 learningPathId = learningPath.id;
+            } else if (learningPath) {
+                console.log(`Updating/Fixing existing learning path for user ${userId}`);
+                learningPathId = learningPath.id;
+
+                // Delete old modules and schedules for this specific path
+                await LearningModule.destroy({ where: { learningPathId: learningPathId } });
+                await LearningSchedule.destroy({ where: { learningPathId: learningPathId } });
+
+                // Update status to generating
+                await learningPath.update({
+                    status: "generating",
+                    path: null,
+                    userPreferencesId: preferences.id
+                });
+            } else {
+                throw new Error("Failed to handle learning path record");
             }
 
             // Emit WebSocket event: generation started
@@ -151,7 +122,7 @@ class LearningPathService {
             });
 
             // Start async generation (don't await)
-            this.performGeneration(userId, learningPathId, user, preferences, existingModules).catch((error) => {
+            this.performGeneration(userId, learningPathId, user, preferences).catch((error) => {
                 console.error(`Failed to generate learning path for user ${userId}:`, error);
             });
         } catch (error: any) {
@@ -167,8 +138,7 @@ class LearningPathService {
         userId: number,
         learningPathId: number,
         user: any,
-        preferences: any,
-        existingModules: any[]
+        preferences: any
     ): Promise<void> {
         try {
             // Fetch related data
@@ -176,43 +146,28 @@ class LearningPathService {
             const interests = await Interest.findAll({ where: { id: preferences.interestIds || [] } });
 
             let course = null;
-            let branch = null;
             if (preferences.courseId) {
                 course = await Course.findByPk(preferences.courseId);
             }
+            let branch = null;
             if (preferences.branchId) {
                 branch = await Branches.findByPk(preferences.branchId);
             }
 
-            const reuseStats = {
-                totalModules: 0,
-                reusedModules: 0,
-                newModules: 0,
-                reusePercentage: "0",
-                groqTokensUsed: 0,
-                tokensSaved: 0
-            };
+            // SIMILARITY CHECK: Try to find a similar path from another user
+            const similarPath = await this.findSimilarLearningPath(user, preferences);
+            if (similarPath) {
+                console.log(
+                    `[Similarity] Found a highly similar path from user ${similarPath.userId} (Score: ${similarPath.similarityScore})`
+                );
+                await this.copyLearningPath(similarPath, learningPathId, userId, preferences);
+                return;
+            }
 
             // Calculate how many new modules needed from Groq
             const targetModuleCount = this.calculateTargetModuleCount(user.group, preferences.weeklyLearningHours);
-            const reuseCount = Math.min(existingModules.length, targetModuleCount);
-            const newModulesNeeded = Math.max(0, targetModuleCount - reuseCount);
 
-            // Calculate token savings
-            const estimatedTokensPerModule = 500;
-            reuseStats.totalModules = targetModuleCount;
-            reuseStats.reusedModules = reuseCount;
-            reuseStats.newModules = newModulesNeeded;
-            reuseStats.reusePercentage = ((reuseCount / targetModuleCount) * 100).toFixed(1);
-            reuseStats.tokensSaved = reuseCount * estimatedTokensPerModule;
-            reuseStats.groqTokensUsed = newModulesNeeded * estimatedTokensPerModule;
-
-            console.log(
-                `[Module Reuse] Strategy: ${reuseCount} existing + ${newModulesNeeded} new = ${targetModuleCount} total (${reuseStats.reusePercentage}% reuse)`
-            );
-            console.log(
-                `[Module Reuse] Token savings: ${reuseStats.tokensSaved} tokens (~$${(reuseStats.tokensSaved * 0.000002).toFixed(4)})`
-            );
+            console.log(`[Learning Path] Generating ${targetModuleCount} fresh modules for path ${learningPathId}`);
 
             // Generate path based on user group (only for missing modules)
             let generatedPath: GeneratedPath;
@@ -240,13 +195,11 @@ class LearningPathService {
                     throw new Error(`Unsupported user group: ${user.group}`);
             }
 
-            // Create learning modules (mix existing + new)
+            // Create learning modules (all fresh)
             const moduleIds = await this.createModules(
                 learningPathId,
                 generatedPath.modules,
                 user.group,
-                existingModules.slice(0, reuseCount), // Use top quality existing modules
-                reuseStats,
                 preferences.courseId,
                 preferences.branchId
             );
@@ -546,41 +499,17 @@ Return a JSON object with:
         });
     }
 
-    /**
-     * Create learning module records from generated data with real resources
-     * OPTIMIZATION: Mix existing quality modules with newly generated ones
-     */
     private async createModules(
         learningPathId: number,
         modules: GeneratedModule[],
         userGroup: string,
-        existingModules: any[] = [],
-        reuseStats?: any,
         courseId?: number,
         branchId?: number
     ): Promise<number[]> {
         const createdModules: any[] = [];
 
-        // First, add existing modules (already have resources)
-        console.log(`[Module Mix] Adding ${existingModules.length} existing modules`);
-        for (let i = 0; i < existingModules.length; i++) {
-            const existing = existingModules[i];
-
-            // Associate existing module with this learning path
-            await LearningModule.update(
-                {
-                    learningPathId,
-                    orderInPath: i + 1
-                },
-                { where: { id: existing.id } }
-            );
-
-            createdModules.push(existing);
-            console.log(`Reused module ${i + 1}/${existingModules.length}: ${existing.title}`);
-        }
-
-        // Then, create new modules from Groq generation
-        console.log(`[Module Mix] Creating ${modules.length} new modules`);
+        // Create new modules from Groq generation
+        console.log(`[Learning Path] Creating ${modules.length} modules`);
         for (let index = 0; index < modules.length; index++) {
             const module = modules[index];
 
@@ -664,7 +593,7 @@ Return a JSON object with:
                     category: module.category,
                     subcategory: module.subcategory,
                     learningPathId,
-                    orderInPath: existingModules.length + index + 1, // Account for existing modules
+                    orderInPath: index + 1,
                     isAiGenerated: true,
                     targetUserGroups: [userGroup],
                     courseId: courseId || null,
@@ -746,7 +675,8 @@ Return a JSON object with:
      */
     async getLearningPathByUserId(userId: number) {
         const learningPath = await LearningPath.findOne({
-            where: { userId }
+            where: { userId },
+            order: [["createdAt", "DESC"]]
         });
 
         if (!learningPath) {
@@ -769,7 +699,10 @@ Return a JSON object with:
      * Get generation status
      */
     async getGenerationStatus(userId: number) {
-        const learningPath = await LearningPath.findOne({ where: { userId } });
+        const learningPath = await LearningPath.findOne({
+            where: { userId },
+            order: [["createdAt", "DESC"]]
+        });
 
         if (!learningPath) {
             return {
@@ -785,6 +718,164 @@ Return a JSON object with:
             generatedAt: learningPath.generatedAt,
             error: learningPath.generationError
         };
+    }
+
+    /**
+     * Check if a user has finished all modules in a specific learning path
+     */
+    private async isPathFinishedByUser(userId: number, learningPathId: number): Promise<boolean> {
+        const modules = await LearningModule.findAll({
+            where: { learningPathId }
+        });
+
+        if (modules.length === 0) return true;
+
+        const moduleIds = modules.map((m) => m.id);
+        const progress = await UserModuleProgress.findAll({
+            where: {
+                userId,
+                moduleId: moduleIds,
+                status: "completed"
+            }
+        });
+
+        return progress.length === moduleIds.length;
+    }
+
+    /**
+     * Finds a similar learning path from another user using a point-based system
+     */
+    private async findSimilarLearningPath(user: any, prefs: any): Promise<any> {
+        // Only search for other users in the same group
+        const group = user.group;
+        if (!group || group === "KIDS") return null;
+
+        const skillIds = prefs.skillIds || [];
+        const interestIds = prefs.interestIds || [];
+
+        // Construct SQL for point-based similarity
+        const query = `
+            SELECT 
+                lp.id as lp_id,
+                lp."userId",
+                lp.path,
+                up.id as prefs_id,
+                (
+                    (CASE WHEN up."courseId" = :courseId AND :courseId IS NOT NULL THEN 25 ELSE 0 END) +
+                    (CASE WHEN up."branchId" = :branchId AND :branchId IS NOT NULL THEN 25 ELSE 0 END) +
+                    (CASE WHEN up."industry" = :industry AND :industry IS NOT NULL THEN 15 ELSE 0 END) +
+                    (CASE WHEN up."targetRole" = :targetRole AND :targetRole IS NOT NULL THEN 15 ELSE 0 END) +
+                    (COALESCE((SELECT COUNT(*) FROM unnest(up."skillIds") s WHERE s = ANY(:skillIds)), 0) * 8) +
+                    (COALESCE((SELECT COUNT(*) FROM unnest(up."interestIds") i WHERE i = ANY(:interestIds)), 0) * 8)
+                ) as "similarityScore"
+            FROM learning_paths lp
+            JOIN user_preferences up ON lp."userId" = up."userId"
+            JOIN users u ON lp."userId" = u.id
+            WHERE 
+                lp.status = 'completed' AND 
+                lp."userId" != :userId AND
+                u."group" = :group
+            ORDER BY "similarityScore" DESC
+            LIMIT 1
+        `;
+
+        const results: any[] = await sequelize.query(query, {
+            replacements: {
+                userId: user.id,
+                group: group,
+                courseId: prefs.courseId || null,
+                branchId: prefs.branchId || null,
+                industry: prefs.industry || null,
+                targetRole: prefs.targetRole || null,
+                skillIds: skillIds.length > 0 ? skillIds : [0],
+                interestIds: interestIds.length > 0 ? interestIds : [0]
+            },
+            type: QueryTypes.SELECT
+        });
+
+        if (results.length > 0 && results[0].similarityScore >= 40) {
+            return results[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * Copies an existing learning path's modules and structure to a new path
+     */
+    private async copyLearningPath(source: any, targetPathId: number, targetUserId: number, prefs: any): Promise<void> {
+        console.log(`[Similarity] Cloning modules from path ${source.lp_id} to ${targetPathId}`);
+
+        // 1. Fetch source modules
+        const sourceModules = await LearningModule.findAll({
+            where: { learningPathId: source.lp_id },
+            order: [["orderInPath", "ASC"]]
+        });
+
+        const newModuleIds: number[] = [];
+
+        // 2. Clone each module
+        for (const mod of sourceModules) {
+            const cloned = await LearningModule.create({
+                title: mod.title,
+                description: mod.description,
+                moduleType: mod.moduleType,
+                format: mod.format,
+                difficulty: mod.difficulty,
+                duration: mod.duration,
+                contentUrl: mod.contentUrl,
+                thumbnailUrl: mod.thumbnailUrl,
+                category: mod.category,
+                subcategory: mod.subcategory,
+                skillTags: mod.skillTags,
+                prerequisiteModules: [], // Re-map later if needed, but simple clone for now
+                targetUserGroups: mod.targetUserGroups,
+                groupSpecificMetadata: mod.groupSpecificMetadata,
+                courseId: mod.courseId,
+                learningPathId: targetPathId,
+                orderInPath: mod.orderInPath,
+                isAiGenerated: false, // It's a clone
+                generationMetadata: {
+                    clonedFromPath: source.lp_id,
+                    clonedFromModule: mod.id,
+                    clonedAt: new Date()
+                }
+            });
+            newModuleIds.push(cloned.id);
+        }
+
+        // 3. Update the path record
+        const pathData = source.path || {};
+        await LearningPath.update(
+            {
+                path: {
+                    ...pathData,
+                    modules: newModuleIds,
+                    cloned: true,
+                    sourceUserId: source.userId
+                },
+                status: "completed",
+                generatedAt: new Date()
+            },
+            { where: { id: targetPathId } }
+        );
+
+        // 4. Generate schedule
+        await this.generateSchedule(targetUserId, targetPathId, newModuleIds, prefs.weeklyLearningHours);
+
+        // 5. Emit WebSocket event
+        websocketService.emitGenerationCompleted(targetUserId, {
+            learningPathId: targetPathId,
+            message: "Learning path assigned based on similar profiles",
+            path: {
+                name: source.path?.name || "Learning Path",
+                description: source.path?.description || "",
+                modules: sourceModules.map((m) => m.toJSON()),
+                metadata: source.path?.metadata || {}
+            }
+        });
+
+        console.log(`[Similarity] Successfully cloned path for user ${targetUserId}`);
     }
 }
 

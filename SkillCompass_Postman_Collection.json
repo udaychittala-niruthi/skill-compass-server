@@ -198,7 +198,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"avatar\": \"superhero_1.png\",\n    \"bio\": \"I love coding games!\"\n}",
+                            "raw": "{\n    \"learningStyle\": \"visual\",\n    \"weeklyLearningHours\": 5,\n    \"avatar\": \"superhero_1.png\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -226,7 +226,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"interestIds\": [1, 2],\n    \"skillIds\": [1],\n    \"bio\": \"Interested in web dev.\"\n}",
+                            "raw": "{\n    \"learningStyle\": \"hands-on\",\n    \"weeklyLearningHours\": 10,\n    \"courseId\": 1,\n    \"branchId\": 1,\n    \"interestIds\": [1, 2],\n    \"skillIds\": [1]\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -254,7 +254,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"courseId\": 1,\n    \"branchId\": 1,\n    \"skills\": [1, 3],\n    \"bio\": \"CS Student\"\n}",
+                            "raw": "{\n    \"courseId\": 1,\n    \"branchId\": 1,\n    \"learningStyle\": \"mixed\",\n    \"weeklyLearningHours\": 15,\n    \"skillIds\": [1, 3]\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -282,7 +282,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"currentRole\": \"Software Engineer\",\n    \"industry\": \"Tech\",\n    \"yearsOfExperience\": 5,\n    \"skills\": [1, 4],\n    \"bio\": \"Full stack dev\"\n}",
+                            "raw": "{\n    \"courseId\": 1,\n    \"branchId\": 1,\n    \"learningStyle\": \"reading\",\n    \"weeklyLearningHours\": 20,\n    \"currentRole\": \"Software Engineer\",\n    \"targetRole\": \"Senior Architect\",\n    \"industry\": \"Tech\",\n    \"yearsOfExperience\": 5,\n    \"skillIds\": [1, 4]\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -310,7 +310,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"interestIds\": [3],\n    \"bio\": \"Learning basic computer skills\",\n    \"accessibilitySettings\": { \"fontSize\": \"large\" }\n}",
+                            "raw": "{\n    \"learningStyle\": \"mixed\",\n    \"weeklyLearningHours\": 8,\n    \"courseId\": 1,\n    \"branchId\": 1,\n    \"interestIds\": [3],\n    \"skillIds\": [1],\n    \"accessibilitySettings\": { \"fontSize\": \"large\" }\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"

@@ -25,9 +25,16 @@ router.get(
 
 // Get modules for a path - excludes KIDS
 router.get(
-    "/:id/modules",
+    "/modules",
     requireGroup("TEENS", "COLLEGE_STUDENTS", "PROFESSIONALS", "SENIORS"),
     learningPathController.getPathModules
+);
+
+// Get specific module of user - excludes KIDS
+router.get(
+    "/modules/:moduleId",
+    requireGroup("TEENS", "COLLEGE_STUDENTS", "PROFESSIONALS", "SENIORS"),
+    learningPathController.getPathModule
 );
 
 // Regenerate learning path - excludes KIDS

@@ -38,7 +38,7 @@ LearningModule.hasMany(UserModuleProgress, { foreignKey: "moduleId", as: "userPr
 UserModuleProgress.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
 
 // 4. LEARNING PATHS
-User.hasOne(LearningPath, { foreignKey: "userId", as: "learningPath" });
+User.hasMany(LearningPath, { foreignKey: "userId", as: "learningPaths" });
 LearningPath.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 LearningPath.belongsTo(UserPreferences, {

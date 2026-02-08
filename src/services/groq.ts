@@ -31,6 +31,8 @@ export interface GroqCompletionOptions {
     systemPrompt?: string;
 }
 
+const blockedModels = new Map<string, number>();
+
 let cachedModels: string[] = [];
 let lastFetchTime = 0;
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
@@ -62,6 +64,24 @@ async function getAvailableModels(): Promise<string[]> {
 }
 
 /**
+ * Helper to parse retry duration from Groq error message.
+ * Example: "Please try again in 9m0s."
+ */
+function parseRetryAfter(message: string): number {
+    const match = message.match(/try again in (\d+m)?(\d+(\.\d+)?s)?/);
+    if (!match) return 60 * 1000; // Default 1 minute
+
+    let ms = 0;
+    if (match[1]) {
+        ms += parseInt(match[1]) * 60 * 1000;
+    }
+    if (match[2]) {
+        ms += parseFloat(match[2]) * 1000;
+    }
+    return ms > 0 ? ms : 60 * 1000;
+}
+
+/**
  * Helper to retry an operation with fallback models on rate limit errors.
  */
 async function withModelFallback<T>(
@@ -69,25 +89,49 @@ async function withModelFallback<T>(
     preferredModel: string = DEFAULT_MODEL
 ): Promise<T> {
     const availableModels = await getAvailableModels();
+    const now = Date.now();
+
+    // Clean up expired blocks
+    for (const [model, blockedUntil] of blockedModels.entries()) {
+        if (now > blockedUntil) {
+            blockedModels.delete(model);
+        }
+    }
 
     // Ensure preferred model is first, then unique available models (excluding preferred)
-    const modelsToTry = [preferredModel, ...availableModels.filter((m) => m !== preferredModel)];
+    const allModels = [preferredModel, ...availableModels.filter((m: string) => m !== preferredModel)];
+
+    // Filter out blocked models
+    const modelsToTry = allModels.filter((m: string) => !blockedModels.has(m));
+
+    // If all models are blocked, try all models as a last resort (or we'll have nothing to try)
+    const finalModelsToTry = modelsToTry.length > 0 ? modelsToTry : allModels;
 
     let lastError: any;
 
-    for (const model of modelsToTry) {
+    for (const model of finalModelsToTry) {
         try {
             return await operation(model);
         } catch (error: any) {
             console.warn(`Groq request failed with model ${model}:`, error.status, error.message);
             lastError = error;
 
+            const isRateLimit =
+                error?.status === 429 ||
+                error?.code === "rate_limit_exceeded" ||
+                (error?.message && error.message.includes("429"));
+
+            if (isRateLimit) {
+                const retryAfter = parseRetryAfter(error.message || "");
+                console.log(`Model ${model} rate limited. Blocking for ${Math.round(retryAfter / 1000)}s.`);
+                blockedModels.set(model, Date.now() + retryAfter);
+            }
+
             const isRetryable =
-                error?.status === 429 || // Rate limit
+                isRateLimit ||
                 error?.status === 400 || // Bad request (e.g., model doesn't support chat)
                 error?.status === 503 || // Service unavailable
-                error?.code === "rate_limit_exceeded" ||
-                (error?.message && (error.message.includes("429") || error.message.includes("does not support")));
+                (error?.message && error.message.includes("does not support"));
 
             if (isRetryable) {
                 console.log(`Switching to next model due to error (${error?.status || "unknown"})...`);

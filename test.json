@@ -1,0 +1,1189 @@
+[
+    {
+        "id": 182,
+        "title": "Introduction to Human Behavior",
+        "description": "Understanding the fundamentals of human behavior and its impact on service design",
+        "moduleType": "course",
+        "format": "video",
+        "difficulty": "beginner",
+        "duration": 240,
+        "contentUrl": "https://www.youtube.com/watch?v=SSJ_HA9TDyY",
+        "thumbnailUrl": "https://pixabay.com/get/gd7ec68a7a0a553332d8f8bdb06cf523ebe2beee4af02c22304b6348dbc9ddd0ceed0e93f0d423ebec0432a598eea3080a35d77f7871ed2e3f175c17fabb6ab75_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Core",
+        "skillTags": [
+            "human behavior",
+            "service design"
+        ],
+        "prerequisiteModules": [],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 1,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:46.214Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "240 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 240
+            },
+            "searchKeywords": "human behavior theory, service design principles",
+            "originalPrerequisites": []
+        },
+        "createdAt": "2026-02-08T06:12:46.215Z",
+        "updatedAt": "2026-02-08T06:12:46.215Z"
+    },
+    {
+        "id": 181,
+        "title": "Advanced SQL Topics",
+        "description": "Exploring advanced SQL concepts for data analysis",
+        "moduleType": "micro-lesson",
+        "format": "video",
+        "difficulty": "advanced",
+        "duration": 90,
+        "contentUrl": "https://www.youtube.com/watch?v=OT1RErkfLNQ",
+        "thumbnailUrl": "https://pixabay.com/get/gf0aa4f0e70f5a3a65f2f4eabc5c99e6c6838dc728caad72734ac76858a6431d926c135fbe52889fbb35aeef9dcb1cbb8e6aa195f2e7959d90b115aeb7c9fc30d_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Elective",
+        "skillTags": [
+            "sql",
+            "advanced data analysis"
+        ],
+        "prerequisiteModules": [
+            172
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 1,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:25.960Z",
+            "generatedFor": 3,
+            "pdfResources": [
+                "https://www.sqltutorial.org/",
+                "https://www.postgresql.org/docs/current/tutorial.html",
+                "https://mode.com/sql-tutorial/"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "90 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 90
+            },
+            "searchKeywords": "advanced sql, data analysis with sql",
+            "originalPrerequisites": [
+                "SQL Fundamentals"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:25.960Z",
+        "updatedAt": "2026-02-08T06:12:45.249Z"
+    },
+    {
+        "id": 183,
+        "title": "SQL for Data Analysis",
+        "description": "Building on existing SQL skills to analyze data for human behavior insights",
+        "moduleType": "micro-lesson",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 90,
+        "contentUrl": "https://www.youtube.com/watch?v=OT1RErkfLNQ",
+        "thumbnailUrl": "https://pixabay.com/get/ga3570d76f47cd30b14ab1b42e6ad381f2c6e55908a0fb1d2fdba7f51496110870acebb8fe14665b00c3fb2eb73b0da4b4fa4e89156f0e56bcfdc935be64352d0_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Core",
+        "skillTags": [
+            "sql",
+            "data analysis"
+        ],
+        "prerequisiteModules": [],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 2,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:46.735Z",
+            "generatedFor": 3,
+            "pdfResources": [
+                "https://www.sqltutorial.org/",
+                "https://www.postgresql.org/docs/current/tutorial.html",
+                "https://mode.com/sql-tutorial/"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "90 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 90
+            },
+            "searchKeywords": "sql data analysis, data visualization",
+            "originalPrerequisites": []
+        },
+        "createdAt": "2026-02-08T06:12:46.736Z",
+        "updatedAt": "2026-02-08T06:12:46.736Z"
+    },
+    {
+        "id": 179,
+        "title": "Assessment: Understanding Human Behavior",
+        "description": "Evaluating knowledge of human behavior principles",
+        "moduleType": "assessment",
+        "format": "quiz",
+        "difficulty": "intermediate",
+        "duration": 120,
+        "contentUrl": "https://www.youtube.com/watch?v=GeIkN549bs0",
+        "thumbnailUrl": "https://pixabay.com/get/g60adb9eabc4ee7cf7eb5c3c242597e7e077136d7f9b4f1b6b9b6d4c12739df65a85132c874b08ffb6875b8f897e15d6b062fb5b4c82121a490d1b49ee638f25a_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Core",
+        "skillTags": [
+            "human behavior",
+            "psychology"
+        ],
+        "prerequisiteModules": [
+            171
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 2,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:24.847Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "quiz",
+                "quality": "N/A",
+                "duration": "120 minutes",
+                "provider": "Platform",
+                "estimatedDuration": 120
+            },
+            "searchKeywords": "psychology assessment, human behavior quiz",
+            "originalPrerequisites": [
+                "Introduction to Psychology"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:24.847Z",
+        "updatedAt": "2026-02-08T06:12:45.256Z"
+    },
+    {
+        "id": 178,
+        "title": "Capstone Project: Service Improvement",
+        "description": "Applying knowledge to improve service quality in a real-world setting",
+        "moduleType": "project",
+        "format": "interactive",
+        "difficulty": "advanced",
+        "duration": 600,
+        "contentUrl": "https://www.youtube.com/watch?v=4C5LYI1DLR4",
+        "thumbnailUrl": "https://pixabay.com/get/gdebcc72b1b04ebddeb8a957aacb56edf07ffd1d8e4011fac26711e613465e3fe420e23f7d2a2816523cf8ca6bf3c04af6fca3a43b1928fbe22ab2c713115e49f_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Project",
+        "skillTags": [
+            "service improvement",
+            "project management"
+        ],
+        "prerequisiteModules": [
+            175,
+            176
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 3,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:24.210Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "interactive",
+                "quality": "N/A",
+                "duration": "600 minutes",
+                "provider": "Self-guided",
+                "estimatedDuration": 600
+            },
+            "searchKeywords": "service improvement projects, project management",
+            "originalPrerequisites": [
+                "Social Psychology",
+                "Service Quality Management"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:24.211Z",
+        "updatedAt": "2026-02-08T06:12:45.263Z"
+    },
+    {
+        "id": 184,
+        "title": "Service Design Fundamentals",
+        "description": "Learning the principles of service design to create user-centered experiences",
+        "moduleType": "workshop",
+        "format": "live-session",
+        "difficulty": "beginner",
+        "duration": 180,
+        "contentUrl": "https://www.youtube.com/watch?v=12bk7TwCy2M",
+        "thumbnailUrl": "https://pixabay.com/get/g8f477d65c8196f16f190d6889b247caa86a1961d0f916d28f30178b6ccff576dfc24e73395350fa4b10b12cea229a44a026fc2077205969acb8f4036f81339b0_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Elective",
+        "skillTags": [
+            "service design",
+            "user experience"
+        ],
+        "prerequisiteModules": [
+            182
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 3,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:47.414Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "live-session",
+                "quality": "Interactive",
+                "duration": "180 minutes",
+                "provider": "Virtual",
+                "estimatedDuration": 180
+            },
+            "searchKeywords": "service design workshop, user experience design",
+            "originalPrerequisites": [
+                "Introduction to Human Behavior"
+            ]
+        },
+        "createdAt": "2026-02-08T06:12:47.414Z",
+        "updatedAt": "2026-02-08T06:12:47.414Z"
+    },
+    {
+        "id": 185,
+        "title": "Human Behavior and Psychology",
+        "description": "Delving deeper into human behavior and psychology to inform service design decisions",
+        "moduleType": "reading",
+        "format": "article",
+        "difficulty": "intermediate",
+        "duration": 120,
+        "contentUrl": "https://www.youtube.com/watch?v=Ztzy5aOr_N8",
+        "thumbnailUrl": "https://pixabay.com/get/ga56a40c3a53b76d832c58c6560d941eab6242a0a8a361d60d68f37e19d09ae8f9fe33fada3b57df8c4c65fa8300d82766839d90147e8b1f4fd5f886d37f83498_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Core",
+        "skillTags": [
+            "human behavior",
+            "psychology"
+        ],
+        "prerequisiteModules": [
+            182
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 4,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:48.052Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "article",
+                "quality": "Text",
+                "duration": "120 minutes",
+                "provider": "PDF/Web",
+                "estimatedDuration": 120
+            },
+            "searchKeywords": "human behavior psychology, cognitive biases",
+            "originalPrerequisites": [
+                "Introduction to Human Behavior"
+            ]
+        },
+        "createdAt": "2026-02-08T06:12:48.053Z",
+        "updatedAt": "2026-02-08T06:12:48.053Z"
+    },
+    {
+        "id": 177,
+        "title": "Human-Computer Interaction",
+        "description": "Designing interfaces for effective human-computer interaction",
+        "moduleType": "workshop",
+        "format": "live-session",
+        "difficulty": "advanced",
+        "duration": 120,
+        "contentUrl": "https://www.youtube.com/watch?v=i_LRpD7Rfiw",
+        "thumbnailUrl": "https://pixabay.com/get/g30af030053123a8ed76c7d4841b73d89215968735a93897406e6b9d845443f3eafea7ced12323981ba460e0a86b1de8deaaae7149fead2006b2c1fdd36e7d488_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Elective",
+        "skillTags": [
+            "human-computer interaction",
+            "interface design"
+        ],
+        "prerequisiteModules": [
+            174
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 4,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:23.621Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "live-session",
+                "quality": "Interactive",
+                "duration": "120 minutes",
+                "provider": "Virtual",
+                "estimatedDuration": 120
+            },
+            "searchKeywords": "human-computer interaction, interface design principles",
+            "originalPrerequisites": [
+                "Data Visualization"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:23.622Z",
+        "updatedAt": "2026-02-08T06:12:45.269Z"
+    },
+    {
+        "id": 186,
+        "title": "Data-Driven Service Improvement",
+        "description": "Applying data analysis skills to improve service design and delivery",
+        "moduleType": "project",
+        "format": "interactive",
+        "difficulty": "intermediate",
+        "duration": 360,
+        "contentUrl": "https://www.youtube.com/watch?v=WX9CCUgF-dY",
+        "thumbnailUrl": "https://pixabay.com/get/g3ac34f4eba0a54014745ec30f51c05760053faf4b866b57ebc5cc7fc751220da2ce5e6de2fea906ffd0f753d11dfc181082c86a2c284747bf5f7f76d96473968_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Project",
+        "skillTags": [
+            "data analysis",
+            "service improvement"
+        ],
+        "prerequisiteModules": [
+            183,
+            184
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 5,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:48.637Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "interactive",
+                "quality": "N/A",
+                "duration": "360 minutes",
+                "provider": "Self-guided",
+                "estimatedDuration": 360
+            },
+            "searchKeywords": "data-driven service improvement, service design projects",
+            "originalPrerequisites": [
+                "SQL for Data Analysis",
+                "Service Design Fundamentals"
+            ]
+        },
+        "createdAt": "2026-02-08T06:12:48.638Z",
+        "updatedAt": "2026-02-08T06:12:48.638Z"
+    },
+    {
+        "id": 176,
+        "title": "Service Quality Management",
+        "description": "Implementing quality management principles in service settings",
+        "moduleType": "micro-lesson",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 90,
+        "contentUrl": "https://www.youtube.com/watch?v=4T59Si1fGKk",
+        "thumbnailUrl": "https://pixabay.com/get/g47e6f7d1bade90a1927c0ce8b476f89db4f4b76d5c88f86de143f19352527773b8288b2cc1295a6ee1eda3e39d21e04aa3f681b3a6f8de864350123bd8741b56_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Elective",
+        "skillTags": [
+            "service quality",
+            "quality management"
+        ],
+        "prerequisiteModules": [
+            173
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 5,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:22.993Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "90 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 90
+            },
+            "searchKeywords": "service quality, quality management principles",
+            "originalPrerequisites": [
+                "Service Management Essentials"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:22.994Z",
+        "updatedAt": "2026-02-08T06:12:45.275Z"
+    },
+    {
+        "id": 175,
+        "title": "Social Psychology",
+        "description": "Advanced concepts in social psychology to understand group behavior",
+        "moduleType": "course",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 240,
+        "contentUrl": "https://www.youtube.com/watch?v=zKQmddXEXAQ",
+        "thumbnailUrl": "https://pixabay.com/get/gc8238cbf40a21945397e29eaf8ddacfb92bed2897c29bcfa7ce6685e1aa53853815239da005cd62fcd68406fced0a9d5d3dd3a9a7970c92bfe18c2a616a352b1_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Core",
+        "skillTags": [
+            "social psychology",
+            "group behavior"
+        ],
+        "prerequisiteModules": [
+            171
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 6,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:22.390Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "240 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 240
+            },
+            "searchKeywords": "social psychology, group dynamics",
+            "originalPrerequisites": [
+                "Introduction to Psychology"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:22.390Z",
+        "updatedAt": "2026-02-08T06:12:45.282Z"
+    },
+    {
+        "id": 187,
+        "title": "Advanced SQL for Human Behavior Insights",
+        "description": "Mastering advanced SQL techniques to uncover deeper human behavior insights",
+        "moduleType": "micro-lesson",
+        "format": "video",
+        "difficulty": "advanced",
+        "duration": 120,
+        "contentUrl": "https://www.youtube.com/watch?v=5PrZvPeUw60",
+        "thumbnailUrl": "https://pixabay.com/get/g31bf154ceb5cc4d74046d630c041f2a2390fdf8ef03e6b4e874320baee8c28aa993dc164cf9d56bd8e0ce616091098ca878a7c2dee2cf6961ef0b57cb2d20e32_640.jpg",
+        "category": "Semester 3",
+        "subcategory": "Elective",
+        "skillTags": [
+            "sql",
+            "human behavior insights"
+        ],
+        "prerequisiteModules": [
+            183
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 6,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:49.180Z",
+            "generatedFor": 3,
+            "pdfResources": [
+                "https://www.sqltutorial.org/",
+                "https://www.postgresql.org/docs/current/tutorial.html",
+                "https://mode.com/sql-tutorial/"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "120 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 120
+            },
+            "searchKeywords": "advanced sql techniques, human behavior insights",
+            "originalPrerequisites": [
+                "SQL for Data Analysis"
+            ]
+        },
+        "createdAt": "2026-02-08T06:12:49.180Z",
+        "updatedAt": "2026-02-08T06:12:49.180Z"
+    },
+    {
+        "id": 188,
+        "title": "Service Design for Social Impact",
+        "description": "Applying service design principles to create positive social impact",
+        "moduleType": "workshop",
+        "format": "live-session",
+        "difficulty": "intermediate",
+        "duration": 240,
+        "contentUrl": "https://www.youtube.com/watch?v=TDWj-8kX-Zs",
+        "thumbnailUrl": "https://pixabay.com/get/ga3bf79611f5e9514ef6580f34e2ca2d33ae6495b9f4d725be3092ece78f1ae0c2d5321493fa692948b551b6eaa8982b98dd6e5cdaec87c1d7a47e4f791f249ea_640.jpg",
+        "category": "Semester 3",
+        "subcategory": "Elective",
+        "skillTags": [
+            "service design",
+            "social impact"
+        ],
+        "prerequisiteModules": [
+            184
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 7,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:49.898Z",
+            "generatedFor": 3,
+            "pdfResources": [
+                "https://go.dev/doc/",
+                "https://gobyexample.com/"
+            ],
+            "formatMetadata": {
+                "type": "live-session",
+                "quality": "Interactive",
+                "duration": "240 minutes",
+                "provider": "Virtual",
+                "estimatedDuration": 240
+            },
+            "searchKeywords": "service design social impact, design for good",
+            "originalPrerequisites": [
+                "Service Design Fundamentals"
+            ]
+        },
+        "createdAt": "2026-02-08T06:12:49.899Z",
+        "updatedAt": "2026-02-08T06:12:49.899Z"
+    },
+    {
+        "id": 174,
+        "title": "Data Visualization",
+        "description": "Visualizing data to understand human behavior and service trends",
+        "moduleType": "project",
+        "format": "interactive",
+        "difficulty": "intermediate",
+        "duration": 300,
+        "contentUrl": "https://www.youtube.com/watch?v=me_Xep_MjhM",
+        "thumbnailUrl": "https://pixabay.com/get/geaa7e19f1285d80b16a7eaa351012d8113c48813ce5449664e31795d76610eb68b426aefe62af446fec9e390ddade0beea53945247572dc0832a9d61af36149b_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Project",
+        "skillTags": [
+            "data visualization",
+            "human behavior analysis"
+        ],
+        "prerequisiteModules": [
+            172
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 7,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:04:21.777Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "interactive",
+                "quality": "N/A",
+                "duration": "300 minutes",
+                "provider": "Self-guided",
+                "estimatedDuration": 300
+            },
+            "searchKeywords": "data visualization tools, human behavior analysis",
+            "originalPrerequisites": [
+                "SQL Fundamentals"
+            ]
+        },
+        "createdAt": "2026-02-08T06:04:21.778Z",
+        "updatedAt": "2026-02-08T06:12:45.288Z"
+    },
+    {
+        "id": 189,
+        "title": "Human-Centric Service Assessment",
+        "description": "Evaluating service design decisions using human behavior and psychology principles",
+        "moduleType": "assessment",
+        "format": "quiz",
+        "difficulty": "advanced",
+        "duration": 180,
+        "contentUrl": "https://www.youtube.com/watch?v=HRoCPLbh_hA",
+        "thumbnailUrl": "https://pixabay.com/get/g42a3e20fe85236a6a65ad00baa06a4ea3904724592dc20a295b457cbf1b1af52864bd2f41fd9527252d26cf7845c43caf10eed7e0f7e4b747f59ee7d4f63fedc_640.jpg",
+        "category": "Semester 4",
+        "subcategory": "Core",
+        "skillTags": [
+            "human behavior",
+            "service assessment"
+        ],
+        "prerequisiteModules": [
+            185,
+            186
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": null
+        },
+        "courseId": null,
+        "learningPathId": 3,
+        "orderInPath": 8,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-08T06:12:50.509Z",
+            "generatedFor": 3,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "quiz",
+                "quality": "N/A",
+                "duration": "180 minutes",
+                "provider": "Platform",
+                "estimatedDuration": 180
+            },
+            "searchKeywords": "human behavior assessment, service design evaluation",
+            "originalPrerequisites": [
+                "Human Behavior and Psychology",
+                "Data-Driven Service Improvement"
+            ]
+        },
+        "createdAt": "2026-02-08T06:12:50.509Z",
+        "updatedAt": "2026-02-08T06:12:50.509Z"
+    },
+    {
+        "id": 170,
+        "title": "Final Project - Web Application Development",
+        "description": "Developing a comprehensive web application using React, incorporating project management and software development life cycle principles.",
+        "moduleType": "project",
+        "format": "interactive",
+        "difficulty": "advanced",
+        "duration": 1200,
+        "contentUrl": "https://www.youtube.com/watch?v=4WjtQjPQGIs",
+        "thumbnailUrl": "https://pixabay.com/get/g6b8516bf12633f31736976f394bb601902e3f3053c22d9621587748713a479ca25738a141c6078b0679c13735396fc3535bc2f083fec4cec4987ee2dc0b09f0f_640.jpg",
+        "category": "Semester 4",
+        "subcategory": "Project",
+        "skillTags": [
+            "web development",
+            "project management",
+            "software development"
+        ],
+        "prerequisiteModules": [
+            165,
+            167,
+            163
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 8,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:34.193Z",
+            "generatedFor": 14,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "interactive",
+                "quality": "N/A",
+                "duration": "1200 minutes",
+                "provider": "Self-guided",
+                "estimatedDuration": 1200
+            },
+            "searchKeywords": "web application development tutorial",
+            "originalPrerequisites": [
+                "Web Development Frameworks - React",
+                "Software Development Life Cycle",
+                "Introduction to Project Management"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:34.194Z",
+        "updatedAt": "2026-02-08T06:12:45.295Z"
+    },
+    {
+        "id": 168,
+        "title": "Cloud Computing and Deployment",
+        "description": "Introduction to cloud computing concepts and deployment strategies for web applications.",
+        "moduleType": "course",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 240,
+        "contentUrl": "https://www.youtube.com/watch?v=RWgW-CgdIk0",
+        "thumbnailUrl": "https://pixabay.com/get/gce2e3ec46f25b445ceafba1438be97417a3066f8763992fd4cda7002076c05d6651ca272e825665b4e1bd7d19f9acd496f789f4c52ab49853d4724c2321dc4b8_640.jpg",
+        "category": "Semester 3",
+        "subcategory": "Elective",
+        "skillTags": [
+            "cloud computing",
+            "deployment"
+        ],
+        "prerequisiteModules": [
+            165
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 9,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:32.890Z",
+            "generatedFor": 14,
+            "pdfResources": [
+                "https://aws.amazon.com/getting-started/",
+                "https://learn.microsoft.com/en-us/azure/",
+                "https://cloud.google.com/docs"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "240 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 240
+            },
+            "searchKeywords": "cloud computing tutorial for beginners",
+            "originalPrerequisites": [
+                "Web Development Frameworks - React"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:32.890Z",
+        "updatedAt": "2026-02-08T06:12:45.301Z"
+    },
+    {
+        "id": 167,
+        "title": "Software Development Life Cycle",
+        "description": "Understanding the software development life cycle, including requirements gathering, design, implementation, testing, and deployment.",
+        "moduleType": "course",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 240,
+        "contentUrl": "https://www.youtube.com/watch?v=CjKzkj1xUJk",
+        "thumbnailUrl": "https://pixabay.com/get/gecf4412f01074d714cbec053f976093745bcafc5bb496dd973212ae4e30d5fe8f9db5078e1551bad2e0bf4559e95e9eebf029082d869e6e4efcc746814d90b28_640.jpg",
+        "category": "Semester 3",
+        "subcategory": "Core",
+        "skillTags": [
+            "software development"
+        ],
+        "prerequisiteModules": [
+            164
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 10,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:32.555Z",
+            "generatedFor": 14,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "240 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 240
+            },
+            "searchKeywords": "software development life cycle tutorial",
+            "originalPrerequisites": [
+                "Data Structures and Algorithms"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:32.556Z",
+        "updatedAt": "2026-02-08T06:12:45.307Z"
+    },
+    {
+        "id": 166,
+        "title": "Assessment - Web Development and Project Management",
+        "description": "Comprehensive assessment of web development and project management skills, including a project proposal and presentation.",
+        "moduleType": "assessment",
+        "format": "quiz",
+        "difficulty": "advanced",
+        "duration": 480,
+        "contentUrl": "https://www.youtube.com/watch?v=50NN3d-Ne1U",
+        "thumbnailUrl": "https://pixabay.com/get/g80555ee81e4f3a180ebee277e47424fac5fa54718c596c6304da1a01bd5286f6ac24a084ad8b844ae8e0790b212ddb53bd7764b2eca639c06b4677fe84eb5d66_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Assessment",
+        "skillTags": [
+            "web development",
+            "project management"
+        ],
+        "prerequisiteModules": [
+            162,
+            163
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 11,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:32.060Z",
+            "generatedFor": 14,
+            "pdfResources": [
+                "https://developer.mozilla.org/en-US/docs/Learn",
+                "https://www.freecodecamp.org/news/tag/web-development/"
+            ],
+            "formatMetadata": {
+                "type": "quiz",
+                "quality": "N/A",
+                "duration": "480 minutes",
+                "provider": "Platform",
+                "estimatedDuration": 480
+            },
+            "searchKeywords": "web development and project management assessment",
+            "originalPrerequisites": [
+                "Web Development Project - To-Do List App",
+                "Introduction to Project Management"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:32.061Z",
+        "updatedAt": "2026-02-08T06:12:45.313Z"
+    },
+    {
+        "id": 165,
+        "title": "Web Development Frameworks - React",
+        "description": "Introduction to the React framework for building complex web applications.",
+        "moduleType": "course",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 300,
+        "contentUrl": "https://www.youtube.com/watch?v=SqcY0GlETPk",
+        "thumbnailUrl": "https://pixabay.com/get/g1c941af5305ccc853d1ef67adb6d51130dd80683c789856177714de2ce5cff1050b88f932fcdbda5d75850d90e2edaa3456b19b2a578d4e01c7fdf6ad2df76b4_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Elective",
+        "skillTags": [
+            "react",
+            "web development"
+        ],
+        "prerequisiteModules": [
+            158
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 12,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:31.610Z",
+            "generatedFor": 14,
+            "pdfResources": [
+                "https://react.dev/learn",
+                "https://reactjs.org/tutorial/tutorial.html"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "300 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 300
+            },
+            "searchKeywords": "react tutorial for beginners",
+            "originalPrerequisites": [
+                "Introduction to Web Development"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:31.610Z",
+        "updatedAt": "2026-02-08T06:12:45.318Z"
+    },
+    {
+        "id": 164,
+        "title": "Data Structures and Algorithms",
+        "description": "In-depth exploration of data structures, including arrays, linked lists, stacks, and queues, and advanced algorithmic techniques.",
+        "moduleType": "course",
+        "format": "video",
+        "difficulty": "advanced",
+        "duration": 360,
+        "contentUrl": "https://www.youtube.com/watch?v=2bH09YEDdxE",
+        "thumbnailUrl": "https://pixabay.com/get/gacc3a94f604c8b29eef27abdd83ce52ece91fe03d3c254a5d4d8100aa7503405ecba25d6171ef7bf5ad6af688a7d3b87490c877be4d3af316bee1abec5a1fa34_640.jpg",
+        "category": "Semester 2",
+        "subcategory": "Core",
+        "skillTags": [
+            "data structures",
+            "algorithms"
+        ],
+        "prerequisiteModules": [
+            159,
+            161
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 13,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:31.215Z",
+            "generatedFor": 14,
+            "pdfResources": [
+                "https://go.dev/doc/",
+                "https://gobyexample.com/"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "360 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 360
+            },
+            "searchKeywords": "data structures and algorithms tutorial",
+            "originalPrerequisites": [
+                "Programming Fundamentals with C",
+                "Problem Solving with Algorithms"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:31.215Z",
+        "updatedAt": "2026-02-08T06:12:45.325Z"
+    },
+    {
+        "id": 162,
+        "title": "Web Development Project - To-Do List App",
+        "description": "Building a simple to-do list app using HTML, CSS, and JavaScript to apply web development skills.",
+        "moduleType": "project",
+        "format": "interactive",
+        "difficulty": "intermediate",
+        "duration": 600,
+        "contentUrl": "https://www.youtube.com/watch?v=Z3K6NV_h9DE",
+        "thumbnailUrl": "https://pixabay.com/get/g402650fda948c7faf04eb461fc533674a1fc905acf06dfe0324c50594fc0551d62793b7b21f9d5c791968ee9e31f078d_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Project",
+        "skillTags": [
+            "web development",
+            "project management"
+        ],
+        "prerequisiteModules": [
+            158
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 14,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:30.185Z",
+            "generatedFor": 14,
+            "pdfResources": [],
+            "formatMetadata": {
+                "type": "interactive",
+                "quality": "N/A",
+                "duration": "600 minutes",
+                "provider": "Self-guided",
+                "estimatedDuration": 600
+            },
+            "searchKeywords": "todo list app tutorial",
+            "originalPrerequisites": [
+                "Introduction to Web Development"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:30.185Z",
+        "updatedAt": "2026-02-08T06:12:45.330Z"
+    },
+    {
+        "id": 161,
+        "title": "Problem Solving with Algorithms",
+        "description": "Applying problem-solving skills to algorithmic challenges, including sorting, searching, and graph algorithms.",
+        "moduleType": "micro-lesson",
+        "format": "video",
+        "difficulty": "intermediate",
+        "duration": 120,
+        "contentUrl": "https://www.youtube.com/watch?v=HtSuA80QTyo",
+        "thumbnailUrl": "https://pixabay.com/get/g76e7a33b0ba8dfc1840bb884b172e041b7ed2819e2de9b5c794afc01495b66d83f06a88d9a5b40d8c8aba0266b06848f36869770d2b64584735defe501ec1e23_640.jpg",
+        "category": "Semester 1",
+        "subcategory": "Elective",
+        "skillTags": [
+            "problem solving",
+            "algorithms"
+        ],
+        "prerequisiteModules": [
+            159
+        ],
+        "targetUserGroups": [
+            "COLLEGE_STUDENTS"
+        ],
+        "averageRating": "0.00",
+        "completionCount": 0,
+        "groupSpecificMetadata": {
+            "branchId": 49
+        },
+        "courseId": 2,
+        "learningPathId": 3,
+        "orderInPath": 15,
+        "isAiGenerated": true,
+        "generationMetadata": {
+            "generatedAt": "2026-02-07T22:43:29.524Z",
+            "generatedFor": 14,
+            "pdfResources": [
+                "https://go.dev/doc/",
+                "https://gobyexample.com/"
+            ],
+            "formatMetadata": {
+                "type": "video",
+                "quality": "HD",
+                "duration": "120 minutes",
+                "provider": "YouTube",
+                "estimatedDuration": 120
+            },
+            "searchKeywords": "algorithmic problem solving tutorial",
+            "originalPrerequisites": [
+                "Programming Fundamentals with C"
+            ]
+        },
+        "createdAt": "2026-02-07T22:43:29.524Z",
+        "updatedAt": "2026-02-08T06:12:45.336Z"
+    }
+]

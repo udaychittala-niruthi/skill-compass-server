@@ -45,28 +45,42 @@ export const learningPathController = {
     async getPathModules(req: Request, res: Response) {
         try {
             const userId = (req as any).user.id;
-            const pathIdParam = req.params.id;
-            const pathId = parseInt(Array.isArray(pathIdParam) ? pathIdParam[0] : pathIdParam);
-
-            if (isNaN(pathId)) {
-                return sendResponse(res, false, "Invalid path ID", 400);
-            }
 
             const learningPath = await learningPathService.getLearningPathByUserId(userId);
 
             if (!learningPath) {
-                return sendResponse(res, false, "Learning path not found", 404);
-            }
-
-            if (learningPath.id !== pathId) {
-                return sendResponse(res, false, "Access denied: This path does not belong to you", 403);
+                return sendResponse(res, false, "No learning path found", 404);
             }
 
             return sendResponse(res, true, "Modules retrieved successfully", 200, {
-                modules: learningPath.path
+                modules: learningPath.modules
             });
         } catch (error: any) {
             console.error("Get Path Modules Error:", error);
+            return sendResponse(res, false, error.message || "Internal Server Error", 500);
+        }
+    },
+
+    async getPathModule(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.id;
+            const moduleId = req.params.moduleId;
+
+            const learningPath = await learningPathService.getLearningPathByUserId(userId);
+
+            if (!learningPath) {
+                return sendResponse(res, false, "No learning path found", 404);
+            }
+
+            const module = learningPath.modules.find((m: any) => m.id === Number(moduleId));
+
+            if (!module) {
+                return sendResponse(res, false, "Module not found", 404);
+            }
+
+            return sendResponse(res, true, "Module retrieved successfully", 200, module);
+        } catch (error: any) {
+            console.error("Get Path Module Error:", error);
             return sendResponse(res, false, error.message || "Internal Server Error", 500);
         }
     },

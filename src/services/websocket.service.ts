@@ -1,5 +1,7 @@
-import { Server as SocketIOServer } from "socket.io";
+import { Server as SocketIOServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
+import jwt from "jsonwebtoken";
+import { User } from "../models/index.js";
 
 class WebSocketService {
     private io: SocketIOServer | null = null;
@@ -16,15 +18,46 @@ class WebSocketService {
             }
         });
 
-        this.io.on("connection", (socket) => {
+        // Middleware for authentication
+        this.io.use(async (socket, next) => {
+            const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization;
+
+            if (!token) {
+                return next(new Error("Authentication error: Token not provided"));
+            }
+
+            const tokenString = token.startsWith("Bearer ") ? token.split(" ")[1] : token;
+
+            jwt.verify(tokenString, process.env.JWT_SECRET || "my_jwt_scret", async (err: any, decoded: any) => {
+                if (err) {
+                    return next(new Error("Authentication error: Invalid token"));
+                }
+
+                try {
+                    const user = await User.findByPk(decoded.id);
+                    if (!user) {
+                        return next(new Error("Authentication error: User not found"));
+                    }
+
+                    // Attach user to socket data
+                    socket.data.user = user.toJSON();
+                    next();
+                } catch (dbError) {
+                    console.error("Socket Auth DB Error:", dbError);
+                    next(new Error("Internal server error"));
+                }
+            });
+        });
+
+        this.io.on("connection", (socket: Socket) => {
             console.log(`WebSocket client connected: ${socket.id}`);
 
-            // Join user-specific room based on userId from query
-            const userId = socket.handshake.query.userId as string;
-            if (userId) {
-                const room = this.getUserRoom(parseInt(userId));
+            // Join user-specific room based on userId from authenticated user
+            const user = socket.data.user;
+            if (user && user.id) {
+                const room = this.getUserRoom(user.id);
                 socket.join(room);
-                console.log(`User ${userId} joined room: ${room}`);
+                console.log(`User ${user.id} joined room: ${room}`);
             }
 
             socket.on("disconnect", () => {
