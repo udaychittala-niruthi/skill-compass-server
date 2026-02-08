@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { accessChecker } from "../services/access.service";
-import { UserContext, ServiceAccess } from "../types/access";
+import { accessChecker } from "../services/access.service.js";
+import { UserContext, ServiceAccess } from "../types/access.js";
 
 // Extending Express Request to include serviceAccess
 declare global {

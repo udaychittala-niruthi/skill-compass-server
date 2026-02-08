@@ -1,4 +1,4 @@
-import { User, sequelize } from "../models";
+import { User, sequelize } from "../models/index.js";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";

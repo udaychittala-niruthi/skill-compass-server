@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Interest, Skill, Course, Branches } from "../models";
-import { predictionService } from "../services/prediction.service";
-import { sendResponse } from "../utils/customResponse";
+import { Interest, Skill, Course, Branches } from "../models/index.js";
+import { predictionService } from "../services/prediction.service.js";
+import { sendResponse } from "../utils/customResponse.js";
 
 export const commonController = {
     async getInterests(req: Request, res: Response) {

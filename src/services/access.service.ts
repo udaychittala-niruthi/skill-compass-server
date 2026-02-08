@@ -1,4 +1,4 @@
-import { ServiceAccess, UserContext } from "../types/access";
+import { ServiceAccess, UserContext } from "../types/access.js";
 
 export class AccessChecker {
     public getAccessForUser(user: UserContext): ServiceAccess {

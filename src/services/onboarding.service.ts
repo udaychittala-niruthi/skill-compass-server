@@ -1,7 +1,7 @@
-import { User, UserPreferences } from "../models";
-import { learningPathService } from "./learningPath.service";
+import { User, UserPreferences } from "../models/index.js";
+import { learningPathService } from "./learningPath.service.js";
 import { Op } from "sequelize";
-import { Skill, Interest } from "../models";
+import { Skill, Interest } from "../models/index.js";
 
 class OnboardingService {
     async onboardKid(userId: number, data: { learningStyle: string; weeklyLearningHours: number; avatar?: string }) {

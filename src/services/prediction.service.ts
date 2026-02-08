@@ -1,5 +1,5 @@
-import { Course, Branches, Interest, Skill } from "../models";
-import { getJsonCompletion } from "./groq";
+import { Course, Branches, Interest, Skill } from "../models/index.js";
+import { getJsonCompletion } from "./groq.js";
 
 interface PredictionRequest {
     interestIds: number[];

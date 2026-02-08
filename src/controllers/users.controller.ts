@@ -1,4 +1,4 @@
-import { User } from "../models";
+import { User } from "../models/index.js";
 import type { Request, Response } from "express";
 import { sendResponse } from "../utils/customResponse.js";
 

@@ -4,7 +4,7 @@
  */
 
 import axios from "axios";
-import { UrlValidator } from "../utils/urlValidator";
+import { UrlValidator } from "../utils/urlValidator.js";
 
 export class ResourceUrlService {
     private youtubeApiKey: string;

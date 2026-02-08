@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { learningProgressController } from "../../controllers/learningProgress.controller";
-import { authenticate } from "../../middleware/auth.middleware";
-import { accessMiddleware } from "../../middleware/access.middleware";
+import { learningProgressController } from "../../controllers/learningProgress.controller.js";
+import { authenticate } from "../../middleware/auth.middleware.js";
+import { accessMiddleware } from "../../middleware/access.middleware.js";
 
 const router = Router();
 

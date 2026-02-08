@@ -15,7 +15,7 @@ import {
     LearningSchedule,
     AiAnalysis,
     EducationalResource
-} from "../models";
+} from "../models/index.js";
 
 export const resolvers = {
     Query: {

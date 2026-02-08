@@ -9,11 +9,11 @@ import {
     Branches,
     LearningSchedule,
     UserModuleProgress
-} from "../models";
-import { getJsonCompletion } from "./groq";
-import { websocketService } from "./websocket.service";
-import { resourceUrlService } from "./resourceUrl.service";
-import sequelize from "../config/db";
+} from "../models/index.js";
+import { getJsonCompletion } from "./groq.js";
+import { websocketService } from "./websocket.service.js";
+import { resourceUrlService } from "./resourceUrl.service.js";
+import sequelize from "../config/db.js";
 import { QueryTypes } from "sequelize";
 
 interface GeneratedModule {

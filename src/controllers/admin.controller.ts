@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { aiGenerateService } from "../services/aiGenerate.service";
-import { sendResponse } from "../utils/customResponse";
+import { aiGenerateService } from "../services/aiGenerate.service.js";
+import { sendResponse } from "../utils/customResponse.js";
 
 class AdminController {
     /**

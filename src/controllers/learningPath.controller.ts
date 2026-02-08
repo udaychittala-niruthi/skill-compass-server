@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { learningPathService } from "../services/learningPath.service";
-import { sendResponse } from "../utils/customResponse";
+import { learningPathService } from "../services/learningPath.service.js";
+import { sendResponse } from "../utils/customResponse.js";
 
 export const learningPathController = {
     /**

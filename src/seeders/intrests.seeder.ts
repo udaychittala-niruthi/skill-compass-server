@@ -1,4 +1,4 @@
-import { Interest } from "../models";
+import { Interest } from "../models/index.js";
 
 const interests = [
     "cloud computing",

@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
-import { Course, Skill, Interest } from "../models";
-import { getJsonCompletion } from "./groq";
+import { Course, Skill, Interest } from "../models/index.js";
+import { getJsonCompletion } from "./groq.js";
 
 export interface SyncCourseInput {
     name: string;

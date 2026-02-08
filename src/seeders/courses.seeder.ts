@@ -1,5 +1,5 @@
 import { aiGenerateService, SyncCourseInput } from "../services/aiGenerate.service";
-import { Course, Op } from "../models";
+import { Course, Op } from "../models/index.js";
 
 const courses: Record<string, string> = {
     BE: "TECH",

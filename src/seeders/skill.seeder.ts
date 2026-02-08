@@ -1,5 +1,5 @@
-import { Skill } from "../models";
-import { resolveIconsAndGenerateNew } from "./utils";
+import { Skill } from "../models/index.js";
+import { resolveIconsAndGenerateNew } from "./utils.js";
 
 const skills = [
     "python",

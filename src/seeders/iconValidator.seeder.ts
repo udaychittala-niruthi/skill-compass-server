@@ -1,4 +1,4 @@
-import { Skill, Interest, Course } from "../models";
+import { Skill, Interest, Course } from "../models/index.js";
 import { validateSeederItems, SeederItem } from "./utils";
 
 /**

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { commonController, predictionController } from "../../controllers/common.controller";
-import { authenticate } from "../../middleware/auth.middleware";
-import { validate } from "../../middleware/validate.middleware";
-import { predictCourseSchema, predictBranchSchema } from "../../validations/prediction.validation";
+import { commonController, predictionController } from "../../controllers/common.controller.js";
+import { authenticate } from "../../middleware/auth.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
+import { predictCourseSchema, predictBranchSchema } from "../../validations/prediction.validation.js";
 
 const router = Router();
 

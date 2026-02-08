@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { UserModuleProgress, Op } from "../models";
-import { sendResponse } from "../utils/customResponse";
+import { UserModuleProgress, Op } from "../models/index.js";
+import { sendResponse } from "../utils/customResponse.js";
 
 export const learningProgressController = {
     /**
@@ -122,7 +122,7 @@ export const learningProgressController = {
 
             // Update module quality metrics for reuse algorithm
             try {
-                const { LearningModule } = await import("../models");
+                const { LearningModule } = await import("../models/index.js");
                 if (status === "completed") {
                     await LearningModule.increment("completionCount", { where: { id: moduleId } });
                 }

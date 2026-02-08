@@ -1,10 +1,10 @@
-import { postgresConnection } from "../config/db";
-import { sequelize } from "../models";
-import InterestSeeder from "./intrests.seeder";
-import SkillSeeder from "./skill.seeder";
-import CourseSeeder from "./courses.seeder";
-import BranchesSeeder from "./branches.seeder";
-import { EducationalResourcesSeeder } from "./educationalResources.seeder";
+import { postgresConnection } from "../config/db.js";
+import { sequelize } from "../models/index.js";
+import InterestSeeder from "./intrests.seeder.js";
+import SkillSeeder from "./skill.seeder.js";
+import CourseSeeder from "./courses.seeder.js";
+import BranchesSeeder from "./branches.seeder.js";
+import { EducationalResourcesSeeder } from "./educationalResources.seeder.js";
 
 const educationalResourcesSeeder = new EducationalResourcesSeeder();
 

@@ -1,6 +1,6 @@
-import { postgresConnection } from "../config/db";
-import { sequelize } from "../models";
-import IconValidatorSeeder from "./iconValidator.seeder";
+import { postgresConnection } from "../config/db.js";
+import { sequelize } from "../models/index.js";
+import IconValidatorSeeder from "./iconValidator.seeder.js";
 
 /**
  * Standalone script to validate and fix icons in the database.

@@ -3,7 +3,7 @@
  * Searches and scores existing modules for reuse in learning path generation
  */
 
-import { LearningModule, Op } from "../models";
+import { LearningModule, Op } from "../models/index.js";
 
 interface ModuleSearchCriteria {
     userGroup: "COLLEGE_STUDENTS" | "PROFESSIONALS" | "TEENS" | "SENIORS";

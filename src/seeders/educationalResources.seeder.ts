@@ -1,4 +1,4 @@
-import EducationalResource from "../models/EducationalResource";
+import EducationalResource from "../models/EducationalResource.js";
 
 /**
  * Seeder for Educational Resources

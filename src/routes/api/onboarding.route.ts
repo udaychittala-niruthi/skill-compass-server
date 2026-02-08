@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { onboardingController } from "../../controllers/onboarding.controller";
-import { authenticate } from "../../middleware/auth.middleware";
-import { requireGroup } from "../../middleware/access.middleware";
-import { validate } from "../../middleware/validate.middleware";
+import { onboardingController } from "../../controllers/onboarding.controller.js";
+import { authenticate } from "../../middleware/auth.middleware.js";
+import { requireGroup } from "../../middleware/access.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
 import {
     onboardKidSchema,
     onboardTeenSchema,
@@ -10,8 +10,8 @@ import {
     onboardProfessionalSchema,
     onboardSeniorSchema,
     updateSkillsInterestsSchema
-} from "../../validations/onboarding.validation";
-import { ageUpdateSchema } from "../../validations/auth.validation";
+} from "../../validations/onboarding.validation.js";
+import { ageUpdateSchema } from "../../validations/auth.validation.js";
 
 const router = Router();
 

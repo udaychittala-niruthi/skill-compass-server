@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { LearningSchedule } from "../models";
-import { sendResponse } from "../utils/customResponse";
+import { LearningSchedule } from "../models/index.js";
+import { sendResponse } from "../utils/customResponse.js";
 
 export const learningScheduleController = {
     /**

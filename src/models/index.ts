@@ -1,21 +1,21 @@
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { Op } from "sequelize";
-import User from "./User";
-import Interest from "./Interest";
-import Skill from "./Skill";
-import Course from "./Course";
-import Branches from "./Branches"; // Assuming this still exists
-import LearningPath from "./LearningPath";
-import UserPreferences from "./UserPreferences";
-import LearningModule from "./LearningModule";
-import UserModuleProgress from "./UserModuleProgress";
-import Assessment from "./Assessment";
-import Certification from "./Certification";
-import UserCertification from "./UserCertification";
-import UserPortfolio from "./UserPortfolio";
-import LearningSchedule from "./LearningSchedule";
-import AiAnalysis from "./AiAnalysis";
-import EducationalResource from "./EducationalResource";
+import User from "./User.js";
+import Interest from "./Interest.js";
+import Skill from "./Skill.js";
+import Course from "./Course.js";
+import Branches from "./Branches.js"; // Assuming this still exists
+import LearningPath from "./LearningPath.js";
+import UserPreferences from "./UserPreferences.js";
+import LearningModule from "./LearningModule.js";
+import UserModuleProgress from "./UserModuleProgress.js";
+import Assessment from "./Assessment.js";
+import Certification from "./Certification.js";
+import UserCertification from "./UserCertification.js";
+import UserPortfolio from "./UserPortfolio.js";
+import LearningSchedule from "./LearningSchedule.js";
+import AiAnalysis from "./AiAnalysis.js";
+import EducationalResource from "./EducationalResource.js";
 
 // 1. USER PREFERENCES
 User.hasOne(UserPreferences, { foreignKey: "userId", as: "preferences" });

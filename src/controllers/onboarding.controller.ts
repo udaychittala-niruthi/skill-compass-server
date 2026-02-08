@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { onboardingService } from "../services/onboarding.service";
-import { sendResponse } from "../utils/customResponse";
+import { onboardingService } from "../services/onboarding.service.js";
+import { sendResponse } from "../utils/customResponse.js";
 
 export const onboardingController = {
     async onboardKid(req: Request, res: Response) {
