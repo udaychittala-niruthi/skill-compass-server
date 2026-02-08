@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../utils/customResponse.js";
 import jwt from "jsonwebtoken";
 
-import { User } from "../models";
+import { User } from "../models/index.js";
 
 function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;

@@ -1,21 +1,29 @@
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 import { Op } from "sequelize";
-import User from "./User";
-import Interest from "./Interest";
-import Skill from "./Skill";
-import Course from "./Course";
-import Branches from "./Branches"; // Assuming this still exists
-import LearningPath from "./LearningPath";
-import UserPreferences from "./UserPreferences";
-import LearningModule from "./LearningModule";
-import UserModuleProgress from "./UserModuleProgress";
-import Assessment from "./Assessment";
-import Certification from "./Certification";
-import UserCertification from "./UserCertification";
-import UserPortfolio from "./UserPortfolio";
-import LearningSchedule from "./LearningSchedule";
-import AiAnalysis from "./AiAnalysis";
-import EducationalResource from "./EducationalResource";
+import User from "./User.js";
+import Interest from "./Interest.js";
+import Skill from "./Skill.js";
+import Course from "./Course.js";
+import Branches from "./Branches.js";
+import LearningPath from "./LearningPath.js";
+import UserPreferences from "./UserPreferences.js";
+import LearningModule from "./LearningModule.js";
+import UserModuleProgress from "./UserModuleProgress.js";
+import Assessment from "./Assessment.js";
+import Certification from "./Certification.js";
+import UserCertification from "./UserCertification.js";
+import UserPortfolio from "./UserPortfolio.js";
+import LearningSchedule from "./LearningSchedule.js";
+import AiAnalysis from "./AiAnalysis.js";
+import EducationalResource from "./EducationalResource.js";
+import Lesson from "./Lesson.js";
+import Task from "./Task.js";
+import Resource from "./Resource.js";
+import UserProgress from "./UserProgress.js";
+import TaskSubmission from "./TaskSubmission.js";
+import LearningAnalytics from "./LearningAnalytics.js";
+import Achievement from "./Achievement.js";
+import UserAchievement from "./UserAchievement.js";
 
 // 1. USER PREFERENCES
 User.hasOne(UserPreferences, { foreignKey: "userId", as: "preferences" });
@@ -30,11 +38,11 @@ UserPreferences.belongsTo(Branches, { foreignKey: "branchId", as: "branch", onDe
 LearningModule.belongsTo(Course, { foreignKey: "courseId", as: "course", onDelete: "CASCADE" });
 Course.hasMany(LearningModule, { foreignKey: "courseId", as: "modules", onDelete: "CASCADE" });
 
-// 3. USER MODULE PROGRESS
+// 3. USER MODULE PROGRESS (Legacy - Keeping for compatibility or later migration)
 User.hasMany(UserModuleProgress, { foreignKey: "userId", as: "moduleProgress" });
 UserModuleProgress.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-LearningModule.hasMany(UserModuleProgress, { foreignKey: "moduleId", as: "userProgress", onDelete: "CASCADE" });
+LearningModule.hasMany(UserModuleProgress, { foreignKey: "moduleId", as: "moduleUserProgress", onDelete: "CASCADE" });
 UserModuleProgress.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
 
 // 4. LEARNING PATHS
@@ -54,34 +62,78 @@ UserPreferences.hasMany(LearningPath, {
 LearningPath.hasMany(LearningModule, { foreignKey: "learningPathId", as: "modules" });
 LearningModule.belongsTo(LearningPath, { foreignKey: "learningPathId", as: "learningPath" });
 
-// 5. ASSESSMENTS
+// 5. GRANULAR STRUCTURE (Lessons, Tasks, Resources)
+LearningModule.hasMany(Lesson, { foreignKey: "moduleId", as: "lessons", onDelete: "CASCADE" });
+Lesson.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
+
+Lesson.hasMany(Task, { foreignKey: "lessonId", as: "tasks", onDelete: "CASCADE" });
+Task.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson", onDelete: "CASCADE" });
+
+Lesson.hasMany(Resource, { foreignKey: "lessonId", as: "resources", onDelete: "CASCADE" });
+Resource.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson", onDelete: "CASCADE" });
+
+LearningModule.hasMany(Resource, { foreignKey: "moduleId", as: "moduleResources", onDelete: "CASCADE" });
+Resource.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
+
+// 6. COMPREHENSIVE PROGRESS TRACKING
+User.hasMany(UserProgress, { foreignKey: "userId", as: "detailedProgress" });
+UserProgress.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+LearningPath.hasMany(UserProgress, { foreignKey: "pathId", as: "pathProgress" });
+UserProgress.belongsTo(LearningPath, { foreignKey: "pathId", as: "path" });
+
+LearningModule.hasMany(UserProgress, { foreignKey: "moduleId", as: "moduleProgress" });
+UserProgress.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module" });
+
+Lesson.hasMany(UserProgress, { foreignKey: "lessonId", as: "lessonProgress" });
+UserProgress.belongsTo(Lesson, { foreignKey: "lessonId", as: "lesson" });
+
+Task.hasMany(UserProgress, { foreignKey: "taskId", as: "taskProgress" });
+UserProgress.belongsTo(Task, { foreignKey: "taskId", as: "task" });
+
+// 7. TASK SUBMISSIONS
+Task.hasMany(TaskSubmission, { foreignKey: "taskId", as: "submissions", onDelete: "CASCADE" });
+TaskSubmission.belongsTo(Task, { foreignKey: "taskId", as: "task", onDelete: "CASCADE" });
+
+User.hasMany(TaskSubmission, { foreignKey: "userId", as: "taskSubmissions" });
+TaskSubmission.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// 8. LEARNING ANALYTICS
+User.hasMany(LearningAnalytics, { foreignKey: "userId", as: "analytics" });
+LearningAnalytics.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// 9. GAMIFICATION
+User.hasMany(UserAchievement, { foreignKey: "userId", as: "earnedAchievements" });
+UserAchievement.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+Achievement.hasMany(UserAchievement, { foreignKey: "achievementId", as: "userAchievements", onDelete: "CASCADE" });
+UserAchievement.belongsTo(Achievement, { foreignKey: "achievementId", as: "achievement", onDelete: "CASCADE" });
+
+// 10. ASSESSMENTS
 User.hasMany(Assessment, { foreignKey: "userId", as: "assessments" });
 Assessment.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 LearningModule.hasMany(Assessment, { foreignKey: "moduleId", as: "assessments", onDelete: "CASCADE" });
 Assessment.belongsTo(LearningModule, { foreignKey: "moduleId", as: "module", onDelete: "CASCADE" });
 
-// 6. CERTIFICATIONS (Catalog) - No direct user relation, mostly static
-
-// 7. USER CERTIFICATIONS
+// 11. CERTIFICATIONS & PORTFOLIOS
 User.hasMany(UserCertification, { foreignKey: "userId", as: "certifications" });
 UserCertification.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-Certification.hasMany(UserCertification, { foreignKey: "certificationId", as: "userProgress" });
+Certification.hasMany(UserCertification, { foreignKey: "certificationId", as: "userCertificationProgress" });
 UserCertification.belongsTo(Certification, { foreignKey: "certificationId", as: "certification" });
 
-// 8. USER PORTFOLIOS
 User.hasOne(UserPortfolio, { foreignKey: "userId", as: "portfolio" });
 UserPortfolio.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-// 9. LEARNING SCHEDULES
+// 12. LEARNING SCHEDULES
 User.hasMany(LearningSchedule, { foreignKey: "userId", as: "schedules" });
 LearningSchedule.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 LearningPath.hasMany(LearningSchedule, { foreignKey: "learningPathId", as: "schedules" });
 LearningSchedule.belongsTo(LearningPath, { foreignKey: "learningPathId", as: "learningPath" });
 
-// 10. AI ANALYSES
+// 13. AI ANALYSES
 User.hasMany(AiAnalysis, { foreignKey: "userId", as: "aiAnalyses" });
 AiAnalysis.belongsTo(User, { foreignKey: "userId", as: "user" });
 
@@ -115,5 +167,13 @@ export {
     LearningSchedule,
     AiAnalysis,
     EducationalResource,
+    Lesson,
+    Task,
+    Resource,
+    UserProgress,
+    TaskSubmission,
+    LearningAnalytics,
+    Achievement,
+    UserAchievement,
     Op
 };

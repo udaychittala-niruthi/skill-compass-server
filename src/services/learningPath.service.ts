@@ -8,13 +8,34 @@ import {
     Course,
     Branches,
     LearningSchedule,
-    UserModuleProgress
-} from "../models";
-import { getJsonCompletion } from "./groq";
-import { websocketService } from "./websocket.service";
-import { resourceUrlService } from "./resourceUrl.service";
-import sequelize from "../config/db";
+    UserModuleProgress,
+    Lesson,
+    Task
+} from "../models/index.js";
+import { getJsonCompletion } from "./groq.js";
+import { websocketService } from "./websocket.service.js";
+import { resourceUrlService } from "./resourceUrl.service.js";
+import sequelize from "../config/db.js";
 import { QueryTypes } from "sequelize";
+
+interface GeneratedTask {
+    title: string;
+    type: "reading" | "coding" | "quiz" | "project" | "discussion" | "reflection";
+    purpose: string;
+    estimatedMinutes: number;
+    instructions: any;
+    completionCriteria: any;
+}
+
+interface GeneratedLesson {
+    title: string;
+    objective: string;
+    estimatedMinutes: number;
+    contentType: "video" | "article" | "interactive" | "quiz";
+    whyLearnThis: string;
+    tasks: GeneratedTask[];
+    keyTakeaways: string[];
+}
 
 interface GeneratedModule {
     title: string;
@@ -27,11 +48,16 @@ interface GeneratedModule {
     subcategory?: string;
     searchKeywords?: string;
     prerequisites?: string[];
+    whyLearnThis?: string;
+    realWorldApplications?: string[];
+    lessons?: GeneratedLesson[];
 }
 
 interface GeneratedPath {
     name: string;
     description: string;
+    personalizedReason: string;
+    totalEstimatedHours: number;
     modules: GeneratedModule[];
     metadata?: any;
 }
@@ -62,9 +88,6 @@ class LearningPathService {
             if (!preferences) {
                 throw new Error("User preferences not found");
             }
-
-            // Fetch skills for module search
-            const skillIds = preferences.skillIds || [];
 
             // Fetch the most recent learning path
             let learningPath = await LearningPath.findOne({
@@ -212,6 +235,8 @@ class LearningPathService {
                         modules: moduleIds,
                         metadata: generatedPath.metadata || {}
                     },
+                    personalizedReason: generatedPath.personalizedReason,
+                    totalEstimatedHours: generatedPath.totalEstimatedHours,
                     status: "completed",
                     generatedAt: new Date()
                 },
@@ -297,22 +322,47 @@ Generate a semester-based learning path with modules mapped to their academic cu
 4. Include a mix of theory, projects, and assessments
 5. Consider their current skill level and interests
 
+For EVERY module, provide a detailed granular structure including Lessons and Tasks.
+
 Return a JSON object with:
 {
   "name": "Learning path name",
   "description": "Brief description of the path",
+  "personalizedReason": "EXPLAIN WHY this specific path was generated for this user based on their profile, skills, and goals.",
+  "totalEstimatedHours": 45.5,
   "modules": [
     {
       "title": "Module title",
       "description": "Module description",
       "moduleType": "course|micro-lesson|project|assessment|workshop|reading",
       "difficulty": "beginner|intermediate|advanced|expert",
-      "duration": 120, // in minutes
+      "duration": 120, // total module duration in minutes
       "skillTags": ["skill1", "skill2"],
       "category": "Semester 1|Semester 2|etc",
       "subcategory": "Core|Elective|Project",
       "searchKeywords": "optimal keywords for finding YouTube videos",
-      "prerequisites": [] // array of module titles or indices that must be completed first
+      "whyLearnThis": "Explain the importance of this module in the context of their career/course",
+      "realWorldApplications": ["use case 1", "use case 2"],
+      "lessons": [
+        {
+          "title": "Lesson title",
+          "objective": "What will be learned",
+          "estimatedMinutes": 30,
+          "contentType": "video|article|interactive|quiz",
+          "whyLearnThis": "Personalized reason for this lesson",
+          "keyTakeaways": ["point 1", "point 2"],
+          "tasks": [
+            {
+              "title": "Task title",
+              "type": "reading|coding|quiz|project|discussion|reflection",
+              "purpose": "Why do this task",
+              "estimatedMinutes": 15,
+              "instructions": { "steps": ["step 1", "step 2"] },
+              "completionCriteria": { "requirement": "what to submit or achieve" }
+            }
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
@@ -356,22 +406,46 @@ Generate a skill progression path that helps them transition from their current 
 4. Include practical projects and case studies
 5. Focus on industry-relevant technologies and practices
 
+For EVERY module, provide a detailed granular structure including Lessons and Tasks.
+
 Return a JSON object with:
 {
   "name": "Learning path name",
   "description": "Brief description of the path",
+  "personalizedReason": "EXPLAIN WHY this specific path was generated for this user based on their profile, skills, and target role.",
+  "totalEstimatedHours": 35,
   "modules": [
     {
       "title": "Module title",
       "description": "Module description",
       "moduleType": "course|micro-lesson|project|assessment|certification|workshop|reading",
       "difficulty": "beginner|intermediate|advanced|expert",
-      "duration": 120, // in minutes
+      "duration": 120, // total module duration in minutes
       "skillTags": ["skill1", "skill2"],
       "category": "Technical Skills|Soft Skills|Leadership|Domain Knowledge",
       "subcategory": "Core|Advanced|Specialized",
       "searchKeywords": "optimal keywords for finding YouTube videos",
-      "prerequisites": [] // array of module titles that must be completed first
+      "whyLearnThis": "Personalized reason for this module",
+      "realWorldApplications": ["use case 1", "use case 2"],
+      "lessons": [
+        {
+          "title": "Lesson title",
+          "objective": "What will be learned",
+          "estimatedMinutes": 30,
+          "contentType": "video|article|interactive|quiz",
+          "whyLearnThis": "Personalized reason for this lesson",
+          "tasks": [
+            {
+              "title": "Task title",
+              "type": "reading|coding|quiz|project|discussion|reflection",
+              "purpose": "Why do this task",
+              "estimatedMinutes": 15,
+              "instructions": { "steps": ["step 1", "step 2"] },
+              "completionCriteria": { "requirement": "what to submit or achieve" }
+            }
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
@@ -412,24 +486,42 @@ Generate a learning path that focuses on:
 4. Mix of academic and practical skills
 5. Include 6-10 engaging, age-appropriate modules
 
-The path should be engaging, interactive, and help them explore potential career paths.
+For EVERY module, provide a detailed granular structure including Lessons and Tasks.
 
 Return a JSON object with:
 {
   "name": "Learning path name",
   "description": "Brief description of the path",
+  "personalizedReason": "EXPLAIN WHY this specific path was generated for this teen based on their interests and age.",
+  "totalEstimatedHours": 20.0,
   "modules": [
     {
       "title": "Module title",
       "description": "Module description",
       "moduleType": "course|micro-lesson|project|assessment|workshop|reading",
       "difficulty": "beginner|intermediate|advanced",
-      "duration": 60, // in minutes
+      "duration": 60, // total module duration in minutes
       "skillTags": ["skill1", "skill2"],
       "category": "Skill Development|College Prep|Career Exploration",
-      "subcategory": "Interactive|Project-Based|Theory",
-      "searchKeywords": "optimal keywords for finding YouTube videos",
-      "prerequisites": [] // array of module titles that must be completed first
+      "whyLearnThis": "Fun and engaging reason for this module",
+      "lessons": [
+        {
+          "title": "Lesson title",
+          "objective": "What will be learned",
+          "estimatedMinutes": 20,
+          "contentType": "video|article|interactive",
+          "whyLearnThis": "Personalized reason",
+          "tasks": [
+            {
+              "title": "Task title",
+              "type": "reading|coding|quiz|reflection",
+              "purpose": "Why do this",
+              "estimatedMinutes": 10,
+              "instructions": { "steps": ["step 1"] }
+            }
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
@@ -440,7 +532,7 @@ Return a JSON object with:
 
         return await getJsonCompletion<GeneratedPath>(prompt, {
             temperature: 0.8,
-            max_tokens: 3000
+            max_tokens: 3500
         });
     }
 
@@ -469,22 +561,42 @@ Generate a learning path that is:
 4. Focuses on practical, life-enriching skills
 5. Considers accessibility needs
 
+For EVERY module, provide a detailed granular structure including Lessons and Tasks.
+
 Return a JSON object with:
 {
   "name": "Learning path name",
   "description": "Brief description of the path",
+  "personalizedReason": "EXPLAIN WHY this specific path was generated for this senior user.",
+  "totalEstimatedHours": 12.0,
   "modules": [
     {
       "title": "Module title",
       "description": "Module description",
       "moduleType": "course|micro-lesson|reading",
       "difficulty": "beginner",
-      "duration": 30, // in minutes
+      "duration": 30, // total module duration in minutes
       "skillTags": ["skill1", "skill2"],
       "category": "Personal Enrichment|Technology Basics|Hobbies",
-      "subcategory": "Guided|Self-Paced",
-      "searchKeywords": "optimal keywords for finding YouTube videos",
-      "prerequisites": [] // array of module titles that must be completed first
+      "whyLearnThis": "Gentle explanation of the purpose",
+      "lessons": [
+        {
+          "title": "Lesson title",
+          "objective": "What will be learned",
+          "estimatedMinutes": 15,
+          "contentType": "video|article",
+          "whyLearnThis": "Personalized reason",
+          "tasks": [
+            {
+              "title": "Task title",
+              "type": "reading|reflection",
+              "purpose": "Why do this",
+              "estimatedMinutes": 10,
+              "instructions": { "steps": ["step 1"] }
+            }
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
@@ -495,7 +607,7 @@ Return a JSON object with:
 
         return await getJsonCompletion<GeneratedPath>(prompt, {
             temperature: 0.6,
-            max_tokens: 2000
+            max_tokens: 2500
         });
     }
 
@@ -508,50 +620,26 @@ Return a JSON object with:
     ): Promise<number[]> {
         const createdModules: any[] = [];
 
-        // Create new modules from Groq generation
-        console.log(`[Learning Path] Creating ${modules.length} modules`);
+        console.log(`[Learning Path] Creating ${modules.length} modules for path ${learningPathId}`);
         for (let index = 0; index < modules.length; index++) {
             const module = modules[index];
 
             try {
-                // Get search keywords (use title if not provided)
                 const searchTerm = module.searchKeywords || module.title;
-
-                // Fetch real resources
-                console.log(`Fetching resources for module: ${module.title}`);
-
                 const [videoUrl, thumbnailUrl, pdfResources] = await Promise.all([
-                    resourceUrlService.findVideoUrl(searchTerm, module.duration),
-                    resourceUrlService.findThumbnail(searchTerm),
-                    resourceUrlService.findPdfResources(searchTerm)
+                    resourceUrlService.findVideoUrl(searchTerm, module.duration).catch(() => null),
+                    resourceUrlService.findThumbnail(searchTerm).catch(() => null),
+                    resourceUrlService.findPdfResources(searchTerm).catch(() => [])
                 ]);
 
-                // Get format metadata
                 const format = resourceUrlService.getFormatMetadata(module.moduleType, module.duration);
 
-                // Map prerequisites to already-created module IDs
-                const prerequisiteIds: number[] = [];
-                if (module.prerequisites && module.prerequisites.length > 0) {
-                    for (const prereqTitle of module.prerequisites) {
-                        // Find by title match
-                        const foundModule = createdModules.find(
-                            (m) =>
-                                m.title.toLowerCase().includes(prereqTitle.toLowerCase()) ||
-                                prereqTitle.toLowerCase().includes(m.title.toLowerCase())
-                        );
-
-                        if (foundModule) {
-                            prerequisiteIds.push(foundModule.id);
-                        }
-                    }
-                }
-
-                // Create module with all enhancements
+                // Create module
                 const created = await LearningModule.create({
                     title: module.title,
                     description: module.description,
                     moduleType: module.moduleType,
-                    format: format.type, // Set format type
+                    format: format.type,
                     difficulty: module.difficulty,
                     duration: module.duration,
                     contentUrl: videoUrl,
@@ -559,52 +647,77 @@ Return a JSON object with:
                     category: module.category,
                     subcategory: module.subcategory,
                     skillTags: module.skillTags || [],
-                    prerequisiteModules: prerequisiteIds,
+                    prerequisiteModules: [], // Will be handled if needed
                     targetUserGroups: [userGroup],
                     learningPathId,
                     orderInPath: index + 1,
                     isAiGenerated: true,
                     courseId: courseId || null,
                     groupSpecificMetadata: { branchId: branchId || null },
+                    whyLearnThis: module.whyLearnThis || null,
+                    realWorldApplications: module.realWorldApplications || [],
+                    status: index === 0 ? "available" : "locked",
                     generationMetadata: {
                         generatedAt: new Date(),
-                        generatedFor: learningPathId,
                         searchKeywords: searchTerm,
-                        formatMetadata: format,
-                        pdfResources: pdfResources,
-                        originalPrerequisites: module.prerequisites || []
+                        pdfResources
                     }
                 });
 
+                // CREATE LESSONS for this module
+                if (module.lessons && module.lessons.length > 0) {
+                    for (let lessonIndex = 0; lessonIndex < module.lessons.length; lessonIndex++) {
+                        const lessonData = module.lessons[lessonIndex];
+                        const lesson = await Lesson.create({
+                            moduleId: created.id,
+                            title: lessonData.title,
+                            objective: lessonData.objective,
+                            keyTakeaways: lessonData.keyTakeaways || [],
+                            contentType: lessonData.contentType,
+                            estimatedMinutes: lessonData.estimatedMinutes,
+                            orderInModule: lessonIndex + 1,
+                            whyLearnThis: lessonData.whyLearnThis,
+                            status: index === 0 && lessonIndex === 0 ? "available" : "locked"
+                        });
+
+                        // CREATE TASKS for this lesson
+                        if (lessonData.tasks && lessonData.tasks.length > 0) {
+                            for (let taskIndex = 0; taskIndex < lessonData.tasks.length; taskIndex++) {
+                                const taskData = lessonData.tasks[taskIndex];
+                                await Task.create({
+                                    lessonId: lesson.id,
+                                    title: taskData.title,
+                                    type: taskData.type,
+                                    instructions: taskData.instructions || {},
+                                    purpose: taskData.purpose,
+                                    completionCriteria: taskData.completionCriteria || {},
+                                    estimatedMinutes: taskData.estimatedMinutes,
+                                    orderInLesson: taskIndex + 1,
+                                    points: 10
+                                });
+                            }
+                        }
+                    }
+                }
+
                 createdModules.push(created);
-
-                console.log(`Created module ${index + 1}/${modules.length}: ${module.title}`);
+                console.log(`Created module ${index + 1}/${modules.length} with lessons and tasks`);
             } catch (error) {
-                console.error(`Error creating module "${module.title}":`, error);
+                console.error(`Error creating granular module "${module.title}":`, error);
 
-                // Create module without resources rather than failing
+                // Fallback: Create basic module
                 const created = await LearningModule.create({
                     title: module.title,
                     description: module.description,
                     moduleType: module.moduleType,
                     difficulty: module.difficulty,
                     duration: module.duration,
-                    skillTags: module.skillTags || [],
-                    category: module.category,
-                    subcategory: module.subcategory,
                     learningPathId,
                     orderInPath: index + 1,
                     isAiGenerated: true,
                     targetUserGroups: [userGroup],
-                    courseId: courseId || null,
-                    groupSpecificMetadata: { branchId: branchId || null },
-                    generationMetadata: {
-                        generatedAt: new Date(),
-                        generatedFor: learningPathId,
-                        error: "Failed to fetch resources"
-                    }
+                    status: index === 0 ? "available" : "locked"
                 });
-
                 createdModules.push(created);
             }
         }
@@ -828,19 +941,59 @@ Return a JSON object with:
                 category: mod.category,
                 subcategory: mod.subcategory,
                 skillTags: mod.skillTags,
-                prerequisiteModules: [], // Re-map later if needed, but simple clone for now
+                prerequisiteModules: [],
                 targetUserGroups: mod.targetUserGroups,
                 groupSpecificMetadata: mod.groupSpecificMetadata,
                 courseId: mod.courseId,
                 learningPathId: targetPathId,
                 orderInPath: mod.orderInPath,
-                isAiGenerated: false, // It's a clone
+                isAiGenerated: false,
+                whyLearnThis: mod.whyLearnThis,
+                realWorldApplications: mod.realWorldApplications,
+                status: mod.status,
                 generationMetadata: {
                     clonedFromPath: source.lp_id,
                     clonedFromModule: mod.id,
                     clonedAt: new Date()
                 }
             });
+
+            // Clone lessons for this module
+            const sourceLessons = await Lesson.findAll({ where: { moduleId: mod.id } });
+            for (const lesson of sourceLessons) {
+                const clonedLesson = await Lesson.create({
+                    moduleId: cloned.id,
+                    title: lesson.title,
+                    objective: lesson.objective,
+                    keyTakeaways: lesson.keyTakeaways,
+                    contentType: lesson.contentType,
+                    contentUrl: lesson.contentUrl,
+                    estimatedMinutes: lesson.estimatedMinutes,
+                    orderInModule: lesson.orderInModule,
+                    whyLearnThis: lesson.whyLearnThis,
+                    status: lesson.status,
+                    prerequisites: lesson.prerequisites
+                });
+
+                // Clone tasks for this lesson
+                const sourceTasks = await Task.findAll({ where: { lessonId: lesson.id } });
+                for (const task of sourceTasks) {
+                    await Task.create({
+                        lessonId: clonedLesson.id,
+                        title: task.title,
+                        type: task.type,
+                        instructions: task.instructions,
+                        purpose: task.purpose,
+                        completionCriteria: task.completionCriteria,
+                        difficultyLevel: task.difficultyLevel,
+                        estimatedMinutes: task.estimatedMinutes,
+                        orderInLesson: task.orderInLesson,
+                        isRequired: task.isRequired,
+                        points: task.points
+                    });
+                }
+            }
+
             newModuleIds.push(cloned.id);
         }
 

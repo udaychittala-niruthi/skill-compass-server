@@ -24,6 +24,10 @@ class LearningModule extends Model {
     declare orderInPath: number | null; // New: sequence in path
     declare isAiGenerated: boolean; // New: flag for AI-generated modules
     declare generationMetadata: any; // New: JSONB for AI generation details
+    declare whyLearnThis: string | null;
+    declare realWorldApplications: any;
+    declare unlocks: any;
+    declare status: "locked" | "available" | "in_progress" | "completed";
 }
 
 LearningModule.init(
@@ -140,6 +144,22 @@ LearningModule.init(
         generationMetadata: {
             type: DataTypes.JSONB,
             defaultValue: {}
+        },
+        whyLearnThis: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
+        realWorldApplications: {
+            type: DataTypes.JSONB,
+            defaultValue: {}
+        },
+        unlocks: {
+            type: DataTypes.JSONB,
+            defaultValue: {}
+        },
+        status: {
+            type: DataTypes.ENUM("locked", "available", "in_progress", "completed"),
+            defaultValue: "locked"
         }
     },
     {

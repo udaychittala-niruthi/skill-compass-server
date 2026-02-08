@@ -10,6 +10,11 @@ class LearningPath extends Model {
     declare status: "generating" | "completed" | "failed";
     declare generationError: string | null;
     declare generatedAt: Date | null;
+    declare personalizedReason: string | null;
+    declare totalEstimatedHours: number | null;
+    declare currentModuleId: number | null;
+    declare currentTaskId: number | null;
+    declare completionPercentage: number;
     declare createdAt: Date;
     declare updatedAt: Date;
 }
@@ -53,6 +58,26 @@ LearningPath.init(
         generatedAt: {
             type: DataTypes.DATE,
             allowNull: true
+        },
+        personalizedReason: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
+        totalEstimatedHours: {
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: true
+        },
+        currentModuleId: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        currentTaskId: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        completionPercentage: {
+            type: DataTypes.DECIMAL(5, 2),
+            defaultValue: 0
         }
     },
     {
