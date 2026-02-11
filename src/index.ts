@@ -7,7 +7,7 @@ import { setupGraphQL } from "./graphql/server.js";
 
 dotenv.config();
 
-const port = process.env.PORT || 5001;
+const port = Number(process.env.PORT) || 5001;
 
 async function startServer() {
     await postgresConnection();
@@ -22,7 +22,7 @@ async function startServer() {
     await setupGraphQL(app);
 
     httpServer
-        .listen(port, () => {
+        .listen(port, "0.0.0.0", () => {
             console.log(`🚀 Server is running on port ${port}`);
             console.log(`🔌 WebSocket server initialized`);
         })

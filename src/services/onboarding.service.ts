@@ -291,11 +291,11 @@ class OnboardingService {
         }
 
         const prefs = await UserPreferences.findOne({ where: { userId } });
-        const skils = await Skill.findAll({ where: { id: { [Op.in]: prefs?.skillIds || [] } } });
+        const skills = await Skill.findAll({ where: { id: { [Op.in]: prefs?.skillIds || [] } } });
         const interests = await Interest.findAll({ where: { id: { [Op.in]: prefs?.interestIds || [] } } });
 
         return {
-            skils,
+            skills,
             interests
         };
     }

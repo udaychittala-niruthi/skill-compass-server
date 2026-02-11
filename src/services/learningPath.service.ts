@@ -550,9 +550,9 @@ Return a JSON object with:
                 const created = await LearningModule.create({
                     title: module.title,
                     description: module.description,
-                    moduleType: module.moduleType,
-                    format: format.type, // Set format type
-                    difficulty: module.difficulty,
+                    moduleType: this.mapModuleType(module.moduleType),
+                    format: format.type as any, // Set format type
+                    difficulty: this.mapDifficulty(module.difficulty),
                     duration: module.duration,
                     contentUrl: videoUrl,
                     thumbnailUrl: thumbnailUrl,
@@ -586,8 +586,8 @@ Return a JSON object with:
                 const created = await LearningModule.create({
                     title: module.title,
                     description: module.description,
-                    moduleType: module.moduleType,
-                    difficulty: module.difficulty,
+                    moduleType: this.mapModuleType(module.moduleType),
+                    difficulty: this.mapDifficulty(module.difficulty),
                     duration: module.duration,
                     skillTags: module.skillTags || [],
                     category: module.category,
@@ -601,7 +601,7 @@ Return a JSON object with:
                     generationMetadata: {
                         generatedAt: new Date(),
                         generatedFor: learningPathId,
-                        error: "Failed to fetch resources"
+                        error: (error as Error).message || "Failed to fetch resources"
                     }
                 });
 
@@ -765,8 +765,8 @@ Return a JSON object with:
                     (CASE WHEN up."branchId" = :branchId AND :branchId IS NOT NULL THEN 25 ELSE 0 END) +
                     (CASE WHEN up."industry" = :industry AND :industry IS NOT NULL THEN 15 ELSE 0 END) +
                     (CASE WHEN up."targetRole" = :targetRole AND :targetRole IS NOT NULL THEN 15 ELSE 0 END) +
-                    (COALESCE((SELECT COUNT(*) FROM unnest(up."skillIds") s WHERE s = ANY(:skillIds)), 0) * 8) +
-                    (COALESCE((SELECT COUNT(*) FROM unnest(up."interestIds") i WHERE i = ANY(:interestIds)), 0) * 8)
+                    (COALESCE((SELECT COUNT(*) FROM unnest(up."skillIds") s WHERE s = ANY(ARRAY[:skillIds])), 0) * 8) +
+                    (COALESCE((SELECT COUNT(*) FROM unnest(up."interestIds") i WHERE i = ANY(ARRAY[:interestIds])), 0) * 8)
                 ) as "similarityScore"
             FROM learning_paths lp
             JOIN user_preferences up ON lp."userId" = up."userId"
@@ -876,6 +876,35 @@ Return a JSON object with:
         });
 
         console.log(`[Similarity] Successfully cloned path for user ${targetUserId}`);
+    }
+
+    /**
+     * Map AI-generated difficulty to valid enum values
+     */
+    private mapDifficulty(difficulty: string): "beginner" | "intermediate" | "advanced" | "expert" {
+        const d = difficulty?.toLowerCase() || "";
+        if (d.includes("beginner") || d.includes("foundational") || d.includes("basic") || d.includes("entry"))
+            return "beginner";
+        if (d.includes("advanced") || d.includes("hard")) return "advanced";
+        if (d.includes("expert") || d.includes("pro") || d.includes("master")) return "expert";
+        return "intermediate";
+    }
+
+    /**
+     * Map AI-generated module type to valid enum values
+     */
+    private mapModuleType(
+        type: string
+    ): "course" | "micro-lesson" | "project" | "assessment" | "certification" | "workshop" | "reading" {
+        const t = type?.toLowerCase() || "";
+        if (t.includes("course")) return "course";
+        if (t.includes("micro") || t.includes("lesson")) return "micro-lesson";
+        if (t.includes("project")) return "project";
+        if (t.includes("assessment") || t.includes("test") || t.includes("quiz")) return "assessment";
+        if (t.includes("certification") || t.includes("cert")) return "certification";
+        if (t.includes("workshop") || t.includes("seminar")) return "workshop";
+        if (t.includes("reading") || t.includes("article") || t.includes("book")) return "reading";
+        return "course";
     }
 }
 

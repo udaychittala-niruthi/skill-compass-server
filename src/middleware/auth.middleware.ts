@@ -14,15 +14,12 @@ function authenticate(req: Request, res: Response, next: NextFunction) {
                     return sendResponse(res, false, "Unauthorized", 401);
                 } else {
                     try {
-                        const user = await User.findByPk(decoded.id, {
-                            include: ["preferences", "certifications"]
-                        });
+                        const user = await User.findByPk(decoded.id);
                         if (!user) {
                             return sendResponse(res, false, "Unauthorized: User not found", 401);
                         }
                         req.user = user.toJSON();
 
-                        // Check if age is present for non-onboarding/age routes
                         // Check if age is present for non-onboarding/age routes
                         const userObj = req.user as any;
                         if (!userObj.age && !req.originalUrl.includes("/onboarding/age")) {
