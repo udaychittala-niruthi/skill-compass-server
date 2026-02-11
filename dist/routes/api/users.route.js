@@ -1,0 +1,11 @@
+import { Router } from "express";
+import userController from "../../controllers/users.controller.js";
+import { authenticate } from "../../middleware/auth.middleware.js";
+import { accessMiddleware } from "../../middleware/access.middleware.js";
+const userRoutes = Router();
+userRoutes.use(authenticate);
+userRoutes.use(accessMiddleware);
+userRoutes.get("/", userController.getUsers);
+userRoutes.post("/", userController.createUser);
+userRoutes.put("/profile", userController.updateProfile);
+export default userRoutes;

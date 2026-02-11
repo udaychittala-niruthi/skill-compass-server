@@ -1,0 +1,64 @@
+import sequelize from "../config/db.js";
+import { DataTypes } from "sequelize";
+/**
+ * Migration to add icon and iconLibrary columns to courses table
+ */
+export async function up() {
+    const queryInterface = sequelize.getQueryInterface();
+    console.log("Running migration: add icon columns to courses...");
+    // Add columns to courses table
+    try {
+        await queryInterface.addColumn("courses", "icon", {
+            type: DataTypes.STRING,
+            allowNull: true
+        });
+        console.log("✅ Added icon column to courses");
+    }
+    catch (error) {
+        if (error.message.includes("already exists")) {
+            console.log("⚠️  icon column already exists in courses");
+        }
+        else {
+            throw error;
+        }
+    }
+    try {
+        await queryInterface.addColumn("courses", "iconLibrary", {
+            type: DataTypes.STRING,
+            allowNull: true
+        });
+        console.log("✅ Added iconLibrary column to courses");
+    }
+    catch (error) {
+        if (error.message.includes("already exists")) {
+            console.log("⚠️  iconLibrary column already exists in courses");
+        }
+        else {
+            throw error;
+        }
+    }
+    console.log("✅ Migration completed successfully!");
+}
+/**
+ * Rollback migration
+ */
+export async function down() {
+    const queryInterface = sequelize.getQueryInterface();
+    console.log("Rolling back migration: remove icon columns from courses...");
+    // Remove columns from courses
+    await queryInterface.removeColumn("courses", "icon");
+    await queryInterface.removeColumn("courses", "iconLibrary");
+    console.log("✅ Rollback completed!");
+}
+// Run migration if called directly
+if (require.main === module) {
+    up()
+        .then(() => {
+        console.log("Migration complete");
+        process.exit(0);
+    })
+        .catch((error) => {
+        console.error("Migration failed:", error);
+        process.exit(1);
+    });
+}
