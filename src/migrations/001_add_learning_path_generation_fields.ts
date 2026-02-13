@@ -209,16 +209,3 @@ export async function down() {
 
     console.log("✅ Rollback completed!");
 }
-
-// Run migration if called directly
-if (require.main === module) {
-    up()
-        .then(() => {
-            console.log("Migration complete");
-            process.exit(0);
-        })
-        .catch((error) => {
-            console.error("Migration failed:", error);
-            process.exit(1);
-        });
-}

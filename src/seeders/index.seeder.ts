@@ -5,6 +5,7 @@ import SkillSeeder from "./skill.seeder.js";
 import CourseSeeder from "./courses.seeder.js";
 import BranchesSeeder from "./branches.seeder.js";
 import { EducationalResourcesSeeder } from "./educationalResources.seeder.js";
+import KidDrawingImagesSeeder from "./kidDrawingImages.seeder.js";
 
 const educationalResourcesSeeder = new EducationalResourcesSeeder();
 
@@ -13,15 +14,24 @@ const seeders = [
     { name: "Skill", run: SkillSeeder },
     { name: "Course", run: CourseSeeder },
     { name: "Branches", run: BranchesSeeder },
-    { name: "EducationalResources", run: (seq: any, trans?: any) => educationalResourcesSeeder.seed(seq, trans) }
+    { name: "EducationalResources", run: (seq: any, trans?: any) => educationalResourcesSeeder.seed(seq, trans) },
+    { name: "KidDrawingImages", run: (seq: any, trans?: any) => KidDrawingImagesSeeder.run(seq, trans) }
 ];
 
 async function seedAll() {
     console.log("🚀 Seeding process started...");
-    const isRollbackMode = process.argv.includes("--rollback");
+    const args = process.argv.slice(2);
+    const isRollbackMode = args.includes("--rollback");
+    const isUpdateMode = args.includes("--update");
 
     if (isRollbackMode) {
         console.log("⚠️ ROLLBACK MODE ENABLED: Changes will be reverted at the end.");
+    }
+
+    if (isUpdateMode) {
+        console.log("🔄 UPDATE MODE ENABLED: Existing records (Courses, Branches) may be updated.");
+    } else {
+        console.log("ℹ️  SAFE MODE: Existing records will be skipped. Use --update to force updates.");
     }
 
     try {
@@ -33,7 +43,12 @@ async function seedAll() {
         await sequelize.transaction(async (transaction) => {
             for (const seeder of seeders) {
                 console.log(`⏳ Seeding ${seeder.name}...`);
-                await seeder.run(sequelize, transaction);
+                // Pass options to run method if it accepts them
+                if (seeder.name === "Course" || seeder.name === "Branches") {
+                    await (seeder.run as any)(sequelize, transaction, { forceUpdate: isUpdateMode });
+                } else {
+                    await seeder.run(sequelize, transaction);
+                }
                 console.log("-----------------------------------------");
             }
 

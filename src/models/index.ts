@@ -16,6 +16,7 @@ import UserPortfolio from "./UserPortfolio.js";
 import LearningSchedule from "./LearningSchedule.js";
 import AiAnalysis from "./AiAnalysis.js";
 import EducationalResource from "./EducationalResource.js";
+import KidDrawingImage from "./KidDrawingImage.js";
 
 // 1. USER PREFERENCES
 User.hasOne(UserPreferences, { foreignKey: "userId", as: "preferences" });
@@ -115,5 +116,6 @@ export {
     LearningSchedule,
     AiAnalysis,
     EducationalResource,
+    KidDrawingImage,
     Op
 };

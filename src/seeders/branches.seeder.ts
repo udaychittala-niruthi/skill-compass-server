@@ -10,15 +10,29 @@ interface BranchesResponse {
     branches: BranchData[];
 }
 
-const BranchesSeeder = async (_sequelize: any, transaction?: any) => {
+const BranchesSeeder = async (_sequelize: any, transaction?: any, options: { forceUpdate?: boolean } = {}) => {
     try {
         console.log("🌱 Seeding Branches...");
+        const { forceUpdate = false } = options;
 
         const courses = await Course.findAll({ transaction });
 
-        console.log(`Found ${courses.length} courses needing branches.`);
+        console.log(`Found ${courses.length} courses to check for branches.`);
 
         for (const course of courses) {
+            // Check if branches already exist for this course
+            if (!forceUpdate) {
+                const existingBranchesCount = await Branches.count({
+                    where: { courseId: course.id },
+                    transaction
+                });
+
+                if (existingBranchesCount > 0) {
+                    console.log(`ℹ️  Skipping ${course.name} (branches exist). Use --update to force.`);
+                    continue;
+                }
+            }
+
             console.log(`Processing course: ${course.name} (${course.category})...`);
 
             const prompt = `
@@ -64,19 +78,22 @@ const BranchesSeeder = async (_sequelize: any, transaction?: any) => {
                 if (response && response.branches && Array.isArray(response.branches)) {
                     const generatedBranchNames = response.branches.map((b) => b.name);
 
-                    // 1. Delete stale branches for this course
-                    const deletedCount = await Branches.destroy({
-                        where: {
-                            courseId: course.id,
-                            name: {
-                                [Op.notIn]: generatedBranchNames
-                            }
-                        },
-                        transaction
-                    });
+                    // 1. Delete stale branches for this course ONLY if forceUpdate is true
+                    let deletedCount = 0;
+                    if (forceUpdate) {
+                        deletedCount = await Branches.destroy({
+                            where: {
+                                courseId: course.id,
+                                name: {
+                                    [Op.notIn]: generatedBranchNames
+                                }
+                            },
+                            transaction
+                        });
 
-                    if (deletedCount > 0) {
-                        console.log(`🗑️ Deleted ${deletedCount} stale branches for ${course.name}`);
+                        if (deletedCount > 0) {
+                            console.log(`🗑️ Deleted ${deletedCount} stale branches for ${course.name}`);
+                        }
                     }
 
                     // 2. Upsert generated branches
@@ -98,7 +115,7 @@ const BranchesSeeder = async (_sequelize: any, transaction?: any) => {
 
                         if (wasCreated) {
                             createdCount++;
-                        } else {
+                        } else if (forceUpdate) {
                             branch.shortName = branchData.shortName;
                             await branch.save({ transaction });
                             updatedCount++;

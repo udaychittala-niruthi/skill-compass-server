@@ -218,3 +218,45 @@ export async function getJsonCompletion<T = any>(prompt: string, options: GroqCo
         }
     }, requestedModel);
 }
+
+/**
+ * Generates a chat completion with vision capabilities.
+ * @param prompt The user's input prompt.
+ * @param imageUrl The URL of the image to analyze.
+ * @param options Configuration options.
+ * @returns The generated text.
+ */
+export async function getVisionCompletion(
+    prompt: string,
+    imageUrl: string,
+    options: GroqCompletionOptions = {}
+): Promise<string> {
+    const { temperature = 0.5, max_tokens = 1024, systemPrompt, model } = options;
+    // Use a vision-capable model if not specified
+    const visionModel = model || "llama-3.2-11b-vision-preview";
+
+    const messages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [];
+
+    if (systemPrompt) {
+        messages.push({ role: "system", content: systemPrompt });
+    }
+
+    messages.push({
+        role: "user",
+        content: [
+            { type: "text", text: prompt },
+            { type: "image_url", image_url: { url: imageUrl } }
+        ]
+    });
+
+    return withModelFallback(async (m) => {
+        const completion = await groq.chat.completions.create({
+            messages,
+            model: m,
+            temperature,
+            max_tokens
+        });
+
+        return completion.choices[0]?.message?.content || "";
+    }, visionModel);
+}

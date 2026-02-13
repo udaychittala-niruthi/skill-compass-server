@@ -46,15 +46,3 @@ export async function down() {
     });
     console.log("✅ Rollback completed!");
 }
-
-if (require.main === module) {
-    up()
-        .then(() => {
-            console.log("Migration complete");
-            process.exit(0);
-        })
-        .catch((error) => {
-            console.error("Migration failed:", error);
-            process.exit(1);
-        });
-}
