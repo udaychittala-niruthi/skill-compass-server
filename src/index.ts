@@ -1,11 +1,11 @@
-import app from "./app.js";
 import dotenv from "dotenv";
+dotenv.config();
+
+import app from "./app.js";
 import { postgresConnection } from "./config/db.js";
 import { createServer } from "http";
 import { websocketService } from "./services/websocket.service.js";
 import { setupGraphQL } from "./graphql/server.js";
-
-dotenv.config();
 
 const port = Number(process.env.PORT) || 5001;
 
